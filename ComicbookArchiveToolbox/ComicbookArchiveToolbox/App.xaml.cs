@@ -1,4 +1,8 @@
-﻿using System;
+﻿using CommonServiceLocator;
+using Prism.Ioc;
+using Prism.Modularity;
+using Prism.Unity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.Configuration;
@@ -9,11 +13,25 @@ using System.Windows;
 
 namespace ComicbookArchiveHost
 {
-  /// <summary>
-  /// Interaction logic for App.xaml
-  /// </summary>
-  public partial class App : Application
-  {
+	/// <summary>
+	/// Interaction logic for App.xaml
+	/// </summary>
+	public partial class App : PrismApplication
+	{
+		protected override void RegisterTypes(IContainerRegistry containerRegistry)
+		{
+			
+		}
 
-  }
+		protected override Window CreateShell()
+		{
+			return ServiceLocator.Current.GetInstance<MainWindow>();
+		}
+
+		protected override IModuleCatalog CreateModuleCatalog()
+		{
+			PluginsCatalog catalog = new PluginsCatalog();
+			return catalog;
+		}
+	}
 }

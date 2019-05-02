@@ -26,7 +26,6 @@ namespace ComicbookArchiveHost
   /// </summary>
   public partial class MainWindow : Window
   {
-    [ImportMany(typeof(ICatPlugin))]
     public IEnumerable<ICatPlugin> Plugins { get; set; }
 
     public MainWindow()
@@ -34,17 +33,17 @@ namespace ComicbookArchiveHost
       InitializeComponent();
       try
       {
-        var catalog = new AggregateCatalog();
-        catalog.Catalogs.Add(new AssemblyCatalog(System.Reflection.Assembly.GetExecutingAssembly()));
-        foreach( string s in GetPluginsCatalog())
-        {
-          catalog.Catalogs.Add(new AssemblyCatalog(Assembly.LoadFrom(s)));
-        }
-        var container = new CompositionContainer(catalog);
-        container.ComposeParts(this);
+        //var catalog = new AggregateCatalog();
+        //catalog.Catalogs.Add(new AssemblyCatalog(System.Reflection.Assembly.GetExecutingAssembly()));
+        //foreach( string s in GetPluginsCatalog())
+        //{
+        //  catalog.Catalogs.Add(new AssemblyCatalog(Assembly.LoadFrom(s)));
+        //}
+        //var container = new CompositionContainer(catalog);
+        //container.ComposeParts(this);
 
-        HostViewModel vm = new HostViewModel(Plugins);
-        DataContext = vm;
+        //HostViewModel vm = new HostViewModel(Plugins);
+        //DataContext = vm;
       }
       catch (Exception e)
       {

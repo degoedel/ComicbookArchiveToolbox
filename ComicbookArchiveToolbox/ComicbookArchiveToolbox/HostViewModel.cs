@@ -39,7 +39,7 @@ namespace ComicbookArchiveHost
       {
         // Take the View from the Plugin and Merge it with,
         // our Applications Resource Dictionary.
-        Application.Current.Resources.MergedDictionaries.Add(app.View);
+        //Application.Current.Resources.MergedDictionaries.Add(app.View);
         _pluginsNames.Add(app.Name);
         if (!_pluginCategories.Contains(app.Category))
         {
