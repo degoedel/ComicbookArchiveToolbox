@@ -1,4 +1,5 @@
-﻿using CommonServiceLocator;
+﻿using ComicbookArchiveHost.Views;
+using CommonServiceLocator;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Unity;
@@ -25,7 +26,7 @@ namespace ComicbookArchiveHost
 
 		protected override Window CreateShell()
 		{
-			return ServiceLocator.Current.GetInstance<MainWindow>();
+			return Container.Resolve<MainWindow>();
 		}
 
 		protected override IModuleCatalog CreateModuleCatalog()

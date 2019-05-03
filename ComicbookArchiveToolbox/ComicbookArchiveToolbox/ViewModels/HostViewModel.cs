@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace ComicbookArchiveHost
+namespace ComicbookArchiveHost.ViewModels
 {
   public class HostViewModel : BindableBase
   {

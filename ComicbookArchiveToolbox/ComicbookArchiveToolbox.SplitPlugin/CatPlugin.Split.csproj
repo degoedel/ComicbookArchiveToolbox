@@ -68,12 +68,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Plugin.cs" />
+    <Compile Include="SplitPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SplitPluginView.xaml.cs">
+    <Compile Include="Views\SplitPluginView.xaml.cs">
       <DependentUpon>SplitPluginView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SplitPluginViewModel.cs" />
+    <Compile Include="ViewModels\SplitPluginViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComicbookArchiveToolbox.CommonTools\ComicbookArchiveToolbox.CommonTools.csproj">
@@ -86,11 +86,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="SplitPluginView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View.xaml">
+    <Page Include="Views\SplitPluginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

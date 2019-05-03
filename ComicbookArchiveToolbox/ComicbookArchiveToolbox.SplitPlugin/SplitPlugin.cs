@@ -1,5 +1,6 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Interfaces;
+using ComicbookArchiveToolbox.SplitPlugin.ViewModels;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
@@ -13,7 +14,7 @@ using Unity;
 
 namespace ComicbookArchiveToolbox.SplitPlugin
 {
-  public class Plugin : ICatPlugin
+  public class SplitPlugin : ICatPlugin
   {
     #region Attributes
     private SplitPluginViewModel _viewModel;
@@ -32,7 +33,7 @@ namespace ComicbookArchiveToolbox.SplitPlugin
     #endregion Properties
 
     #region Constructors
-    public Plugin(IUnityContainer container, IRegionManager manager)
+    public SplitPlugin(IUnityContainer container, IRegionManager manager)
     {
       _viewModel = new SplitPluginViewModel();
     }

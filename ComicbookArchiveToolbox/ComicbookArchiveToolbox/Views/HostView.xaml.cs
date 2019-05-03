@@ -13,16 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ComicbookArchiveToolbox.SplitPlugin
+namespace ComicbookArchiveHost.Views
 {
-  /// <summary>
-  /// Interaction logic for SplitPluginView.xaml
-  /// </summary>
-  public partial class SplitPluginView : UserControl
-  {
-    public SplitPluginView()
-    {
-      InitializeComponent();
-    }
-  }
+	/// <summary>
+	/// Interaction logic for HostView.xaml
+	/// </summary>
+	public partial class HostView : UserControl
+	{
+		public HostView()
+		{
+			InitializeComponent();
+		}
+	}
 }
