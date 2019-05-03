@@ -31,8 +31,7 @@ namespace ComicbookArchiveHost
 
 		protected override IModuleCatalog CreateModuleCatalog()
 		{
-			PluginsCatalog catalog = new PluginsCatalog();
-			return catalog;
+			return new DirectoryModuleCatalog() { ModulePath = @"." };
 		}
 	}
 }

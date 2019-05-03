@@ -33,24 +33,25 @@ namespace ComicbookArchiveToolbox.SplitPlugin
     #endregion Properties
 
     #region Constructors
-    public SplitPlugin(IUnityContainer container, IRegionManager manager)
+    public SplitPlugin()
     {
       _viewModel = new SplitPluginViewModel();
     }
 
-	#endregion Constructors
+		#endregion Constructors
 
-	#region IModule
-	public void RegisterTypes(IContainerRegistry containerRegistry)
-	{
-		//throw new NotImplementedException();
+		#region IModule
+		public void OnInitialized(IContainerProvider containerProvider)
+		{
+			var regionManager = containerProvider.Resolve<IRegionManager>();
+			regionManager.RegisterViewWithRegion("PluginRegion", typeof(Views.SplitPluginView));
+		}
+
+		public void RegisterTypes(IContainerRegistry containerRegistry)
+		{
+
+		}
+		#endregion IModule
+
 	}
-
-	public void OnInitialized(IContainerProvider containerProvider)
-	{
-		//throw new NotImplementedException();
-	}
-	#endregion IModule
-
-  }
 }

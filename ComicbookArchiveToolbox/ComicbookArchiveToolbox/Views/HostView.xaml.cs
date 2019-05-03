@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Prism.Ioc;
+using Prism.Regions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,46 @@ namespace ComicbookArchiveHost.Views
 	/// </summary>
 	public partial class HostView : UserControl
 	{
-		public HostView()
+		IContainerExtension _container;
+		IRegionManager _regionManager;
+		IRegion _region;
+
+		public HostView(IContainerExtension container, IRegionManager regionManager)
 		{
 			InitializeComponent();
+			_container = container;
+			_regionManager = regionManager;
+			this.Loaded += HostControl_Loaded;
 		}
+
+		private void HostControl_Loaded(object sender, RoutedEventArgs e)
+		{
+			//_viewA = _container.Resolve<ViewA>();
+			//_viewB = _container.Resolve<ViewB>();
+
+			_region = _regionManager.Regions["PluginRegion"];
+
+			//_region.Add(_viewA);
+			//_region.Add(_viewB);
+		}
+
+		//private void Button_Click(object sender, RoutedEventArgs e)
+		//{
+		//	var view = _container.Resolve<ViewA>();
+		//	IRegion region = _regionManager.Regions["ContentRegion"];
+		//	region.Add(view);
+		//}
+
+		//private void Button_Click(object sender, RoutedEventArgs e)
+		//{
+		//	//activate view a
+		//	_region.Activate(_viewA);
+		//}
+
+		//private void Button_Click_1(object sender, RoutedEventArgs e)
+		//{
+		//	//deactivate view a
+		//	_region.Deactivate(_viewA);
+		//}
 	}
 }
