@@ -20,7 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ComicbookArchiveHost.Views
+namespace ComicbookArchiveToolbox.Views
 {
   /// <summary>
   /// Interaction logic for MainWindow.xaml
@@ -32,8 +32,7 @@ namespace ComicbookArchiveHost.Views
     public MainWindow(IRegionManager regionManager)
     {
       InitializeComponent();
-	  regionManager.RegisterViewWithRegion("HostRegion", typeof(HostView));
-
-	}
+	    regionManager.RegisterViewWithRegion("HostRegion", typeof(HostView));
+	  }
   }
 }

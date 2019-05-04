@@ -1,6 +1,6 @@
-﻿using ComicbookArchiveToolbox.CommonTools;
+﻿using CatPlugin.Split.ViewModels;
+using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Interfaces;
-using ComicbookArchiveToolbox.SplitPlugin.ViewModels;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Unity;
 
-namespace ComicbookArchiveToolbox.SplitPlugin
+namespace CatPlugin.Split.SplitPlugin
 {
   public class SplitPlugin : ICatPlugin
   {

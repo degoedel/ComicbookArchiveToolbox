@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ComicbookArchiveToolbox.SplitPlugin.Views
+namespace CatPlugin.Split.Views
 {
   /// <summary>
   /// Interaction logic for SplitPluginView.xaml

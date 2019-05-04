@@ -1,6 +1,6 @@
-﻿using ComicbookArchiveHost.Events;
-using ComicbookArchiveToolbox.CommonTools;
+﻿using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Interfaces;
+using ComicbookArchiveToolbox.Events;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -15,7 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace ComicbookArchiveHost.ViewModels
+namespace ComicbookArchiveToolbox.ViewModels
 {
   public class HostViewModel : BindableBase
   {

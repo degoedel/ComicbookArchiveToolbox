@@ -1,4 +1,4 @@
-﻿using ComicbookArchiveHost.Views;
+﻿using ComicbookArchiveToolbox.Views;
 using CommonServiceLocator;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace ComicbookArchiveHost
+namespace ComicbookArchiveToolbox
 {
 	/// <summary>
 	/// Interaction logic for App.xaml

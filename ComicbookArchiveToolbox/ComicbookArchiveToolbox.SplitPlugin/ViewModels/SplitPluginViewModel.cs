@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComicbookArchiveToolbox.SplitPlugin.ViewModels
+namespace CatPlugin.Split.ViewModels
 {
   public class SplitPluginViewModel : CatViewModel
   {

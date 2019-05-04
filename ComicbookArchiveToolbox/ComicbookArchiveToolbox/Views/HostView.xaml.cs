@@ -1,4 +1,4 @@
-﻿using ComicbookArchiveHost.Events;
+﻿using ComicbookArchiveToolbox.Events;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ComicbookArchiveHost.Views
+namespace ComicbookArchiveToolbox.Views
 {
 	/// <summary>
 	/// Interaction logic for HostView.xaml
