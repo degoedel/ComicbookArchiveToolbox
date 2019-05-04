@@ -56,10 +56,9 @@ namespace ComicbookArchiveToolbox.ViewModels
 			  {
 				  pluginsPath.Add(fi.Name.Split('.')[1]);
 			  }
-        List<ICatPlugin> plugins = new List<ICatPlugin>();
         foreach (string s in pluginsPath)
         {
-          plugins.Add(_container.Resolve<ICatPlugin>(s));
+          _plugins.Add(_container.Resolve<ICatPlugin>(s));
         }
 		  }
 		  catch (Exception e)
