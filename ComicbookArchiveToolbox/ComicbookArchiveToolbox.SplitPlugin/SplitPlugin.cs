@@ -18,13 +18,13 @@ namespace ComicbookArchiveToolbox.SplitPlugin
   {
     #region Attributes
     private SplitPluginViewModel _viewModel;
-	private readonly IUnityContainer _container;
-	private readonly IRegionManager _manager;
-	#endregion Attributes
+	  private readonly IUnityContainer _container;
+	  private readonly IRegionManager _manager;
+	  #endregion Attributes
 
 
-	#region Properties
-	public string Name => "Split";
+	  #region Properties
+	  public string Name => "Split";
 
     public string Category => "Splitters";
 
@@ -33,8 +33,10 @@ namespace ComicbookArchiveToolbox.SplitPlugin
     #endregion Properties
 
     #region Constructors
-    public SplitPlugin()
+    public SplitPlugin(IUnityContainer container)
     {
+      _container = container;
+      _container.RegisterType<ICatPlugin, SplitPlugin>("Split");
       _viewModel = new SplitPluginViewModel();
     }
 
@@ -49,8 +51,8 @@ namespace ComicbookArchiveToolbox.SplitPlugin
 
 		public void RegisterTypes(IContainerRegistry containerRegistry)
 		{
-
-		}
+      
+    }
 		#endregion IModule
 
 	}

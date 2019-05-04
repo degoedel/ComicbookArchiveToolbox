@@ -1,4 +1,6 @@
-﻿using Prism.Ioc;
+﻿using ComicbookArchiveHost.Events;
+using Prism.Events;
+using Prism.Ioc;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
@@ -25,12 +27,15 @@ namespace ComicbookArchiveHost.Views
 		IContainerExtension _container;
 		IRegionManager _regionManager;
 		IRegion _region;
+    IEventAggregator _eventAggregator;
 
-		public HostView(IContainerExtension container, IRegionManager regionManager)
+
+    public HostView(IContainerExtension container, IRegionManager regionManager, IEventAggregator eventAggregator)
 		{
 			InitializeComponent();
 			_container = container;
 			_regionManager = regionManager;
+      _eventAggregator = eventAggregator;
 			this.Loaded += HostControl_Loaded;
 		}
 
@@ -41,6 +46,7 @@ namespace ComicbookArchiveHost.Views
 
 			_region = _regionManager.Regions["PluginRegion"];
 
+      _eventAggregator.GetEvent<InterfaceLoadedEvent>().Publish();
 			//_region.Add(_viewA);
 			//_region.Add(_viewB);
 		}

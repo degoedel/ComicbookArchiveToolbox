@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComicbookArchiveToolbox.SplitPlugin.ViewModels
+namespace CatPlugin.Merge.ViewModels
 {
-  public class SplitPluginViewModel : CatViewModel
+  public class MergePluginViewModel : CatViewModel
   {
-    public string TextContent => "MySplitPluginText";
+    public string TextContent => "MyMergePluginText";
   }
 }

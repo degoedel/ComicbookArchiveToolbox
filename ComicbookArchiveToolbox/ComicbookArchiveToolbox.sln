@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicbookArchiveToolbox.Com
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatPlugin.Split", "ComicbookArchiveToolbox.SplitPlugin\CatPlugin.Split.csproj", "{F80EC68A-7EBB-4BD2-82CB-44BA34340BF5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatPlugin.Merge", "CatPlugin.Merge\CatPlugin.Merge.csproj", "{41F29584-2CCD-471B-97D6-B98E67936583}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F80EC68A-7EBB-4BD2-82CB-44BA34340BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F80EC68A-7EBB-4BD2-82CB-44BA34340BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F80EC68A-7EBB-4BD2-82CB-44BA34340BF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41F29584-2CCD-471B-97D6-B98E67936583}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41F29584-2CCD-471B-97D6-B98E67936583}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41F29584-2CCD-471B-97D6-B98E67936583}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41F29584-2CCD-471B-97D6-B98E67936583}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

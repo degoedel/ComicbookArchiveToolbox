@@ -1,5 +1,7 @@
-﻿using ComicbookArchiveToolbox.CommonTools;
+﻿using ComicbookArchiveHost.Events;
+using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Interfaces;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
 using System;
@@ -21,17 +23,20 @@ namespace ComicbookArchiveHost.ViewModels
 	#region Attributes
 	private List<ICatPlugin> _plugins;
 	private IContainerExtension _container;
+    private IEventAggregator _eventAggregator;
 
-	#endregion Attributes
+  #endregion Attributes
 
-	public CatViewModel DisplayedView { get; set; }
+    public CatViewModel DisplayedView { get; set; }
 
     #region Constructors
-    public HostViewModel(IContainerExtension container)
-    {
+  public HostViewModel(IContainerExtension container, IEventAggregator eventAggregator)
+  {
 		_container = container;
-		//InitPluginsList();
-	}
+    _eventAggregator = eventAggregator;
+    _eventAggregator.GetEvent<InterfaceLoadedEvent>().Subscribe(InitPluginsList);
+
+  }
 	#endregion Constructors
 
 	public string HostTextContent => "This is the host from vm";
@@ -50,24 +55,13 @@ namespace ComicbookArchiveHost.ViewModels
 			List<string> pluginsPath = new List<string>();
 			foreach (FileInfo fi in listing)
 			{
-				pluginsPath.Add(fi.FullName);
+				pluginsPath.Add(fi.Name.Split('.')[1]);
 			}
-			pluginsPath.Add(assemblyPath);
-
-			List<Assembly> assemblies = new List<Assembly>();
-			foreach (string s in pluginsPath)
-			{
-				assemblies.Add(Assembly.LoadFile(s));
-			}
-
-			var types = assemblies.SelectMany(x => x.GetTypes())
-					.Where(x => x.IsClass && type.IsAssignableFrom(x));
-
-			foreach (Type t in types)
-			{
-				ICatPlugin obj = _container.Resolve(t) as ICatPlugin;
-				_plugins.Add(obj);
-			}
+      List<ICatPlugin> plugins = new List<ICatPlugin>();
+      foreach (string s in pluginsPath)
+      {
+        plugins.Add(_container.Resolve<ICatPlugin>(s));
+      }
 
 		}
 		catch (Exception e)
