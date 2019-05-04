@@ -30,8 +30,6 @@ namespace ComicbookArchiveToolbox.ViewModels
 
     #endregion Attributes
 
-    public CatViewModel DisplayedView { get; set; }
-
     #region Constructors
     public HostViewModel(IContainerExtension container, IRegionManager regionManager)
     {
@@ -46,10 +44,8 @@ namespace ComicbookArchiveToolbox.ViewModels
 
     private void DisplayTools()
     {
-      var view = _container.Resolve<ToolsView>();
       IRegion region = _regionManager.Regions["PluginRegion"];
-      //	region.Add(view);
-
+      var view = region.GetView("ToolsView");
       region.Activate(view);
     }
 

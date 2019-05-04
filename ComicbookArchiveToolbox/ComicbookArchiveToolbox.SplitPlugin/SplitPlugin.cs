@@ -1,6 +1,8 @@
 ﻿using CatPlugin.Split.ViewModels;
+using CatPlugin.Split.Views;
 using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Interfaces;
+using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
@@ -12,24 +14,19 @@ using System.Threading.Tasks;
 using System.Windows;
 using Unity;
 
-namespace CatPlugin.Split.SplitPlugin
+namespace CatPlugin.Split
 {
   public class SplitPlugin : ICatPlugin
   {
     #region Attributes
-    private SplitPluginViewModel _viewModel;
 	  private readonly IUnityContainer _container;
-	  private readonly IRegionManager _manager;
-	  #endregion Attributes
+    #endregion Attributes
 
 
-	  #region Properties
-	  public string Name => "Split";
+    #region Properties
+    public string Name => "Split";
 
-    public string Category => "Splitters";
-
-    public CatViewModel ViewModel => _viewModel;
-
+    public DelegateCommand LoadViewCommand { get; private set; }
     #endregion Properties
 
     #region Constructors
@@ -37,19 +34,36 @@ namespace CatPlugin.Split.SplitPlugin
     {
       _container = container;
       _container.RegisterType<ICatPlugin, SplitPlugin>("Split");
-      _viewModel = new SplitPluginViewModel();
+      LoadViewCommand = new DelegateCommand(LoadView, CanExecute);
     }
 
-		#endregion Constructors
+    #endregion Constructors
 
-		#region IModule
-		public void OnInitialized(IContainerProvider containerProvider)
+    #region Command
+    private void LoadView()
+    {
+      var regionManager = _container.Resolve<IRegionManager>();
+      IRegion region = regionManager.Regions["PluginRegion"];
+      var view = region.GetView("SplitView");
+      region.Activate(view);
+    }
+
+    private bool CanExecute()
+    {
+      return true;
+    }
+    #endregion Command
+    
+    #region IModule
+    public void OnInitialized(IContainerProvider containerProvider)
 		{
 			var regionManager = containerProvider.Resolve<IRegionManager>();
-			regionManager.RegisterViewWithRegion("PluginRegion", typeof(Views.SplitPluginView));
-		}
+      IRegion region = regionManager.Regions["PluginRegion"];
+      region.Add(_container.Resolve<SplitPluginView>(), "SplitView");
+      //regionManager.RegisterViewWithRegion("PluginRegion", typeof(SplitPluginView));
+    }
 
-		public void RegisterTypes(IContainerRegistry containerRegistry)
+    public void RegisterTypes(IContainerRegistry containerRegistry)
 		{
       
     }

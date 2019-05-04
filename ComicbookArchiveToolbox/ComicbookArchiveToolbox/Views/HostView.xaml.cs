@@ -27,48 +27,22 @@ namespace ComicbookArchiveToolbox.Views
 		IContainerExtension _container;
 		IRegionManager _regionManager;
 		IRegion _region;
-    IEventAggregator _eventAggregator;
 
 
-    public HostView(IContainerExtension container, IRegionManager regionManager, IEventAggregator eventAggregator)
+    public HostView(IContainerExtension container, IRegionManager regionManager)
 		{
 			InitializeComponent();
 			_container = container;
 			_regionManager = regionManager;
-      _eventAggregator = eventAggregator;
-      regionManager.RegisterViewWithRegion("PluginRegion", typeof(ToolsView));
       this.Loaded += HostControl_Loaded;
 		}
 
-		private void HostControl_Loaded(object sender, RoutedEventArgs e)
-		{
-			//_viewA = _container.Resolve<ViewA>();
-			//_viewB = _container.Resolve<ViewB>();
+    private void HostControl_Loaded(object sender, RoutedEventArgs e)
+    {
+      IRegion region = _regionManager.Regions["PluginRegion"];
+      region.Add(_container.Resolve<ToolsView>(), "ToolsView");
+    }
 
-			_region = _regionManager.Regions["PluginRegion"];
 
-      _eventAggregator.GetEvent<InterfaceLoadedEvent>().Publish();
-			//_region.Add(_viewA);
-			//_region.Add(_viewB);
-		}
-
-		//private void Button_Click(object sender, RoutedEventArgs e)
-		//{
-		//	var view = _container.Resolve<ViewA>();
-		//	IRegion region = _regionManager.Regions["ContentRegion"];
-		//	region.Add(view);
-		//}
-
-		//private void Button_Click(object sender, RoutedEventArgs e)
-		//{
-		//	//activate view a
-		//	_region.Activate(_viewA);
-		//}
-
-		//private void Button_Click_1(object sender, RoutedEventArgs e)
-		//{
-		//	//deactivate view a
-		//	_region.Deactivate(_viewA);
-		//}
-	}
+  }
 }

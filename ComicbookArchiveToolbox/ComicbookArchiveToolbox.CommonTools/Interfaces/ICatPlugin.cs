@@ -1,4 +1,5 @@
-﻿using Prism.Modularity;
+﻿using Prism.Commands;
+using Prism.Modularity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,6 @@ namespace ComicbookArchiveToolbox.CommonTools.Interfaces
   public interface ICatPlugin : IModule
   {
     string Name { get; }
-    string Category { get; }
-    CatViewModel ViewModel { get; }
+    DelegateCommand LoadViewCommand { get; }
   }
 }

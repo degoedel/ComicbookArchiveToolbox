@@ -1,6 +1,8 @@
 ﻿using CatPlugin.Merge.ViewModels;
+using CatPlugin.Merge.Views;
 using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Interfaces;
+using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
@@ -15,18 +17,15 @@ namespace CatPlugin.Merge
   public class MergePlugin : ICatPlugin
   {
     #region Attributes
-    private MergePluginViewModel _viewModel;
     private readonly IUnityContainer _container;
-    private readonly IRegionManager _manager;
     #endregion Attributes
 
 
     #region Properties
     public string Name => "Merge";
 
-    public string Category => "Mergers";
 
-    public CatViewModel ViewModel => _viewModel;
+    public DelegateCommand LoadViewCommand { get; private set; }
 
     #endregion Properties
 
@@ -35,16 +34,34 @@ namespace CatPlugin.Merge
     {
       _container = container;
       _container.RegisterType<ICatPlugin, MergePlugin>("Merge");
-      _viewModel = new MergePluginViewModel();
+
+      LoadViewCommand = new DelegateCommand(LoadView, CanExecute);
     }
 
     #endregion Constructors
+
+    #region Command
+    private void LoadView()
+    {
+      var regionManager = _container.Resolve<IRegionManager>();
+      IRegion region = regionManager.Regions["PluginRegion"];
+      var view = region.GetView("MergeView");
+      region.Activate(view);
+    }
+
+    private bool CanExecute()
+    {
+      return true;
+    }
+    #endregion Command
 
     #region IModule
     public void OnInitialized(IContainerProvider containerProvider)
     {
       var regionManager = containerProvider.Resolve<IRegionManager>();
-      regionManager.RegisterViewWithRegion("PluginRegion", typeof(Views.MergePluginView));
+      IRegion region = regionManager.Regions["PluginRegion"];
+      region.Add(_container.Resolve<MergePluginView>(), "MergeView");
+      //regionManager.RegisterViewWithRegion("PluginRegion", typeof(MergePluginView));
     }
 
     public void RegisterTypes(IContainerRegistry containerRegistry)
