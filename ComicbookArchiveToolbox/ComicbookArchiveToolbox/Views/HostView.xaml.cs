@@ -36,7 +36,8 @@ namespace ComicbookArchiveToolbox.Views
 			_container = container;
 			_regionManager = regionManager;
       _eventAggregator = eventAggregator;
-			this.Loaded += HostControl_Loaded;
+      regionManager.RegisterViewWithRegion("PluginRegion", typeof(ToolsView));
+      this.Loaded += HostControl_Loaded;
 		}
 
 		private void HostControl_Loaded(object sender, RoutedEventArgs e)

@@ -79,8 +79,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Events\InterfaceLoadedEvent.cs" />
+    <Compile Include="ViewModels\ToolsViewModel.cs" />
     <Compile Include="Views\HostView.xaml.cs">
       <DependentUpon>HostView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ToolsView.xaml.cs">
+      <DependentUpon>ToolsView.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -96,6 +100,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\HostView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ToolsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

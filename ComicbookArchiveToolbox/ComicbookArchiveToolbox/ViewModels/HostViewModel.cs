@@ -1,9 +1,12 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Interfaces;
 using ComicbookArchiveToolbox.Events;
+using ComicbookArchiveToolbox.Views;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -21,50 +24,38 @@ namespace ComicbookArchiveToolbox.ViewModels
   {
 
 	  #region Attributes
-	  private List<ICatPlugin> _plugins;
 	  private IContainerExtension _container;
-    private IEventAggregator _eventAggregator;
+    private IRegionManager _regionManager;
+    public DelegateCommand DisplayToolsCommand { get; private set; }
 
     #endregion Attributes
 
     public CatViewModel DisplayedView { get; set; }
 
     #region Constructors
-    public HostViewModel(IContainerExtension container, IEventAggregator eventAggregator)
+    public HostViewModel(IContainerExtension container, IRegionManager regionManager)
     {
 		  _container = container;
-      _eventAggregator = eventAggregator;
-      _eventAggregator.GetEvent<InterfaceLoadedEvent>().Subscribe(InitPluginsList);
+      _regionManager = regionManager;
+      DisplayToolsCommand = new DelegateCommand(DisplayTools, CanExecute);
     }
 	  #endregion Constructors
 
 	  public string HostTextContent => "This is the host from vm";
 
-	  private void InitPluginsList()
-	  {
-		  try
-		  {
-			  _plugins = new List<ICatPlugin>();
-			  var type = typeof(ICatPlugin);
-			  string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-			  UriBuilder uri = new UriBuilder(codeBase);
-			  string assemblyPath = Uri.UnescapeDataString(uri.Path);
-			  DirectoryInfo installDir = new DirectoryInfo(System.IO.Path.GetDirectoryName(assemblyPath));
-			  var listing = installDir.GetFiles("*CatPlugin*.dll").ToList();
-			  List<string> pluginsPath = new List<string>();
-			  foreach (FileInfo fi in listing)
-			  {
-				  pluginsPath.Add(fi.Name.Split('.')[1]);
-			  }
-        foreach (string s in pluginsPath)
-        {
-          _plugins.Add(_container.Resolve<ICatPlugin>(s));
-        }
-		  }
-		  catch (Exception e)
-		  {
-			  Debug.WriteLine(e.Message);
-		  }
-	  }
+
+    private void DisplayTools()
+    {
+      var view = _container.Resolve<ToolsView>();
+      IRegion region = _regionManager.Regions["PluginRegion"];
+      //	region.Add(view);
+
+      region.Activate(view);
+    }
+
+    private bool CanExecute()
+    {
+      return true;
+    }
   }
 }
