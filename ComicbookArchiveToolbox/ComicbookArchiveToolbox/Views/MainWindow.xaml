@@ -1,13 +1,14 @@
-﻿<Window x:Class="ComicbookArchiveToolbox.Views.MainWindow"
+﻿<Controls:MetroWindow x:Class="ComicbookArchiveToolbox.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:prism="http://prismlibrary.com/"
+		    xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:ComicbookArchiveToolbox"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+  <Grid>
 		<ContentControl prism:RegionManager.RegionName="HostRegion" />
 	</Grid>
-</Window>
+</Controls:MetroWindow>

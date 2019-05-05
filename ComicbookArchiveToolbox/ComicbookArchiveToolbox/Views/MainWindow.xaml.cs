@@ -1,4 +1,5 @@
 ﻿using ComicbookArchiveToolbox.CommonTools.Interfaces;
+using MahApps.Metro.Controls;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace ComicbookArchiveToolbox.Views
   /// <summary>
   /// Interaction logic for MainWindow.xaml
   /// </summary>
-  public partial class MainWindow : Window
+  public partial class MainWindow : MetroWindow
   {
     public IEnumerable<ICatPlugin> Plugins { get; set; }
 
