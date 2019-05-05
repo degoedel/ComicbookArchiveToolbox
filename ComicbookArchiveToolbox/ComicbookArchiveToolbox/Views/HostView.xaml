@@ -5,15 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 			       xmlns:prism="http://prismlibrary.com/"
              xmlns:local="clr-namespace:ComicbookArchiveToolbox.Views"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
 			       prism:ViewModelLocator.AutoWireViewModel="True"
 			       mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition/>
-			<RowDefinition/>
-		</Grid.RowDefinitions>
-    <Button Grid.Row="0" Content="Home Page" Command="{Binding DisplayToolsCommand}"/>
-		<ContentControl Grid.Row="1" prism:RegionManager.RegionName="PluginRegion"/>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="60"/>
+      <ColumnDefinition/>
+    </Grid.ColumnDefinitions>
+    <StackPanel Grid.Column="0" Orientation="Vertical" >
+      <Button Content="{iconPacks:Modern HomeEmpty}" Command="{Binding DisplayToolsCommand}" Height="60" BorderThickness="0"/>
+      <Button Content="{iconPacks:Modern Cog}" Command="{Binding DisplayToolsCommand}" Height="60" BorderThickness="0"/>
+    </StackPanel> 
+		<ContentControl Grid.Column="1" prism:RegionManager.RegionName="PluginRegion" Margin="10, 0"/>
 	</Grid>
 </UserControl>
