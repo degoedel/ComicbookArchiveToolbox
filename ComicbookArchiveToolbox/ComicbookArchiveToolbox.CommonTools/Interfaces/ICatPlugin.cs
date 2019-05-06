@@ -1,11 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Modularity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Controls;
 
 namespace ComicbookArchiveToolbox.CommonTools.Interfaces
 {
@@ -13,5 +8,7 @@ namespace ComicbookArchiveToolbox.CommonTools.Interfaces
   {
     string Name { get; }
     DelegateCommand LoadViewCommand { get; }
+
+	Canvas Icon { get; }
   }
 }

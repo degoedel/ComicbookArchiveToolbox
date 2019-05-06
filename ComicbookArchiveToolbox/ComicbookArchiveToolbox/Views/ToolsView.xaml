@@ -17,8 +17,13 @@
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemTemplate>
         <DataTemplate>
-          <Button Content="{Binding Name}" Command="{Binding LoadViewCommand}" Margin="0,0,5,5" />
-        </DataTemplate>
+			<Button Command="{Binding LoadViewCommand}" Margin="0,0,5,5" >
+				<StackPanel Orientation="Vertical">
+					<ContentControl Content="{Binding Icon}"	/>
+					<Label Content="{Binding Name}" />
+				</StackPanel>
+			</Button>
+		</DataTemplate>
       </ItemsControl.ItemTemplate>
     </ItemsControl>
   </Grid>

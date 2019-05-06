@@ -12,30 +12,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using Unity;
 
 namespace CatPlugin.Split
 {
-  public class SplitPlugin : ICatPlugin
-  {
-    #region Attributes
-	  private readonly IUnityContainer _container;
-    #endregion Attributes
+	public class SplitPlugin : ICatPlugin
+	{
+		#region Attributes
+		private readonly IUnityContainer _container;
+		private Canvas _icon;
+		#endregion Attributes
 
 
-    #region Properties
-    public string Name => "Split";
+		#region Properties
+		public string Name => "Split";
 
-    public DelegateCommand LoadViewCommand { get; private set; }
-    #endregion Properties
+		public DelegateCommand LoadViewCommand { get; private set; }
 
-    #region Constructors
-    public SplitPlugin(IUnityContainer container)
-    {
-      _container = container;
-      _container.RegisterType<ICatPlugin, SplitPlugin>("Split");
-      LoadViewCommand = new DelegateCommand(LoadView, CanExecute);
-    }
+		public Canvas Icon => _icon;
+		#endregion Properties
+
+		#region Constructors
+		public SplitPlugin(IUnityContainer container)
+		{
+			_container = container;
+			_container.RegisterType<ICatPlugin, SplitPlugin>("Split");
+			LoadViewCommand = new DelegateCommand(LoadView, CanExecute);
+			var myResourceDictionary = new ResourceDictionary();
+			myResourceDictionary.Source = new Uri("/CatPlugin.Split;component/Resources/Icons.xaml", UriKind.RelativeOrAbsolute);
+			_icon = myResourceDictionary["appbar_slice"] as Canvas;
+		}
 
     #endregion Constructors
 

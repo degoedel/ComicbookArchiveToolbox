@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using Unity;
 
 namespace CatPlugin.Merge
@@ -18,24 +21,31 @@ namespace CatPlugin.Merge
   {
     #region Attributes
     private readonly IUnityContainer _container;
-    #endregion Attributes
+		public Canvas _icon;
+	#endregion Attributes
 
 
-    #region Properties
-    public string Name => "Merge";
+		#region Properties
+		public string Name => "Merge";
+
 
 
     public DelegateCommand LoadViewCommand { get; private set; }
 
-    #endregion Properties
+		public Canvas Icon => _icon;
 
-    #region Constructors
-    public MergePlugin(IUnityContainer container)
+		#endregion Properties
+
+		#region Constructors
+		public MergePlugin(IUnityContainer container)
     {
       _container = container;
       _container.RegisterType<ICatPlugin, MergePlugin>("Merge");
+			var myResourceDictionary = new ResourceDictionary();
+			myResourceDictionary.Source = new Uri("/CatPlugin.Merge;component/Resources/Icons.xaml", UriKind.RelativeOrAbsolute);
+			_icon = myResourceDictionary["appbar_paperclip"] as Canvas;
 
-      LoadViewCommand = new DelegateCommand(LoadView, CanExecute);
+			LoadViewCommand = new DelegateCommand(LoadView, CanExecute);
     }
 
     #endregion Constructors
