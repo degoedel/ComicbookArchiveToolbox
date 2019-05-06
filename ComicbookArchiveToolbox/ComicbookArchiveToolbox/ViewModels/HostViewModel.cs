@@ -23,23 +23,27 @@ namespace ComicbookArchiveToolbox.ViewModels
   public class HostViewModel : BindableBase
   {
 
-	  #region Attributes
-	  private IContainerExtension _container;
+	#region Attributes
+	private IContainerExtension _container;
     private IRegionManager _regionManager;
     public DelegateCommand DisplayToolsCommand { get; private set; }
+	public DelegateCommand DisplaySettingsCommand { get; private set; }
+	public DelegateCommand DisplayAboutCommand { get; private set; }
 
-    #endregion Attributes
+	#endregion Attributes
 
-    #region Constructors
-    public HostViewModel(IContainerExtension container, IRegionManager regionManager)
+	#region Constructors
+	public HostViewModel(IContainerExtension container, IRegionManager regionManager)
     {
 		  _container = container;
       _regionManager = regionManager;
       DisplayToolsCommand = new DelegateCommand(DisplayTools, CanExecute);
-    }
-	  #endregion Constructors
+	  DisplaySettingsCommand = new DelegateCommand(DisplaySettings, CanExecute);
+	  DisplayAboutCommand = new DelegateCommand(DisplayAbout, CanExecute);
+	}
+	#endregion Constructors
 
-	  public string HostTextContent => "This is the host from vm";
+	public string HostTextContent => "This is the host from vm";
 
 
     private void DisplayTools()
@@ -48,8 +52,20 @@ namespace ComicbookArchiveToolbox.ViewModels
       var view = region.GetView("ToolsView");
       region.Activate(view);
     }
+	private void DisplaySettings()
+	{
+		IRegion region = _regionManager.Regions["PluginRegion"];
+		var view = region.GetView("SettingsView");
+		region.Activate(view);
+	}
+	private void DisplayAbout()
+	{
+		IRegion region = _regionManager.Regions["PluginRegion"];
+		var view = region.GetView("AboutView");
+		region.Activate(view);
+	}
 
-    private bool CanExecute()
+	private bool CanExecute()
     {
       return true;
     }

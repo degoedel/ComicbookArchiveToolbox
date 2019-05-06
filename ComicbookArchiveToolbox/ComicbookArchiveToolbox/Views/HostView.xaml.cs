@@ -41,8 +41,10 @@ namespace ComicbookArchiveToolbox.Views
     {
       IRegion region = _regionManager.Regions["PluginRegion"];
       region.Add(_container.Resolve<ToolsView>(), "ToolsView");
-    }
+	  region.Add(_container.Resolve<SettingsView>(), "SettingsView");
+	  region.Add(_container.Resolve<AboutView>(), "AboutView");
+	}
 
 
-  }
+	}
 }

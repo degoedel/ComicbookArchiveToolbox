@@ -16,8 +16,9 @@
     </Grid.ColumnDefinitions>
     <StackPanel Grid.Column="0" Orientation="Vertical" >
       <Button Content="{iconPacks:Modern HomeEmpty, Height=30, Width=30}" Command="{Binding DisplayToolsCommand}" Height="60" BorderThickness="0"/>
-			<Button Content="{iconPacks:Modern Cog, Height=30, Width=30}" Command="{Binding DisplayToolsCommand}" Height="60" BorderThickness="0"/>
-    </StackPanel> 
+	  <Button Content="{iconPacks:Modern Cog, Height=30, Width=30}" Command="{Binding DisplaySettingsCommand}" Height="60" BorderThickness="0"/>
+	  <Button Content="{iconPacks:Modern informationcircle, Height=30, Width=30}" Command="{Binding DisplayAboutCommand}" Height="60" BorderThickness="0"/>
+	</StackPanel> 
 		<ContentControl Grid.Column="1" prism:RegionManager.RegionName="PluginRegion" Margin="10, 0"/>
 	</Grid>
 </UserControl>
