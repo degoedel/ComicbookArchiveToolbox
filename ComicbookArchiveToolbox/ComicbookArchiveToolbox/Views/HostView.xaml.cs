@@ -30,19 +30,21 @@ namespace ComicbookArchiveToolbox.Views
 
 
     public HostView(IContainerExtension container, IRegionManager regionManager)
-		{
-			InitializeComponent();
-			_container = container;
-			_regionManager = regionManager;
+	{
+	  InitializeComponent();
+	  _container = container;
+	  _regionManager = regionManager;
       this.Loaded += HostControl_Loaded;
-		}
+	}
 
     private void HostControl_Loaded(object sender, RoutedEventArgs e)
     {
       IRegion region = _regionManager.Regions["PluginRegion"];
-      region.Add(_container.Resolve<ToolsView>(), "ToolsView");
+	  var tools = _container.Resolve<ToolsView>();
+	  region.Add(tools, "ToolsView");
 	  region.Add(_container.Resolve<SettingsView>(), "SettingsView");
 	  region.Add(_container.Resolve<AboutView>(), "AboutView");
+	  region.Activate(tools);
 	}
 
 
