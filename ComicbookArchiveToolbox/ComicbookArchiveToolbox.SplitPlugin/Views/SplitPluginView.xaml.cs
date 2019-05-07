@@ -24,5 +24,11 @@ namespace CatPlugin.Split.Views
     {
       InitializeComponent();
     }
+
+	private void NumericOnly(object sender, TextCompositionEventArgs e)
+	{
+	  e.Handled = (!uint.TryParse(e.Text, out uint result));
+	}
+
   }
 }

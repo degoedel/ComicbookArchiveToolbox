@@ -23,7 +23,7 @@
         <ColumnDefinition Width="100"/>
       </Grid.ColumnDefinitions>
       <TextBlock Grid.Column="0" Text="File To Split: " TextAlignment="Right" VerticalAlignment="Center" FontSize="20"/>
-      <TextBox Grid.Column="1" VerticalAlignment="Center" Height="40" Text="{Binding FileToSplit, Mode=TwoWay}"/>
+      <TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding FileToSplit, Mode=TwoWay}"/>
       <Button Grid.Column="2" VerticalAlignment="Center" Content="..." Height="40" Margin="10" Command="{Binding BrowseFileCommand}"/>
     </Grid>
     <Grid Grid.Row="2">
@@ -33,7 +33,7 @@
         <ColumnDefinition />
       </Grid.ColumnDefinitions>
       <TextBlock Grid.Column="0" Text="File Number: " TextAlignment="Right" VerticalAlignment="Center" FontSize="20"/>
-      <TextBox Grid.Column="1" VerticalAlignment="Center" HorizontalContentAlignment="Center" Height="40" Text="{Binding FileNb, Mode=TwoWay}"/>
+	  <TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="40" Text="{Binding FileNb, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
       <Button Grid.Column="2" VerticalAlignment="Center" Content="Split" Height="40" Margin="10" Width="200" HorizontalAlignment="Left" Command="{Binding SplitCommand}"/>
     </Grid>
     <TextBox IsReadOnly="true" Grid.Row="3" Margin="10" Text="{Binding SplitLog}"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
