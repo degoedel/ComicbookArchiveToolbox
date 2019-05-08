@@ -40,9 +40,11 @@ namespace CatPlugin.Split
 			_container = container;
 			_container.RegisterType<ICatPlugin, SplitPlugin>("Split");
 			LoadViewCommand = new DelegateCommand(LoadView, CanExecute);
-			var myResourceDictionary = new ResourceDictionary();
-			myResourceDictionary.Source = new Uri("/CatPlugin.Split;component/Resources/Icons.xaml", UriKind.RelativeOrAbsolute);
-			_icon = myResourceDictionary["appbar_slice"] as Canvas;
+      var myResourceDictionary = new ResourceDictionary
+      {
+        Source = new Uri("/CatPlugin.Split;component/Resources/Icons.xaml", UriKind.RelativeOrAbsolute)
+      };
+      _icon = myResourceDictionary["appbar_slice"] as Canvas;
 		}
 
     #endregion Constructors

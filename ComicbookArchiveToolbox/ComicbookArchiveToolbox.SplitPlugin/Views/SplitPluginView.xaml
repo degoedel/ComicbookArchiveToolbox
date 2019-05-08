@@ -7,13 +7,12 @@
 			       xmlns:prism="http://prismlibrary.com/"
 			       prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="240" d:DesignWidth="800">
     <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="80"/>
       <RowDefinition Height="80"/>
       <RowDefinition Height="80"/>
-      <RowDefinition/>
     </Grid.RowDefinitions>
     <TextBlock Grid.Row="0" Text="Split File" TextAlignment="Center" FontSize="40" VerticalAlignment="Center"/>
     <Grid Grid.Row="1">
@@ -36,6 +35,5 @@
 	  <TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="40" Text="{Binding FileNb, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
       <Button Grid.Column="2" VerticalAlignment="Center" Content="Split" Height="40" Margin="10" Width="200" HorizontalAlignment="Left" Command="{Binding SplitCommand}"/>
     </Grid>
-    <TextBox IsReadOnly="true" Grid.Row="3" Margin="10" Text="{Binding SplitLog}"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
   </Grid>
 </UserControl>

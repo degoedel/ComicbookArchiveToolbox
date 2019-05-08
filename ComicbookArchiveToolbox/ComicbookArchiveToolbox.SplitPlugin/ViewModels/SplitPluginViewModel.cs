@@ -1,55 +1,60 @@
-﻿using ComicbookArchiveToolbox.CommonTools;
+﻿using CatPlugin.Split.Services;
+using ComicbookArchiveToolbox.CommonTools;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Unity;
 
 namespace CatPlugin.Split.ViewModels
 {
   public class SplitPluginViewModel : BindableBase
   {
-	private string _fileToSplit = "";
+    private Logger _logger;
+    private Splitter _splitter; 
+
+	  private string _fileToSplit = "";
     public string FileToSplit
 	{
 	  get { return _fileToSplit; }
-	  set { SetProperty(ref _fileToSplit, value); }
+	  set
+      {
+        SetProperty(ref _fileToSplit, value);
+        SplitCommand.RaiseCanExecuteChanged();
+      }
 	}
 
 	private uint _fileNb = 5;
 	public uint FileNb
 	{
 	  get { return _fileNb; }
-	  set { SetProperty(ref _fileNb, value); }
+	  set
+      {
+        SetProperty(ref _fileNb, value);
+        SplitCommand.RaiseCanExecuteChanged();
+      }
 	}
-
-		private string _splitLog = "";
-    public string SplitLog
-    {
-      get { return _splitLog; }
-      set { SetProperty(ref _splitLog, value); }
-    }
 
     public DelegateCommand BrowseFileCommand { get; private set; }
     public DelegateCommand SplitCommand { get; private set; }
 
-    public SplitPluginViewModel()
+    public SplitPluginViewModel(IUnityContainer container)
     {
       BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);
-      SplitCommand = new DelegateCommand(DoSplit, CanExecute);
-      SplitLog = "";
+      SplitCommand = new DelegateCommand(DoSplit, CanSplit);
+      _logger = container.Resolve<Logger>();
+      _splitter = new Splitter(_logger);
     }
 
     private void BrowseFile()
     {
-      AddLogLine("Browse for file to split");
-	  OpenFileDialog openFileDialog = new OpenFileDialog();
-	  openFileDialog.Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz|All files (*.*)|*.*";
-	  string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+      _logger.Log("Browse for file to split");
+      OpenFileDialog openFileDialog = new OpenFileDialog
+      {
+        Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz|All files (*.*)|*.*"
+      };
+      string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 	  if (!string.IsNullOrEmpty(_fileToSplit))
 	  {
 		try
@@ -62,12 +67,12 @@ namespace CatPlugin.Split.ViewModels
 		  }
 		  else
 		  {
-			AddLogLine("WARNING: cannot reach selected path... Open standard path instead.");
+            _logger.Log("WARNING: cannot reach selected path... Open standard path instead.");
 		  }
 		}
-		catch(Exception e)
+		catch(Exception)
 		{
-		  AddLogLine("ERROR: selected path is not valid... Open standard path instead.");
+          _logger.Log("ERROR: selected path is not valid... Open standard path instead.");
 		}
 		
 	  }
@@ -85,7 +90,7 @@ namespace CatPlugin.Split.ViewModels
     private void DoSplit()
     {
 
-      AddLogLine("Split the file...");
+      _splitter.Split(FileToSplit, FileNb);
     }
 
     private bool CanExecute()
@@ -93,9 +98,11 @@ namespace CatPlugin.Split.ViewModels
       return true;
     }
 
-    private void AddLogLine(string line)
+    private bool CanSplit()
     {
-      SplitLog += line + "\n";
+      return (!string.IsNullOrWhiteSpace(FileToSplit) && File.Exists(FileToSplit) && (FileNb > 1));
     }
+
+
   }
 }

@@ -1,4 +1,5 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
+using ComicbookArchiveToolbox.CommonTools.Events;
 using ComicbookArchiveToolbox.CommonTools.Interfaces;
 using ComicbookArchiveToolbox.Events;
 using ComicbookArchiveToolbox.Views;
@@ -23,20 +24,34 @@ namespace ComicbookArchiveToolbox.ViewModels
   public class HostViewModel : BindableBase
   {
 
-	#region Attributes
+    #region Attributes
+
+    private string _commonLog = "";
 	private IContainerExtension _container;
     private IRegionManager _regionManager;
+    private IEventAggregator _eventAggregator;
     public DelegateCommand DisplayToolsCommand { get; private set; }
 	public DelegateCommand DisplaySettingsCommand { get; private set; }
 	public DelegateCommand DisplayAboutCommand { get; private set; }
 
 	#endregion Attributes
 
+    public string CommonLog
+    {
+      get { return _commonLog;}
+      set
+      {
+        SetProperty(ref _commonLog, value);
+      }
+    }
+
 	#region Constructors
-	public HostViewModel(IContainerExtension container, IRegionManager regionManager)
+	public HostViewModel(IContainerExtension container, IRegionManager regionManager, IEventAggregator eventAggregator)
     {
 		  _container = container;
       _regionManager = regionManager;
+      _eventAggregator = eventAggregator;
+      _eventAggregator.GetEvent<LogEvent>().Subscribe(AddLogLine);
       DisplayToolsCommand = new DelegateCommand(DisplayTools, CanExecute);
 	  DisplaySettingsCommand = new DelegateCommand(DisplaySettings, CanExecute);
 	  DisplayAboutCommand = new DelegateCommand(DisplayAbout, CanExecute);
@@ -65,9 +80,14 @@ namespace ComicbookArchiveToolbox.ViewModels
 		region.Activate(view);
 	}
 
-	private bool CanExecute()
+	  private bool CanExecute()
     {
       return true;
+    }
+
+    private void AddLogLine(string line)
+    {
+      CommonLog += line + "\n";
     }
   }
 }

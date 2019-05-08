@@ -18,7 +18,16 @@
       <Button Content="{iconPacks:Modern HomeEmpty, Height=30, Width=30}" Command="{Binding DisplayToolsCommand}" Height="60" BorderThickness="0"/>
 	  <Button Content="{iconPacks:Modern Cog, Height=30, Width=30}" Command="{Binding DisplaySettingsCommand}" Height="60" BorderThickness="0"/>
 	  <Button Content="{iconPacks:Modern informationcircle, Height=30, Width=30}" Command="{Binding DisplayAboutCommand}" Height="60" BorderThickness="0"/>
-	</StackPanel> 
-		<ContentControl Grid.Column="1" prism:RegionManager.RegionName="PluginRegion" Margin="10, 0"/>
+	</StackPanel>
+    <Grid Grid.Column="1" >
+      <Grid.RowDefinitions>
+        <RowDefinition/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition/>
+      </Grid.RowDefinitions>
+      <ContentControl Grid.Row="0" prism:RegionManager.RegionName="PluginRegion" Margin="10, 0"/>
+      <GridSplitter Grid.Row="1" Height="3"/>
+      <TextBox Grid.Row="2" IsReadOnly="true" Margin="10" Text="{Binding CommonLog}"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+    </Grid>
 	</Grid>
 </UserControl>

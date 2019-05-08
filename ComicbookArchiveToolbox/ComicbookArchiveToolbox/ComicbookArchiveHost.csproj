@@ -174,9 +174,6 @@
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ComicbookArchiveToolbox.CommonTools\ComicbookArchiveToolbox.CommonTools.csproj">
       <Project>{34C346BE-14E1-43F3-9F70-9FEC4DABC388}</Project>
       <Name>ComicbookArchiveToolbox.CommonTools</Name>

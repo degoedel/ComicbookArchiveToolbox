@@ -26,7 +26,6 @@ namespace ComicbookArchiveToolbox.Views
 	{
 		IContainerExtension _container;
 		IRegionManager _regionManager;
-		IRegion _region;
 
 
     public HostView(IContainerExtension container, IRegionManager regionManager)
