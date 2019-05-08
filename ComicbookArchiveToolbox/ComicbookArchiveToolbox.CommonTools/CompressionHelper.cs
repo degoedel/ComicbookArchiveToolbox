@@ -36,7 +36,8 @@ namespace ComicbookArchiveToolbox.CommonTools
         ProcessStartInfo pro = new ProcessStartInfo();
         pro.WindowStyle = ProcessWindowStyle.Hidden;
         pro.FileName = _pathTo7z;
-        pro.Arguments = $"x -o\"{decompressionFolder}\" \"{archivePath}\"";
+        // TODO : exclude xml files if metadata are not wanted
+        pro.Arguments = $"x -aoa -o\"{decompressionFolder}\" \"{archivePath}\"";
         _logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
         Process x = Process.Start(pro);
         x.WaitForExit();

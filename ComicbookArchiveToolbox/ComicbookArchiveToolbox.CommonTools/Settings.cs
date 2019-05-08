@@ -46,5 +46,9 @@ namespace ComicbookArchiveToolbox.CommonTools
       }
       return result;
     }
+
+    public bool IncludeCover => true;
+
+    public bool IncludeMetadata => true;
   }
 }

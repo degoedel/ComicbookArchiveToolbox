@@ -60,6 +60,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SystemTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
