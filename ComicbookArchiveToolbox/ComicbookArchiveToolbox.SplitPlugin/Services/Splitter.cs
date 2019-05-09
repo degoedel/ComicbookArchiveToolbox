@@ -62,37 +62,21 @@ namespace CatPlugin.Split.Services
 
       string comicName = ExtractComicName(filePath);
       int indexSize = Math.Max(fileNb.ToString().Length, 2);
-      int sourcePageIndex = 0;
+	  string coverPath = "";
+	  if (Settings.Instance.IncludeCover)
+	  {
+		coverPath = SaveCoverInBuffer(pathToBuffer, comicName, indexSize, pages);
+	  }
+	  int sourcePageIndex = 0;
       for (int fileIndex = 0; fileIndex < fileNb; ++fileIndex)
       {
         // Create the subBuffer
-        string subBufferPath = Path.Combine(pathToBuffer, comicName + (fileIndex + 1).ToString().PadLeft(indexSize, '0'));
-        _logger.Log($"Create the subFolder {subBufferPath}");
+        string subBufferPath = Path.Combine(pathToBuffer, $"{comicName}_{(fileIndex + 1).ToString().PadLeft(indexSize, '0')}");
+
+		_logger.Log($"Create the subFolder {subBufferPath}");
         int pagesAdded = 0;
         List<FileInfo> pagesToAdd = new List<FileInfo>();
-        if (Settings.Instance.IncludeCover)
-        {
-          bool coverFound = GetCoverIfFound(pages, out FileInfo cover);
-          if (coverFound)
-          {
-            pagesToAdd.Add(cover);
-          }
-          else
-          {
-            _logger.Log("Cannot find cover page.");
-          }
-        }
-        if (Settings.Instance.IncludeMetadata)
-        {
-          if (metadataFiles.Count > 0)
-          {
-            pagesToAdd.Add(metadataFiles[0]);
-          }
-          else
-          {
-            //TODO create metadata file
-          }
-        }
+
         for (int currentPageIndex = sourcePageIndex; (pagesAdded < pagesPerFile) && (currentPageIndex < pages.Count); ++currentPageIndex)
         {
           if (pages[currentPageIndex].Extension != ".xml")
@@ -100,7 +84,7 @@ namespace CatPlugin.Split.Services
             pagesToAdd.Add(pages[currentPageIndex]);
             ++pagesAdded;
           }
-          sourcePageIndex = currentPageIndex;
+          sourcePageIndex = currentPageIndex + 1;
         }
         if (fileIndex == fileNb - 1)
         {
@@ -112,7 +96,18 @@ namespace CatPlugin.Split.Services
             }
           }
         }
-        CreateArchive(subBufferPath, pagesToAdd, comicName);
+        MovePicturesToSubBuffer(subBufferPath, pagesToAdd, comicName);
+		if (Settings.Instance.IncludeCover)
+		{
+			if (fileIndex != 0)
+			{
+				CopyCoverToSubBuffer(coverPath, subBufferPath);
+			}
+		}
+		if (Settings.Instance.IncludeMetadata)
+		{
+			CopyMetaDataToSubBuffer(metadataFiles, subBufferPath);
+		}
       }
 
 
@@ -122,29 +117,53 @@ namespace CatPlugin.Split.Services
       _logger.Log("Done.");
     }
 
-    private void CreateArchive(string destFolder, List<FileInfo> files, string archiveName)
+    private void MovePicturesToSubBuffer(string destFolder, List<FileInfo> files, string archiveName)
     {
       _logger.Log($"Copy the selected files in {destFolder}");
       Directory.CreateDirectory(destFolder);
       int padSize = Math.Max(2, files.Count.ToString().Length);
       for (int i = 0; i < files.Count; ++i)
       {
-        if(files[i].Extension == ".xml")
-        {
-          File.Copy(files[i].FullName, Path.Combine(destFolder, files[i].Name),true);
-        }
-        else
-        {
-          File.Copy(files[i].FullName, Path.Combine(destFolder, $"{archiveName}_{i.ToString().PadLeft(padSize, '0')}{files[i].Extension}"), true);
-        }
+		File.Move(files[i].FullName, Path.Combine(destFolder, $"{archiveName}_{(i + 1).ToString().PadLeft(padSize, '0')}{files[i].Extension}"));
       }
     }
 
-    private string ExtractComicName(string filePath)
+	private void CopyCoverToSubBuffer(string coverFile, string subBuffer)
+	{
+		if (string.IsNullOrWhiteSpace(coverFile))
+		{
+			return;
+		}
+		FileInfo coverInfo = new FileInfo(coverFile);
+		File.Copy(coverFile, Path.Combine(subBuffer, coverInfo.Name));
+	}
+
+	private void CopyMetaDataToSubBuffer(List<FileInfo> metaDataFiles, string subBuffer)
+	{
+		if (metaDataFiles.Count > 0)
+		{
+			File.Copy(metaDataFiles[0].FullName, Path.Combine(subBuffer, metaDataFiles[0].Name));
+		}
+	}
+
+	private string ExtractComicName(string filePath)
     {
       FileInfo sourceFile = new FileInfo(filePath);
       return sourceFile.Name.Substring(0, sourceFile.Name.Length - 4);
     }
+
+	private string SaveCoverInBuffer(string pathToBuffer, string archiveName, int indexSize, List<FileInfo> files)
+	{
+			string savedCoverPath = "";
+			bool coverFound = GetCoverIfFound(files, out FileInfo coverFile);
+			int coverIndex = 0;
+			if (coverFound)
+			{
+				savedCoverPath = Path.Combine(pathToBuffer, $"{archiveName}_{coverIndex.ToString().PadLeft(indexSize, '0')}{coverFile.Extension}");
+				File.Copy(coverFile.FullName, savedCoverPath);
+			}
+			return savedCoverPath;
+	}
 
     private bool GetCoverIfFound(List<FileInfo> files, out FileInfo cover)
     {
