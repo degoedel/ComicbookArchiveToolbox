@@ -23,30 +23,10 @@ namespace CatPlugin.Split.Services
         _logger.Log($"Cannot split archive in {fileNb} files");
         return;
       }
-      //Extract file in buffer
-      CompressionHelper ch = new CompressionHelper(_logger);
-      string pathToBuffer = Settings.Instance.GetBufferDirectory(filePath);
-      _logger.Log($"Start extraction of {filePath} into {pathToBuffer} ...");
-      ch.DecompressToDirectory(filePath, pathToBuffer);
-      _logger.Log($"Extraction done.");
-      //Count files in directory except metadata
-      List<FileInfo> metadataFiles = new List<FileInfo>();
-      DirectoryInfo di = new DirectoryInfo(pathToBuffer);
-      List<FileInfo> pages = new List<FileInfo>();
-      var subdirs = di.GetDirectories();
-      if (subdirs.Count() > 0)
-      {
-        foreach (DirectoryInfo subdir in subdirs)
-        {
-          pages.AddRange(subdir.GetFiles().OrderBy(f => f.Name));
-          metadataFiles.AddRange(subdir.GetFiles("*.xml").OrderBy(f => f.Name));
-        }
-      }
-      else
-      {
-        pages.AddRange(di.GetFiles().OrderBy(f => f.Name));
-        metadataFiles.AddRange(di.GetFiles("*.xml").OrderBy(f => f.Name));
-      }
+	  //Extract file in buffer
+	  string pathToBuffer = ExtractArchive(filePath);
+	  //Count files in directory except metadata
+	  ParseArchiveFiles(pathToBuffer, out List<FileInfo> metadataFiles, out List<FileInfo> pages);
       int totalPagesCount = pages.Count - metadataFiles.Count;
       _logger.Log($"Total number of pages is {totalPagesCount}");
       // Check that the resulting split files number is consistent with the number of pages
@@ -70,60 +50,59 @@ namespace CatPlugin.Split.Services
 	  int sourcePageIndex = 0;
       for (int fileIndex = 0; fileIndex < fileNb; ++fileIndex)
       {
-        // Create the subBuffer
-        string subBufferPath = Path.Combine(pathToBuffer, $"{comicName}_{(fileIndex + 1).ToString().PadLeft(indexSize, '0')}");
-
-		_logger.Log($"Create the subFolder {subBufferPath}");
-        int pagesAdded = 0;
-        List<FileInfo> pagesToAdd = new List<FileInfo>();
-
-        for (int currentPageIndex = sourcePageIndex; (pagesAdded < pagesPerFile) && (currentPageIndex < pages.Count); ++currentPageIndex)
-        {
-          if (pages[currentPageIndex].Extension != ".xml")
-          {
-            pagesToAdd.Add(pages[currentPageIndex]);
-            ++pagesAdded;
-          }
-          sourcePageIndex = currentPageIndex + 1;
-        }
-        if (fileIndex == fileNb - 1)
-        {
-          for (int i = sourcePageIndex; i < pages.Count; ++i)
-          {
-            if (pages[i].Extension != ".xml")
-            {
-              pagesToAdd.Add(pages[i]);
-            }
-          }
-        }
-        MovePicturesToSubBuffer(subBufferPath, pagesToAdd, comicName);
-		if (Settings.Instance.IncludeCover)
+		ArchiveTemplate archiveTemplate = new ArchiveTemplate()
 		{
-			if (fileIndex != 0)
-			{
-				CopyCoverToSubBuffer(coverPath, subBufferPath);
-			}
-		}
-		if (Settings.Instance.IncludeMetadata)
-		{
-			CopyMetaDataToSubBuffer(metadataFiles, subBufferPath);
-		}
-      }
-
-
-      // rename the files in the directories
+			PathToBuffer = pathToBuffer,
+			ComicName = comicName,
+			IndexSize = indexSize,
+			PagesPerFile = pagesPerFile,
+			Pages = pages,
+			MetadataFiles = metadataFiles,
+			CoverPath = coverPath
+		};
+		BuildSplittedArchive(archiveTemplate, fileIndex, fileNb, ref sourcePageIndex);
+	  }
       // compress the resulting file
       // clean the temp directories
       _logger.Log("Done.");
     }
 
-    private void MovePicturesToSubBuffer(string destFolder, List<FileInfo> files, string archiveName)
+	private string ExtractArchive(string filePath)
+	{
+		string pathToBuffer = Settings.Instance.GetBufferDirectory(filePath);
+		CompressionHelper ch = new CompressionHelper(_logger);
+		_logger.Log($"Start extraction of {filePath} into {pathToBuffer} ...");
+		ch.DecompressToDirectory(filePath, pathToBuffer);
+		_logger.Log($"Extraction done.");
+		return pathToBuffer;
+	}
+
+	private void ParseArchiveFiles(string pathToBuffer, out List<FileInfo> metadataFiles, out List<FileInfo> pages)
+	{
+		metadataFiles = new List<FileInfo>();
+		DirectoryInfo di = new DirectoryInfo(pathToBuffer);
+		pages = new List<FileInfo>();
+		pages.AddRange(di.GetFiles().OrderBy(f => f.Name));
+		metadataFiles.AddRange(di.GetFiles("*.xml").OrderBy(f => f.Name));
+		var subdirs = di.GetDirectories();
+		if (subdirs.Count() > 0)
+		{
+			foreach (DirectoryInfo subdir in subdirs)
+			{
+				pages.AddRange(subdir.GetFiles().OrderBy(f => f.Name));
+				metadataFiles.AddRange(subdir.GetFiles("*.xml").OrderBy(f => f.Name));
+			}
+		}
+	}
+
+	private void MovePicturesToSubBuffer(string destFolder, List<FileInfo> files, string archiveName)
     {
       _logger.Log($"Copy the selected files in {destFolder}");
       Directory.CreateDirectory(destFolder);
       int padSize = Math.Max(2, files.Count.ToString().Length);
       for (int i = 0; i < files.Count; ++i)
       {
+		// rename the files in the directories
 		File.Move(files[i].FullName, Path.Combine(destFolder, $"{archiveName}_{(i + 1).ToString().PadLeft(padSize, '0')}{files[i].Extension}"));
       }
     }
@@ -154,15 +133,15 @@ namespace CatPlugin.Split.Services
 
 	private string SaveCoverInBuffer(string pathToBuffer, string archiveName, int indexSize, List<FileInfo> files)
 	{
-			string savedCoverPath = "";
-			bool coverFound = GetCoverIfFound(files, out FileInfo coverFile);
-			int coverIndex = 0;
-			if (coverFound)
-			{
-				savedCoverPath = Path.Combine(pathToBuffer, $"{archiveName}_{coverIndex.ToString().PadLeft(indexSize, '0')}{coverFile.Extension}");
-				File.Copy(coverFile.FullName, savedCoverPath);
-			}
-			return savedCoverPath;
+	  string savedCoverPath = "";
+	  bool coverFound = GetCoverIfFound(files, out FileInfo coverFile);
+	  int coverIndex = 0;
+	  if (coverFound)
+	  {
+	  	savedCoverPath = Path.Combine(pathToBuffer, $"{archiveName}_{coverIndex.ToString().PadLeft(indexSize, '0')}{coverFile.Extension}");
+	  	File.Copy(coverFile.FullName, savedCoverPath);
+	  }
+	  return savedCoverPath;
 	}
 
     private bool GetCoverIfFound(List<FileInfo> files, out FileInfo cover)
@@ -180,5 +159,48 @@ namespace CatPlugin.Split.Services
       }
       return cover!=null;
     }
+
+	private string BuildSplittedArchive(ArchiveTemplate template, int fileIndex, uint fileNb, ref int sourcePageIndex)
+	{
+	  // Create the subBuffer
+	  string subBufferPath = Path.Combine(template.PathToBuffer, $"{template.ComicName}_{(fileIndex + 1).ToString().PadLeft(template.IndexSize, '0')}");
+	  
+	  _logger.Log($"Create the subFolder {subBufferPath}");
+	  int pagesAdded = 0;
+	  List<FileInfo> pagesToAdd = new List<FileInfo>();
+	  
+	  for (int currentPageIndex = sourcePageIndex; (pagesAdded < template.PagesPerFile) && (currentPageIndex < template.Pages.Count); ++currentPageIndex)
+	  {
+	  	if (template.Pages[currentPageIndex].Extension != ".xml")
+	  	{
+	  		pagesToAdd.Add(template.Pages[currentPageIndex]);
+	  		++pagesAdded;
+	  	}
+	  	sourcePageIndex = currentPageIndex + 1;
+	  }
+	  if (fileIndex == fileNb - 1)
+	  {
+	  	for (int i = sourcePageIndex; i < template.Pages.Count; ++i)
+	  	{
+	  		if (template.Pages[i].Extension != ".xml")
+	  		{
+	  			pagesToAdd.Add(template.Pages[i]);
+	  		}
+	  	}
+	  }
+	  MovePicturesToSubBuffer(subBufferPath, pagesToAdd, template.ComicName);
+	  if (!string.IsNullOrWhiteSpace(template.CoverPath))
+	  {
+	  	if (fileIndex != 0)
+	  	{
+	  		CopyCoverToSubBuffer(template.CoverPath, subBufferPath);
+	  	}
+	  }
+	  if (Settings.Instance.IncludeMetadata)
+	  {
+	  	CopyMetaDataToSubBuffer(template.MetadataFiles, subBufferPath);
+	  }
+	  return subBufferPath;
+	}
   }
 }

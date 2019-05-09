@@ -9,6 +9,15 @@ namespace ComicbookArchiveToolbox.CommonTools
 {
   public sealed class Settings
   {
+
+	// ace and rar being proprietary format 7zip cannot create them.
+	public enum ArchiveFormat
+	{
+		Cb7,
+		Cbt,
+		Cbz
+	};
+
     private string _settingsPath = @"C:\ProgramData\ComicbookArchiveToolbox\Settings\Settings.xml";
     public string BufferDirectory => @"C:\ProgramData\ComicbookArchiveToolbox\Buffer";
     public bool UseFileDirAsBuffer => false;
@@ -50,5 +59,7 @@ namespace ComicbookArchiveToolbox.CommonTools
     public bool IncludeCover => true;
 
     public bool IncludeMetadata => true;
+
+	public ArchiveFormat OutputFormat => ArchiveFormat.Cbz;
   }
 }

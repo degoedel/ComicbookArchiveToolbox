@@ -5,6 +5,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Unity;
 
 namespace CatPlugin.Split.ViewModels
@@ -90,7 +91,7 @@ namespace CatPlugin.Split.ViewModels
     private void DoSplit()
     {
 
-      _splitter.Split(FileToSplit, FileNb);
+			Task.Run(() => _splitter.Split(FileToSplit, FileNb));
     }
 
     private bool CanExecute()

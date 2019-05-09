@@ -51,7 +51,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 		  _container = container;
       _regionManager = regionManager;
       _eventAggregator = eventAggregator;
-      _eventAggregator.GetEvent<LogEvent>().Subscribe(AddLogLine);
+      _eventAggregator.GetEvent<LogEvent>().Subscribe(AddLogLine, ThreadOption.UIThread);
       DisplayToolsCommand = new DelegateCommand(DisplayTools, CanExecute);
 	  DisplaySettingsCommand = new DelegateCommand(DisplaySettings, CanExecute);
 	  DisplayAboutCommand = new DelegateCommand(DisplayAbout, CanExecute);
