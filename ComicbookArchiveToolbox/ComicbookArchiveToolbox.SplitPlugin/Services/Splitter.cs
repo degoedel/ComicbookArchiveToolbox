@@ -16,7 +16,7 @@ namespace CatPlugin.Split.Services
       _logger = logger;
     }
 
-    internal void Split(string filePath, uint fileNb)
+    internal void Split(string filePath, uint fileNb, ArchiveTemplate archiveTemplate)
     {
       if (fileNb < 2)
       {
@@ -24,7 +24,7 @@ namespace CatPlugin.Split.Services
         return;
       }
 	  //Extract file in buffer
-	  string pathToBuffer = ExtractArchive(filePath);
+	  string pathToBuffer = ExtractArchive(filePath, archiveTemplate);
 	  //Count files in directory except metadata
 	  ParseArchiveFiles(pathToBuffer, out List<FileInfo> metadataFiles, out List<FileInfo> pages);
       int totalPagesCount = pages.Count - metadataFiles.Count;
@@ -40,36 +40,38 @@ namespace CatPlugin.Split.Services
       int pagesPerFile = Math.DivRem(totalPagesCount, (int)fileNb, out int extraPages);
       _logger.Log($"Pages per resulting file : {pagesPerFile}");
 
-      string comicName = ExtractComicName(filePath);
       int indexSize = Math.Max(fileNb.ToString().Length, 2);
 	  string coverPath = "";
 	  if (Settings.Instance.IncludeCover)
 	  {
-		coverPath = SaveCoverInBuffer(pathToBuffer, comicName, indexSize, pages);
+		coverPath = SaveCoverInBuffer(pathToBuffer, archiveTemplate.ComicName, indexSize, pages);
 	  }
 	  int sourcePageIndex = 0;
       for (int fileIndex = 0; fileIndex < fileNb; ++fileIndex)
       {
-		ArchiveTemplate archiveTemplate = new ArchiveTemplate()
-		{
-			PathToBuffer = pathToBuffer,
-			ComicName = comicName,
-			IndexSize = indexSize,
-			PagesPerFile = pagesPerFile,
-			Pages = pages,
-			MetadataFiles = metadataFiles,
-			CoverPath = coverPath
-		};
-		BuildSplittedArchive(archiveTemplate, fileIndex, fileNb, ref sourcePageIndex);
+		archiveTemplate.PathToBuffer = pathToBuffer;
+		archiveTemplate.IndexSize = indexSize;
+		archiveTemplate.PagesPerFile = pagesPerFile;
+		archiveTemplate.Pages = pages;
+		archiveTemplate.MetadataFiles = metadataFiles;
+		archiveTemplate.CoverPath = coverPath;
+
+		string splittedContentPath = BuildSplittedArchive(archiveTemplate, fileIndex, fileNb, ref sourcePageIndex);
+		_logger.Log($"Compress {splittedContentPath}");
+		CompressArchiveContent(splittedContentPath, archiveTemplate);
+		_logger.Log($"Clean Buffer {splittedContentPath}");
+		SystemTools.CleanDirectory(splittedContentPath, _logger);
 	  }
+	  _logger.Log($"Clean Buffer {pathToBuffer}");
+	  SystemTools.CleanDirectory(pathToBuffer, _logger);
       // compress the resulting file
       // clean the temp directories
       _logger.Log("Done.");
     }
 
-	private string ExtractArchive(string filePath)
+	private string ExtractArchive(string filePath, ArchiveTemplate archiveTemplate)
 	{
-		string pathToBuffer = Settings.Instance.GetBufferDirectory(filePath);
+		string pathToBuffer = Settings.Instance.GetBufferDirectory(filePath, archiveTemplate.ComicName);
 		CompressionHelper ch = new CompressionHelper(_logger);
 		_logger.Log($"Start extraction of {filePath} into {pathToBuffer} ...");
 		ch.DecompressToDirectory(filePath, pathToBuffer);
@@ -124,12 +126,6 @@ namespace CatPlugin.Split.Services
 			File.Copy(metaDataFiles[0].FullName, Path.Combine(subBuffer, metaDataFiles[0].Name));
 		}
 	}
-
-	private string ExtractComicName(string filePath)
-    {
-      FileInfo sourceFile = new FileInfo(filePath);
-      return sourceFile.Name.Substring(0, sourceFile.Name.Length - 4);
-    }
 
 	private string SaveCoverInBuffer(string pathToBuffer, string archiveName, int indexSize, List<FileInfo> files)
 	{
@@ -201,6 +197,16 @@ namespace CatPlugin.Split.Services
 	  	CopyMetaDataToSubBuffer(template.MetadataFiles, subBufferPath);
 	  }
 	  return subBufferPath;
+	}
+
+	private void CompressArchiveContent(string directory, ArchiveTemplate archiveTemplate)
+	{
+		DirectoryInfo di = new DirectoryInfo(directory);
+		string outputFile = Path.Combine(archiveTemplate.OutputDir, $"{di.Name}.cbz");
+		CompressionHelper ch = new CompressionHelper(_logger);
+		_logger.Log($"Start compression of {directory} into {outputFile} ...");
+		ch.CompressDirectoryContent(directory, outputFile);
+		_logger.Log($"Compression done.");
 	}
   }
 }

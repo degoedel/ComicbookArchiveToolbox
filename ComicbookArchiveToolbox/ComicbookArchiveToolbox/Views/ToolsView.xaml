@@ -12,7 +12,7 @@
     <ItemsControl ItemsSource="{Binding Plugins}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-          <WrapPanel />
+          <WrapPanel HorizontalAlignment="Center"/>
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemTemplate>

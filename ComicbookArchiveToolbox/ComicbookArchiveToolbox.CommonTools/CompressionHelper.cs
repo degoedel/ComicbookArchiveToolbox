@@ -36,7 +36,6 @@ namespace ComicbookArchiveToolbox.CommonTools
         ProcessStartInfo pro = new ProcessStartInfo();
         pro.WindowStyle = ProcessWindowStyle.Hidden;
         pro.FileName = _pathTo7z;
-        // TODO : exclude xml files if metadata are not wanted
         pro.Arguments = $"x -aoa -o\"{decompressionFolder}\" \"{archivePath}\"";
         _logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
         Process x = Process.Start(pro);
@@ -44,8 +43,26 @@ namespace ComicbookArchiveToolbox.CommonTools
       }
       catch (Exception e)
       {
-        _logger.Log($"Failure during decompression : {e.Message}");
+        _logger.Log($"Failure during decompression of {archivePath} in {decompressionFolder}: {e.Message}");
       }
     }
+
+	public void CompressDirectoryContent(string inputDir, string outputFile)
+	{
+		try
+		{
+			ProcessStartInfo pro = new ProcessStartInfo();
+			pro.WindowStyle = ProcessWindowStyle.Hidden;
+			pro.FileName = _pathTo7z;
+			pro.Arguments = $"a -aoa -tzip \"{outputFile}\" \"{inputDir}\\*\" ";
+			_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
+			Process x = Process.Start(pro);
+			x.WaitForExit();
+		}
+			catch (Exception e)
+		{
+			_logger.Log($"Failure during compression of {inputDir} in {outputFile} : {e.Message}");
+		}
+	}
   }
 }

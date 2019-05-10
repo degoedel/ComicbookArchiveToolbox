@@ -15,18 +15,42 @@ namespace CatPlugin.Split.ViewModels
     private Logger _logger;
     private Splitter _splitter; 
 
-	  private string _fileToSplit = "";
+	private string _fileToSplit = "";
     public string FileToSplit
 	{
 	  get { return _fileToSplit; }
 	  set
       {
         SetProperty(ref _fileToSplit, value);
+		RaisePropertyChanged("FileSelected");
+		bool validFile = ExtractNameTemplateFromFile(_fileToSplit, out string newTemplate);
+		if (validFile)
+		{
+		  NameTemplate = newTemplate;
+		}
         SplitCommand.RaiseCanExecuteChanged();
       }
 	}
 
-	private uint _fileNb = 5;
+		private string _outputDir = "";
+		public string OutputDir
+		{
+			get { return _outputDir; }
+			set
+			{
+				SetProperty(ref _outputDir, value);
+				SplitCommand.RaiseCanExecuteChanged();
+			}
+		}
+
+		public bool FileSelected
+	{
+		get { return File.Exists(FileToSplit); }
+
+	}
+
+
+		private uint _fileNb = 5;
 	public uint FileNb
 	{
 	  get { return _fileNb; }
@@ -37,7 +61,54 @@ namespace CatPlugin.Split.ViewModels
       }
 	}
 
-    public DelegateCommand BrowseFileCommand { get; private set; }
+	private string _nameTemplate;
+	public string NameTemplate
+	{
+	  get { return _nameTemplate; }
+	  set
+	  {
+	  	SetProperty(ref _nameTemplate, value);
+		SplitCommand.RaiseCanExecuteChanged();
+	  }
+	}
+
+	private bool ExtractNameTemplateFromFile(string fileName, out string fileTemplate)
+	{
+		bool result = false;
+		fileTemplate = "";
+		if (File.Exists(fileName))
+		{
+		  FileInfo fi = new FileInfo(fileName);
+		  fileTemplate = fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length);
+		  result = true;
+		}
+		return result;
+	}
+
+	private bool _followFilePath;
+	public bool FollowFilePath
+	{
+	  get { return _followFilePath; }
+	  set
+	  {
+	  	SetProperty(ref _followFilePath, value);
+		if (_followFilePath)
+		{
+		  SetOutputPathSameAsInput();
+		}
+	  }
+	}
+
+	private void SetOutputPathSameAsInput()
+	{
+	  if (File.Exists(FileToSplit))
+	  {
+	  	FileInfo fi = new FileInfo(FileToSplit);
+	  	OutputDir = fi.DirectoryName;
+	  }
+	}
+
+	public DelegateCommand BrowseFileCommand { get; private set; }
     public DelegateCommand SplitCommand { get; private set; }
 
     public SplitPluginViewModel(IUnityContainer container)
@@ -90,8 +161,12 @@ namespace CatPlugin.Split.ViewModels
 
     private void DoSplit()
     {
-
-			Task.Run(() => _splitter.Split(FileToSplit, FileNb));
+		ArchiveTemplate arctemp = new ArchiveTemplate()
+		{
+			ComicName = NameTemplate,
+			OutputDir = OutputDir
+		};
+		Task.Run(() => _splitter.Split(FileToSplit, FileNb, arctemp));
     }
 
     private bool CanExecute()
@@ -101,7 +176,7 @@ namespace CatPlugin.Split.ViewModels
 
     private bool CanSplit()
     {
-      return (!string.IsNullOrWhiteSpace(FileToSplit) && File.Exists(FileToSplit) && (FileNb > 1));
+      return (!string.IsNullOrWhiteSpace(FileToSplit) && File.Exists(FileToSplit) && (FileNb > 1) && !string.IsNullOrWhiteSpace(OutputDir) && !string.IsNullOrWhiteSpace(NameTemplate));
     }
 
 

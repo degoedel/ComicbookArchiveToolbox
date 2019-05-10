@@ -16,5 +16,6 @@ namespace ComicbookArchiveToolbox.CommonTools
 		public List<FileInfo> Pages { get; set; }
 		public List<FileInfo> MetadataFiles { get; set; }
 		public string CoverPath { get; set; }
+		public string OutputDir { get; set; }
 	}
 }

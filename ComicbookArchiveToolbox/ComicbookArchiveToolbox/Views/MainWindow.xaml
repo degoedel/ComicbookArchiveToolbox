@@ -7,7 +7,7 @@
 		    xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:ComicbookArchiveToolbox"
         mc:Ignorable="d"
-        Title="Comicbook Archive Toolbox" Height="450" Width="800">
+        Title="Comicbook Archive Toolbox" Height="520" Width="800">
   <Grid>
 		<ContentControl prism:RegionManager.RegionName="HostRegion" />
 	</Grid>

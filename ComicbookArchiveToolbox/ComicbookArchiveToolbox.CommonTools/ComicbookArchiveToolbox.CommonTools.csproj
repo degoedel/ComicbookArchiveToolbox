@@ -58,6 +58,7 @@
     <Compile Include="CompressionHelper.cs" />
     <Compile Include="Events\LogEvent.cs" />
     <Compile Include="Interfaces\ICatPlugin.cs" />
+    <Compile Include="InverseBooleanConverter.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />

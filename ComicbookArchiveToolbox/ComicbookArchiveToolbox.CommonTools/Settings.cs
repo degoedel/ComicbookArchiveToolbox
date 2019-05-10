@@ -39,19 +39,18 @@ namespace ComicbookArchiveToolbox.CommonTools
       }
     }
 
-    public string GetBufferDirectory(string filePath)
+    public string GetBufferDirectory(string filePath, string outputNameTemplate)
     {
       FileInfo fi = new FileInfo(filePath);
-      string archiveName = fi.Name.Substring(0, fi.Name.Length - 4);
       string result = "";
       if (UseFileDirAsBuffer)
       {
-        result = Path.Combine(fi.DirectoryName, archiveName);
+        result = Path.Combine(fi.DirectoryName, outputNameTemplate);
       }
       else
       {
         InitBuffer();
-        result = Path.Combine(BufferDirectory, archiveName);
+        result = Path.Combine(BufferDirectory, outputNameTemplate);
       }
       return result;
     }
