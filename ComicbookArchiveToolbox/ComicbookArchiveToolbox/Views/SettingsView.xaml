@@ -8,43 +8,46 @@
              xmlns:local="clr-namespace:ComicbookArchiveToolbox.Views"
 			 prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="250" d:DesignWidth="800">
   <UserControl.Resources>
     <converters:InverseBooleanConverter x:Key="InverseConverter"/>
   </UserControl.Resources>
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition/>
-      <RowDefinition/>
-      <RowDefinition/>
-      <RowDefinition/>
+      <RowDefinition Height="50"/>
+      <RowDefinition Height="50"/>
+      <RowDefinition Height="50"/>
+      <RowDefinition Height="50"/>
+      <RowDefinition Height="50"/>
     </Grid.RowDefinitions>
-    <CheckBox Content="Use input file folder as buffer" Grid.Row="0" IsChecked="{Binding UseFileDirAsBuffer, Mode=TwoWay}"/>
-    <Grid Grid.Row="1"  IsEnabled="{Binding UseFileDirAsBuffer, Converter={StaticResource InverseConverter}}">
+    <Grid Grid.Row="0">
       <Grid.ColumnDefinitions>
         <ColumnDefinition/>
         <ColumnDefinition/>
-        <ColumnDefinition/>
       </Grid.ColumnDefinitions>
-      <Label Content="Buffer Path: " Grid.Column="0"/>
-      <TextBox Grid.Column="1" Text="{Binding BufferPath}"/>
-      <Button Content="..." Grid.Column="2"/>
+      <CheckBox Content="Always include cover in generated files" Grid.Column="0" IsChecked="{Binding AlwaysIncludeCover}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
+      <CheckBox Content="Always include metadata if available in generated files" Grid.Column="1"  IsChecked="{Binding AlwaysIncludeMetadata}"  FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
     </Grid>
-    <Grid Grid.Row="2">
+    <CheckBox Content="Use input file folder as buffer" Grid.Row="1" IsChecked="{Binding UseFileDirAsBuffer, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
+    <Grid Grid.Row="2"  IsEnabled="{Binding UseFileDirAsBuffer, Converter={StaticResource InverseConverter}}">
       <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="160"/>
         <ColumnDefinition/>
-        <ColumnDefinition/>
+        <ColumnDefinition Width="80"/>
       </Grid.ColumnDefinitions>
-      <CheckBox Content="Always include cover in generated files" Grid.Column="0" IsChecked="{Binding AlwaysIncludeCover}"/>
-      <CheckBox Content="Always include metadata if available in generated files" Grid.Column="1"  IsChecked="{Binding AlwaysIncludeMetadata}"/>
+      <TextBlock Text="Buffer Path: " Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+      <TextBox Grid.Column="1" Text="{Binding BufferPath}" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Margin="5" />
+      <Button Content="..." Grid.Column="2" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40"/>
     </Grid>
     <Grid Grid.Row="3">
       <Grid.ColumnDefinitions>
-        <ColumnDefinition/>
+        <ColumnDefinition Width="160"/>
+        <ColumnDefinition Width="150"/>
         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
-      <Label Content="Prefered output format: " Grid.Column="0"/>
-      <ComboBox Grid.Column="1" ItemsSource="{Binding Formats}"/>
+      <TextBlock Text="Prefered output format: " Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+      <ComboBox Grid.Column="1" ItemsSource="{Binding Formats}" SelectedItem="{Binding SelectedFormat}" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" Margin="5"/>
     </Grid>
+    <Button Grid.Row="4" Content="Save" Command="{Binding SaveSettingsCommand}"  VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" HorizontalAlignment="Center" Width="100" />
   </Grid>
 </UserControl>

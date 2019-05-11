@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,26 +8,9 @@ using System.Threading.Tasks;
 
 namespace ComicbookArchiveToolbox.CommonTools
 {
-  public sealed class Settings
+  public sealed class Settings : SerializationSettings
   {
-
-	// ace and rar being proprietary format 7zip cannot create them.
-	public enum ArchiveFormat
-	{
-		Cb7,
-		Cbt,
-		Cbz
-	};
-
-    private string _settingsPath = @"C:\ProgramData\ComicbookArchiveToolbox\Settings\Settings.xml";
-    public string BufferDirectory { get; set; }
-    public bool UseFileDirAsBuffer { get; set; }
-    public bool IncludeCover { get; set; }
-
-    public bool IncludeMetadata { get; set; }
-
-    public ArchiveFormat OutputFormat { get; set; }
-
+    private string _settingsPath = @"C:\ProgramData\ComicbookArchiveToolbox\Settings\Settings.json";
 
     private static readonly Lazy<Settings> lazy =
     new Lazy<Settings>(() => new Settings());
@@ -35,11 +19,18 @@ namespace ComicbookArchiveToolbox.CommonTools
 
     private Settings()
     {
-      UseFileDirAsBuffer = false;
-      BufferDirectory = @"C:\ProgramData\ComicbookArchiveToolbox\Buffer";
-      IncludeCover = true;
-      IncludeMetadata = true;
-      OutputFormat = ArchiveFormat.Cbz;
+      if (File.Exists(_settingsPath))
+      {
+        InitializeSettings();
+      }
+      else
+      {
+        UseFileDirAsBuffer = false;
+        BufferDirectory = @"C:\ProgramData\ComicbookArchiveToolbox\Buffer";
+        IncludeCover = true;
+        IncludeMetadata = true;
+        OutputFormat = ArchiveFormat.Cbz;
+      }
     }
 
     private void InitBuffer()
@@ -65,6 +56,50 @@ namespace ComicbookArchiveToolbox.CommonTools
       }
       return result;
     }
+
+
+    public void SerializeSettings()
+    {
+      FileInfo fi = new FileInfo(_settingsPath);
+      Directory.CreateDirectory(fi.DirectoryName);
+      JsonSerializer serializer = new JsonSerializer();
+      serializer.NullValueHandling = NullValueHandling.Ignore;
+      using (StreamWriter sw = new StreamWriter(_settingsPath))
+      using (JsonWriter writer = new JsonTextWriter(sw))
+      {
+        serializer.Serialize(writer, this);
+      }
+    }
+
+    private void InitializeSettings()
+    {
+      SerializationSettings serializedSettings = JsonConvert.DeserializeObject<SerializationSettings>(File.ReadAllText(_settingsPath));
+      BufferDirectory = serializedSettings.BufferDirectory;
+      UseFileDirAsBuffer = serializedSettings.UseFileDirAsBuffer;
+      IncludeCover = serializedSettings.IncludeCover;
+      IncludeMetadata = serializedSettings.IncludeMetadata;
+      OutputFormat = serializedSettings.OutputFormat;
+    }
+
+  }
+
+  public class SerializationSettings
+  {
+    // ace and rar being proprietary format 7zip cannot create them.
+    public enum ArchiveFormat
+    {
+      Cb7,
+      Cbt,
+      Cbz
+    };
+
+    public string BufferDirectory { get; set; }
+    public bool UseFileDirAsBuffer { get; set; }
+    public bool IncludeCover { get; set; }
+
+    public bool IncludeMetadata { get; set; }
+
+    public ArchiveFormat OutputFormat { get; set; }
 
 
   }
