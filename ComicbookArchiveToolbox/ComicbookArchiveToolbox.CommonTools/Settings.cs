@@ -19,8 +19,14 @@ namespace ComicbookArchiveToolbox.CommonTools
 	};
 
     private string _settingsPath = @"C:\ProgramData\ComicbookArchiveToolbox\Settings\Settings.xml";
-    public string BufferDirectory => @"C:\ProgramData\ComicbookArchiveToolbox\Buffer";
-    public bool UseFileDirAsBuffer => false;
+    public string BufferDirectory { get; set; }
+    public bool UseFileDirAsBuffer { get; set; }
+    public bool IncludeCover { get; set; }
+
+    public bool IncludeMetadata { get; set; }
+
+    public ArchiveFormat OutputFormat { get; set; }
+
 
     private static readonly Lazy<Settings> lazy =
     new Lazy<Settings>(() => new Settings());
@@ -29,6 +35,11 @@ namespace ComicbookArchiveToolbox.CommonTools
 
     private Settings()
     {
+      UseFileDirAsBuffer = false;
+      BufferDirectory = @"C:\ProgramData\ComicbookArchiveToolbox\Buffer";
+      IncludeCover = true;
+      IncludeMetadata = true;
+      OutputFormat = ArchiveFormat.Cbz;
     }
 
     private void InitBuffer()
@@ -55,10 +66,6 @@ namespace ComicbookArchiveToolbox.CommonTools
       return result;
     }
 
-    public bool IncludeCover => true;
 
-    public bool IncludeMetadata => true;
-
-	public ArchiveFormat OutputFormat => ArchiveFormat.Cbz;
   }
 }

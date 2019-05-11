@@ -25,7 +25,7 @@
         <RowDefinition/>
       </Grid.RowDefinitions>
       <ContentControl Grid.Row="0" prism:RegionManager.RegionName="PluginRegion" Margin="10, 0"/>
-      <TextBox Grid.Row="1" IsReadOnly="true" Margin="10" Text="{Binding CommonLog}"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+      <TextBox Grid.Row="1" IsReadOnly="true" Margin="10" Text="{Binding CommonLog}"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" TextChanged="TextBox_TextChanged"/>
     </Grid>
 	</Grid>
 </UserControl>

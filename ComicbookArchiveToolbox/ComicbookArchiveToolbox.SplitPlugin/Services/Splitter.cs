@@ -41,29 +41,34 @@ namespace CatPlugin.Split.Services
       _logger.Log($"Pages per resulting file : {pagesPerFile}");
 
       int indexSize = Math.Max(fileNb.ToString().Length, 2);
-	  string coverPath = "";
-	  if (Settings.Instance.IncludeCover)
-	  {
-		coverPath = SaveCoverInBuffer(pathToBuffer, archiveTemplate.ComicName, indexSize, pages);
-	  }
-	  int sourcePageIndex = 0;
+	    string coverPath = "";
+	    if (Settings.Instance.IncludeCover)
+	    {
+		    coverPath = SaveCoverInBuffer(pathToBuffer, archiveTemplate.ComicName, indexSize, pages);
+	    }
+	    int sourcePageIndex = 0;
       for (int fileIndex = 0; fileIndex < fileNb; ++fileIndex)
       {
-		archiveTemplate.PathToBuffer = pathToBuffer;
-		archiveTemplate.IndexSize = indexSize;
-		archiveTemplate.PagesPerFile = pagesPerFile;
-		archiveTemplate.Pages = pages;
-		archiveTemplate.MetadataFiles = metadataFiles;
-		archiveTemplate.CoverPath = coverPath;
+		    archiveTemplate.PathToBuffer = pathToBuffer;
+		    archiveTemplate.IndexSize = indexSize;
+		    archiveTemplate.PagesPerFile = pagesPerFile;
+		    archiveTemplate.Pages = pages;
+		    archiveTemplate.MetadataFiles = metadataFiles;
+		    archiveTemplate.CoverPath = coverPath;
 
-		string splittedContentPath = BuildSplittedArchive(archiveTemplate, fileIndex, fileNb, ref sourcePageIndex);
-		_logger.Log($"Compress {splittedContentPath}");
-		CompressArchiveContent(splittedContentPath, archiveTemplate);
-		_logger.Log($"Clean Buffer {splittedContentPath}");
-		SystemTools.CleanDirectory(splittedContentPath, _logger);
-	  }
-	  _logger.Log($"Clean Buffer {pathToBuffer}");
-	  SystemTools.CleanDirectory(pathToBuffer, _logger);
+		    string splittedContentPath = BuildSplittedArchive(archiveTemplate, fileIndex, fileNb, ref sourcePageIndex);
+        if (string.IsNullOrWhiteSpace(splittedContentPath))
+        {
+          _logger.Log("ERROR: Failure to split the file");
+          break;
+        }
+		    _logger.Log($"Compress {splittedContentPath}");
+		    CompressArchiveContent(splittedContentPath, archiveTemplate);
+		    _logger.Log($"Clean Buffer {splittedContentPath}");
+		    SystemTools.CleanDirectory(splittedContentPath, _logger);
+	    }
+	    _logger.Log($"Clean Buffer {pathToBuffer}");
+	    SystemTools.CleanDirectory(pathToBuffer, _logger);
       // compress the resulting file
       // clean the temp directories
       _logger.Log("Done.");
@@ -97,16 +102,26 @@ namespace CatPlugin.Split.Services
 		}
 	}
 
-	private void MovePicturesToSubBuffer(string destFolder, List<FileInfo> files, string archiveName)
-    {
-      _logger.Log($"Copy the selected files in {destFolder}");
-      Directory.CreateDirectory(destFolder);
-      int padSize = Math.Max(2, files.Count.ToString().Length);
-      for (int i = 0; i < files.Count; ++i)
+	private bool MovePicturesToSubBuffer(string destFolder, List<FileInfo> files, string archiveName)
+   {
+      bool result = true;
+     _logger.Log($"Copy the selected files in {destFolder}");
+      try
       {
-		// rename the files in the directories
-		File.Move(files[i].FullName, Path.Combine(destFolder, $"{archiveName}_{(i + 1).ToString().PadLeft(padSize, '0')}{files[i].Extension}"));
+        Directory.CreateDirectory(destFolder);
+        int padSize = Math.Max(2, files.Count.ToString().Length);
+        for (int i = 0; i < files.Count; ++i)
+        {
+          // rename the files in the directories
+          File.Move(files[i].FullName, Path.Combine(destFolder, $"{archiveName}_{(i + 1).ToString().PadLeft(padSize, '0')}{files[i].Extension}"));
+        }
       }
+      catch (Exception e)
+      {
+        result = false;
+        _logger.Log($"ERROR: Cannot split archive {e.Message}");
+      }
+      return result;
     }
 
 	private void CopyCoverToSubBuffer(string coverFile, string subBuffer)
@@ -184,7 +199,12 @@ namespace CatPlugin.Split.Services
 	  		}
 	  	}
 	  }
-	  MovePicturesToSubBuffer(subBufferPath, pagesToAdd, template.ComicName);
+	  bool ok = MovePicturesToSubBuffer(subBufferPath, pagesToAdd, template.ComicName);
+    if (!ok)
+    {
+        SystemTools.CleanDirectory(subBufferPath, _logger);
+        return "";
+    }
 	  if (!string.IsNullOrWhiteSpace(template.CoverPath))
 	  {
 	  	if (fileIndex != 0)

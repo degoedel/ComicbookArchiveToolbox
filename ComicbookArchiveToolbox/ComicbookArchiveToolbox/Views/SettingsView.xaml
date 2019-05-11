@@ -4,11 +4,47 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:prism="http://prismlibrary.com/"
+			 xmlns:converters="clr-namespace:ComicbookArchiveToolbox.CommonTools;assembly=ComicbookArchiveToolbox.CommonTools"
              xmlns:local="clr-namespace:ComicbookArchiveToolbox.Views"
 			 prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-		<Label Content="Settings View"/>
-	</Grid>
+  <UserControl.Resources>
+    <converters:InverseBooleanConverter x:Key="InverseConverter"/>
+  </UserControl.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition/>
+      <RowDefinition/>
+      <RowDefinition/>
+      <RowDefinition/>
+    </Grid.RowDefinitions>
+    <CheckBox Content="Use input file folder as buffer" Grid.Row="0" IsChecked="{Binding UseFileDirAsBuffer, Mode=TwoWay}"/>
+    <Grid Grid.Row="1"  IsEnabled="{Binding UseFileDirAsBuffer, Converter={StaticResource InverseConverter}}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      <Label Content="Buffer Path: " Grid.Column="0"/>
+      <TextBox Grid.Column="1" Text="{Binding BufferPath}"/>
+      <Button Content="..." Grid.Column="2"/>
+    </Grid>
+    <Grid Grid.Row="2">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      <CheckBox Content="Always include cover in generated files" Grid.Column="0" IsChecked="{Binding AlwaysIncludeCover}"/>
+      <CheckBox Content="Always include metadata if available in generated files" Grid.Column="1"  IsChecked="{Binding AlwaysIncludeMetadata}"/>
+    </Grid>
+    <Grid Grid.Row="3">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      <Label Content="Prefered output format: " Grid.Column="0"/>
+      <ComboBox Grid.Column="1" ItemsSource="{Binding Formats}"/>
+    </Grid>
+  </Grid>
 </UserControl>

@@ -46,6 +46,10 @@ namespace ComicbookArchiveToolbox.Views
 	  region.Activate(tools);
 	}
 
-
-	}
+    private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+      var tb = sender as TextBox;
+      tb.ScrollToEnd();
+    }
+  }
 }
