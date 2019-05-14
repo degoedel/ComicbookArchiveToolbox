@@ -76,6 +76,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Wpf.7.1.0.431\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -98,6 +99,18 @@
     <Compile Include="Services\Splitter.cs" />
     <Compile Include="SplitPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\SplitByFileNbView.xaml.cs">
+      <DependentUpon>SplitByFileNbView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SplitByMaxPagesView.xaml.cs">
+      <DependentUpon>SplitByMaxPagesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SplitByMaxSizeView.xaml.cs">
+      <DependentUpon>SplitByMaxSizeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SplitByPagesIndexView.xaml.cs">
+      <DependentUpon>SplitByPagesIndexView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SplitPluginView.xaml.cs">
       <DependentUpon>SplitPluginView.xaml</DependentUpon>
     </Compile>
@@ -121,6 +134,22 @@
     <Page Include="Resources\IconsNonShared.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SplitByFileNbView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SplitByMaxPagesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SplitByMaxSizeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SplitByPagesIndexView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SplitPluginView.xaml">
       <SubType>Designer</SubType>

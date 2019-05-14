@@ -70,8 +70,12 @@ namespace CatPlugin.Split
 			var regionManager = containerProvider.Resolve<IRegionManager>();
       IRegion region = regionManager.Regions["PluginRegion"];
       region.Add(_container.Resolve<SplitPluginView>(), "SplitView");
-      //regionManager.RegisterViewWithRegion("PluginRegion", typeof(SplitPluginView));
-    }
+			region = regionManager.Regions["SplitArgsRegion"];
+			region.Add(_container.Resolve<SplitByFileNbView>(), "SplitByFileNbView");
+			region.Add(_container.Resolve<SplitByMaxPagesView>(), "SplitByMaxPagesView");
+			region.Add(_container.Resolve<SplitByMaxSizeView>(), "SplitByMaxSizeView");
+			region.Add(_container.Resolve<SplitByPagesIndexView>(), "SplitByPagesIndexView");
+		}
 
     public void RegisterTypes(IContainerRegistry containerRegistry)
 		{

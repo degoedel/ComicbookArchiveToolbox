@@ -221,8 +221,10 @@ namespace CatPlugin.Split.Services
 
 	private void CompressArchiveContent(string directory, ArchiveTemplate archiveTemplate)
 	{
+			string archiveExtension = $".{Settings.Instance.OutputFormat.ToString().ToLower()}";
+
 		DirectoryInfo di = new DirectoryInfo(directory);
-		string outputFile = Path.Combine(archiveTemplate.OutputDir, $"{di.Name}.cbz");
+		string outputFile = Path.Combine(archiveTemplate.OutputDir, $"{di.Name}{archiveExtension}");
 		CompressionHelper ch = new CompressionHelper(_logger);
 		_logger.Log($"Start compression of {directory} into {outputFile} ...");
 		ch.CompressDirectoryContent(directory, outputFile);

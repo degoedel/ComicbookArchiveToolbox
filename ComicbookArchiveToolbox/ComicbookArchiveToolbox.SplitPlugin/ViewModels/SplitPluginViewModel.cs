@@ -4,7 +4,9 @@ using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Unity;
@@ -14,9 +16,51 @@ namespace CatPlugin.Split.ViewModels
   public class SplitPluginViewModel : BindableBase
   {
     private Logger _logger;
-    private Splitter _splitter; 
+    private Splitter _splitter;
+		private IRegionManager _regionManager;
 
-	private string _fileToSplit = "";
+		public List<string> SplitStyles { get; set; }
+
+		private string _selectedStyle = "By File Nb";
+		public string SelectedStyle
+		{
+			get { return _selectedStyle; }
+			set
+			{
+				SetProperty(ref _selectedStyle, value);
+				SetSplitterView(_selectedStyle);
+			}
+		}
+
+		private void SetSplitterView(string selectedView)
+		{
+			string viewToActivate = "";
+			switch (selectedView)
+			{
+				case "By File Nb":
+					viewToActivate = "SplitByFileNbView";
+					break;
+				case "By Max Pages Nb":
+					viewToActivate = "SplitByMaxPagesView";
+					break;
+				case "By Size (Mb)":
+					viewToActivate = "SplitByMaxSizeView";
+					break;
+				case "By Pages Index":
+					viewToActivate = "SplitByPagesIndexView";
+					break;
+				default:
+					viewToActivate = "SplitByFileNbView";
+					break;
+
+			}
+			IRegion region = _regionManager.Regions["SplitArgsRegion"];
+			var view = region.GetView(viewToActivate);
+			region.Activate(view);
+
+		}
+
+		private string _fileToSplit = "";
     public string FileToSplit
 	{
 	  get { return _fileToSplit; }
@@ -61,6 +105,35 @@ namespace CatPlugin.Split.ViewModels
         SplitCommand.RaiseCanExecuteChanged();
       }
 	}
+
+		private uint _maxFilePerArchive = 50;
+		public uint MaxFilePerArchive
+		{
+			get { return _maxFilePerArchive; }
+			set { SetProperty(ref _maxFilePerArchive, value); }
+		}
+
+		private uint _maxFileSize = 50;
+		public uint MaxFileSize
+		{
+			get { return _maxFileSize; }
+			set { SetProperty(ref _maxFileSize, value); }
+		}
+
+		private List<uint> _pagesToSplitIndex = new List<uint>();
+		public string PagesToSplitIndex
+		{
+			get { return String.Join(";", _pagesToSplitIndex); }
+			set {
+				var indexesAsStr = value.Split(';');
+				var pagesToSplitIndex = new List<uint>();
+				foreach (string s in indexesAsStr)
+				{
+					pagesToSplitIndex.Add(uint.Parse(s.Trim()));
+				}
+				SetProperty(ref _pagesToSplitIndex, pagesToSplitIndex);
+				}
+		}
 
 	private string _nameTemplate;
 	public string NameTemplate
@@ -113,9 +186,17 @@ namespace CatPlugin.Split.ViewModels
     public DelegateCommand BrowseOutputDirCommand { get; private set; }
     public DelegateCommand SplitCommand { get; private set; }
 
-    public SplitPluginViewModel(IUnityContainer container)
+    public SplitPluginViewModel(IUnityContainer container, IRegionManager regionManager)
     {
-      BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);
+			SplitStyles = new List<string>()
+			{
+				"By File Nb",
+				"By Max Pages Nb",
+				"By Size (Mb)",
+				"By Pages Index"
+			};
+			_regionManager = regionManager;
+			BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);
       SplitCommand = new DelegateCommand(DoSplit, CanSplit);
       BrowseOutputDirCommand = new DelegateCommand(BrowseDirectory, CanExecute);
       _logger = container.Resolve<Logger>();

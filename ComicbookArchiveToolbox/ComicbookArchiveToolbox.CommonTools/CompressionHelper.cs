@@ -49,12 +49,28 @@ namespace ComicbookArchiveToolbox.CommonTools
 
 	public void CompressDirectoryContent(string inputDir, string outputFile)
 	{
-		try
+			string compressionArg = "";
+			switch (Settings.Instance.OutputFormat)
+			{
+				case SerializationSettings.ArchiveFormat.Cb7:
+					compressionArg = "7z";
+					break;
+				case SerializationSettings.ArchiveFormat.Cbt:
+					compressionArg = "tar";
+					break;
+				case SerializationSettings.ArchiveFormat.Cbz:
+					compressionArg = "zip";
+					break;
+				default:
+					compressionArg = "zip";
+					break;
+			}
+			try
 		{
 			ProcessStartInfo pro = new ProcessStartInfo();
 			pro.WindowStyle = ProcessWindowStyle.Hidden;
 			pro.FileName = _pathTo7z;
-			pro.Arguments = $"a -aoa -tzip \"{outputFile}\" \"{inputDir}\\*\" ";
+			pro.Arguments = $"a -aoa -t{compressionArg} \"{outputFile}\" \"{inputDir}\\*\" ";
 			_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
 			Process x = Process.Start(pro);
 			x.WaitForExit();

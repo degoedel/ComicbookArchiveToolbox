@@ -48,9 +48,10 @@
 	  	<ColumnDefinition Width="100"/>
 		  <ColumnDefinition />
 	  </Grid.ColumnDefinitions>
-	  <TextBlock Grid.Column="0" Text="Files Number: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-	  <TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="40" Text="{Binding FileNb, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
-	</Grid>
+	  <TextBlock Grid.Column="0" Text="Split style: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+			<ComboBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="40" ItemsSource="{Binding SplitStyles}" SelectedItem="{Binding SelectedStyle}" />
+			<ContentControl Grid.Column="2" prism:RegionManager.RegionName="SplitArgsRegion"/>
+		</Grid>
     <Grid Grid.Row="4">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="150"/>

@@ -1,6 +1,4 @@
-﻿using Prism.Ioc;
-using Prism.Regions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,20 +15,19 @@ using System.Windows.Shapes;
 
 namespace CatPlugin.Split.Views
 {
-  /// <summary>
-  /// Interaction logic for SplitPluginView.xaml
-  /// </summary>
-  public partial class SplitPluginView : UserControl
-  {
-    public SplitPluginView()
-    {
-      InitializeComponent();
-    }
+	/// <summary>
+	/// Interaction logic for SplitByFileNbView.xaml
+	/// </summary>
+	public partial class SplitByFileNbView : UserControl
+	{
+		public SplitByFileNbView()
+		{
+			InitializeComponent();
+		}
 
 		private void NumericOnly(object sender, TextCompositionEventArgs e)
 		{
 			e.Handled = (!uint.TryParse(e.Text, out uint result));
 		}
-
 	}
 }
