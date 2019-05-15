@@ -1,4 +1,5 @@
-﻿using ComicbookArchiveToolbox.CommonTools;
+﻿using CatPlugin.Merge.Service;
+using ComicbookArchiveToolbox.CommonTools;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -134,12 +135,13 @@ namespace CatPlugin.Merge.ViewModels
 
 		private void DoMerge()
 		{
-
+      Merger merger = new Merger(_logger);
+      Task.Run(() => merger.Merge(OutputFile, SelectedFiles));
 		}
 
 		private bool CanMerge()
 		{
-			return (SelectedFiles != null && SelectedFiles.Count > 1);
+			return (SelectedFiles != null && SelectedFiles.Count > 1 && !string.IsNullOrWhiteSpace(OutputFile));
 		}
 
 

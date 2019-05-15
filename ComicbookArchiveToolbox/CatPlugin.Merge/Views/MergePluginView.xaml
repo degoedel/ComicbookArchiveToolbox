@@ -12,7 +12,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
-			<RowDefinition/>
+			<RowDefinition MaxHeight="250"/>
 			<RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
 		</Grid.RowDefinitions>
@@ -29,7 +29,7 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
-			<ListView Grid.Column="0" Margin="5" ItemsSource="{Binding SelectedFiles}" />
+			<ListView Grid.Column="0" Margin="5" ItemsSource="{Binding SelectedFiles}"/>
 		</Grid>
 		<Grid Grid.Row="3">
 			<Grid.ColumnDefinitions>

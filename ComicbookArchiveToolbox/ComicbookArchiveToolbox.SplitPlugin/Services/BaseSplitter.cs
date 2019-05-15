@@ -118,7 +118,7 @@ namespace CatPlugin.Split.Services
 				for (int i = 0; i < files.Count; ++i)
 				{
 					// rename the files in the directories
-					File.Move(files[i].FullName, Path.Combine(destFolder, $"{archiveName}_{(i + increaseIndex).ToString().PadLeft(padSize, '0')}{files[i].Extension}"));
+					File.Move(files[i].FullName, Path.Combine(destFolder, $"{archiveName}_{(i + increaseIndex).ToString().PadLeft(padSize, '0')}{files[i].Extension}".Replace(' ', '_')));
 				}
 			}
 			catch (Exception e)

@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="MergePlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\Merger.cs" />
     <Compile Include="ViewModels\MergePluginViewModel.cs" />
     <Compile Include="Views\MergePluginView.xaml.cs">
       <DependentUpon>MergePluginView.xaml</DependentUpon>
