@@ -15,9 +15,9 @@ namespace CatPlugin.Split.ViewModels
 {
   public class SplitPluginViewModel : BindableBase
   {
-    private Logger _logger;
-    private Splitter _splitter;
+		private Logger _logger;
 		private IRegionManager _regionManager;
+		private IUnityContainer _container;
 
 		public List<string> SplitStyles { get; set; }
 
@@ -57,7 +57,7 @@ namespace CatPlugin.Split.ViewModels
 			IRegion region = _regionManager.Regions["SplitArgsRegion"];
 			var view = region.GetView(viewToActivate);
 			region.Activate(view);
-
+			SplitCommand.RaiseCanExecuteChanged();
 		}
 
 		private string _fileToSplit = "";
@@ -110,21 +110,30 @@ namespace CatPlugin.Split.ViewModels
 		public uint MaxFilePerArchive
 		{
 			get { return _maxFilePerArchive; }
-			set { SetProperty(ref _maxFilePerArchive, value); }
+			set
+			{
+				SetProperty(ref _maxFilePerArchive, value);
+				SplitCommand.RaiseCanExecuteChanged();
+			}
 		}
 
-		private uint _maxFileSize = 50;
-		public uint MaxFileSize
+		private long _maxFileSize = 50;
+		public long MaxFileSize
 		{
 			get { return _maxFileSize; }
-			set { SetProperty(ref _maxFileSize, value); }
+			set
+			{
+				SetProperty(ref _maxFileSize, value);
+				SplitCommand.RaiseCanExecuteChanged();
+			}
 		}
 
 		private List<uint> _pagesToSplitIndex = new List<uint>();
 		public string PagesToSplitIndex
 		{
 			get { return String.Join(";", _pagesToSplitIndex); }
-			set {
+			set
+			{
 				var indexesAsStr = value.Split(';');
 				var pagesToSplitIndex = new List<uint>();
 				foreach (string s in indexesAsStr)
@@ -132,7 +141,8 @@ namespace CatPlugin.Split.ViewModels
 					pagesToSplitIndex.Add(uint.Parse(s.Trim()));
 				}
 				SetProperty(ref _pagesToSplitIndex, pagesToSplitIndex);
-				}
+				SplitCommand.RaiseCanExecuteChanged();
+			}
 		}
 
 	private string _nameTemplate;
@@ -188,6 +198,7 @@ namespace CatPlugin.Split.ViewModels
 
     public SplitPluginViewModel(IUnityContainer container, IRegionManager regionManager)
     {
+			_container = container;
 			SplitStyles = new List<string>()
 			{
 				"By File Nb",
@@ -199,8 +210,7 @@ namespace CatPlugin.Split.ViewModels
 			BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);
       SplitCommand = new DelegateCommand(DoSplit, CanSplit);
       BrowseOutputDirCommand = new DelegateCommand(BrowseDirectory, CanExecute);
-      _logger = container.Resolve<Logger>();
-      _splitter = new Splitter(_logger);
+      _logger = _container.Resolve<Logger>();
     }
 
     private void BrowseFile()
@@ -247,9 +257,14 @@ namespace CatPlugin.Split.ViewModels
 		ArchiveTemplate arctemp = new ArchiveTemplate()
 		{
 			ComicName = NameTemplate,
-			OutputDir = OutputDir
+			OutputDir = OutputDir,
+			NumberOfSplittedFiles = FileNb,
+			MaxPagesPerSplittedFile = MaxFilePerArchive,
+			MaxSizePerSplittedFile = MaxFileSize,
+			PagesIndexToSplit = _pagesToSplitIndex
 		};
-		Task.Run(() => _splitter.Split(FileToSplit, FileNb, arctemp));
+		var splitter = _container.Resolve<ISplitter>(SelectedStyle);
+		Task.Run(() => splitter.Split(FileToSplit, arctemp));
     }
 
     private bool CanExecute()
@@ -259,7 +274,27 @@ namespace CatPlugin.Split.ViewModels
 
     private bool CanSplit()
     {
-      return (!string.IsNullOrWhiteSpace(FileToSplit) && File.Exists(FileToSplit) && (FileNb > 1) && !string.IsNullOrWhiteSpace(OutputDir) && !string.IsNullOrWhiteSpace(NameTemplate));
+			bool selectedMethodArgument = false;
+			switch (SelectedStyle)
+			{
+				case "By File Nb":
+					selectedMethodArgument = FileNb > 1;
+					break;
+				case "By Max Pages Nb":
+					selectedMethodArgument = MaxFilePerArchive > 1;
+					break;
+				case "By Size (Mb)":
+					selectedMethodArgument = MaxFileSize > 1;
+					break;
+				case "By Pages Index":
+					selectedMethodArgument = _pagesToSplitIndex.Count > 0;
+					break;
+				default:
+					selectedMethodArgument = false;
+					break;
+
+			}
+			return (!string.IsNullOrWhiteSpace(FileToSplit) && File.Exists(FileToSplit) && selectedMethodArgument && !string.IsNullOrWhiteSpace(OutputDir) && !string.IsNullOrWhiteSpace(NameTemplate));
     }
 
     private void BrowseDirectory()

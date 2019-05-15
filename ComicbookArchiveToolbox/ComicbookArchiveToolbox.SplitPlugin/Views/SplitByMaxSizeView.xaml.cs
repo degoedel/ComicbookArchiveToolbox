@@ -27,7 +27,7 @@ namespace CatPlugin.Split.Views
 
 		private void NumericOnly(object sender, TextCompositionEventArgs e)
 		{
-			e.Handled = (!uint.TryParse(e.Text, out uint result));
+			e.Handled = (!long.TryParse(e.Text, out long result));
 		}
 	}
 }

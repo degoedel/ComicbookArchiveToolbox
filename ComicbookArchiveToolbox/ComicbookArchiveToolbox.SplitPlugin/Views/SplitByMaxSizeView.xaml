@@ -13,6 +13,6 @@
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
 		<TextBlock Grid.Column="0" Text="Max Size: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-		<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="40" Text="{Binding MaxSize, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
+		<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="40" Text="{Binding MaxFileSize, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
 	</Grid>
 </UserControl>

@@ -17,5 +17,9 @@ namespace ComicbookArchiveToolbox.CommonTools
 		public List<FileInfo> MetadataFiles { get; set; }
 		public string CoverPath { get; set; }
 		public string OutputDir { get; set; }
+		public uint NumberOfSplittedFiles { get; set; }
+		public uint MaxPagesPerSplittedFile { get; set; }
+		public long MaxSizePerSplittedFile { get; set; }
+		public List<uint> PagesIndexToSplit { get; set; }
 	}
 }

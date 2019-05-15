@@ -1,4 +1,5 @@
-﻿using CatPlugin.Split.ViewModels;
+﻿using CatPlugin.Split.Services;
+using CatPlugin.Split.ViewModels;
 using CatPlugin.Split.Views;
 using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Interfaces;
@@ -40,17 +41,21 @@ namespace CatPlugin.Split
 			_container = container;
 			_container.RegisterType<ICatPlugin, SplitPlugin>("Split");
 			LoadViewCommand = new DelegateCommand(LoadView, CanExecute);
-      var myResourceDictionary = new ResourceDictionary
-      {
-        Source = new Uri("/CatPlugin.Split;component/Resources/Icons.xaml", UriKind.RelativeOrAbsolute)
-      };
-      _icon = myResourceDictionary["appbar_slice"] as Canvas;
+			var myResourceDictionary = new ResourceDictionary
+			{
+				Source = new Uri("/CatPlugin.Split;component/Resources/Icons.xaml", UriKind.RelativeOrAbsolute)
+			};
+			_icon = myResourceDictionary["appbar_slice"] as Canvas;
+			container.RegisterType<ISplitter, ByFileSplitter>("By File Nb");
+			container.RegisterType<ISplitter, ByMaxPageSplitter>("By Max Pages Nb");
+			container.RegisterType<ISplitter, BySizeSplitter>("By Size (Mb)");
+
 		}
 
-    #endregion Constructors
+		#endregion Constructors
 
-    #region Command
-    private void LoadView()
+		#region Command
+		private void LoadView()
     {
       var regionManager = _container.Resolve<IRegionManager>();
       IRegion region = regionManager.Regions["PluginRegion"];
@@ -74,7 +79,6 @@ namespace CatPlugin.Split
 			region.Add(_container.Resolve<SplitByFileNbView>(), "SplitByFileNbView");
 			region.Add(_container.Resolve<SplitByMaxPagesView>(), "SplitByMaxPagesView");
 			region.Add(_container.Resolve<SplitByMaxSizeView>(), "SplitByMaxSizeView");
-			region.Add(_container.Resolve<SplitByPagesIndexView>(), "SplitByPagesIndexView");
 		}
 
     public void RegisterTypes(IContainerRegistry containerRegistry)
