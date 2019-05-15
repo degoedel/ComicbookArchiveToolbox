@@ -112,9 +112,6 @@
     <Compile Include="Views\SplitByMaxSizeView.xaml.cs">
       <DependentUpon>SplitByMaxSizeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SplitByPagesIndexView.xaml.cs">
-      <DependentUpon>SplitByPagesIndexView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SplitPluginView.xaml.cs">
       <DependentUpon>SplitPluginView.xaml</DependentUpon>
     </Compile>
@@ -148,10 +145,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SplitByMaxSizeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SplitByPagesIndexView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
