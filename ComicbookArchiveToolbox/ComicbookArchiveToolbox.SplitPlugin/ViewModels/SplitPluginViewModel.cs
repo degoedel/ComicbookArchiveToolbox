@@ -46,9 +46,6 @@ namespace CatPlugin.Split.ViewModels
 				case "By Size (Mb)":
 					viewToActivate = "SplitByMaxSizeView";
 					break;
-				case "By Pages Index":
-					viewToActivate = "SplitByPagesIndexView";
-					break;
 				default:
 					viewToActivate = "SplitByFileNbView";
 					break;
@@ -203,8 +200,7 @@ namespace CatPlugin.Split.ViewModels
 			{
 				"By File Nb",
 				"By Max Pages Nb",
-				"By Size (Mb)",
-				"By Pages Index"
+				"By Size (Mb)"
 			};
 			_regionManager = regionManager;
 			BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);

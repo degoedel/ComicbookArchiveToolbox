@@ -34,8 +34,8 @@ namespace CatPlugin.Merge.ViewModels
 			}
 		}
 
-		private ObservableCollection<string> _selectedFiles = new ObservableCollection<string>();
-		public ObservableCollection<string> SelectedFiles
+		private List<string> _selectedFiles = new List<string>();
+		public List<string> SelectedFiles
 		{
 			get { return _selectedFiles; }
 			set
@@ -88,18 +88,18 @@ namespace CatPlugin.Merge.ViewModels
 				CommonFileDialogResult result = dialog.ShowDialog();
 				if (result == CommonFileDialogResult.Ok)
 				{
-					foreach (string s in dialog.FileNames)
-					{
-						SelectedFiles.Add(s);
-					}
-					SelectedFiles.Sort();
+					List<string> newValue = new List<string>(SelectedFiles);
+					List<string> dialogSelection = dialog.FileNames.ToList();
+					dialogSelection.Sort();
+					newValue.AddRange(dialogSelection);
+					SelectedFiles = newValue;
 				}
 			}
 		}
 
 		private void ClearFiles()
 		{
-			SelectedFiles.Clear();
+			SelectedFiles = new List<string>();
 		}
 
 		private void BrowseOutputFile()
@@ -147,13 +147,4 @@ namespace CatPlugin.Merge.ViewModels
 
 	}
 
-	static class Extensions
-	{
-		public static void Sort<T>(this ObservableCollection<T> collection) where T : IComparable
-		{
-			List<T> sorted = collection.OrderBy(x => x).ToList();
-			for (int i = 0; i < sorted.Count(); i++)
-				collection.Move(collection.IndexOf(sorted[i]), i);
-		}
-	}
 }

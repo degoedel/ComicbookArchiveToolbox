@@ -29,7 +29,7 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
-			<ListView Grid.Column="0" Margin="5" ItemsSource="{Binding SelectedFiles}"/>
+			<ListView Grid.Column="0" Margin="5" ItemsSource="{Binding SelectedFiles}" MaxHeight="240"/>
 		</Grid>
 		<Grid Grid.Row="3">
 			<Grid.ColumnDefinitions>

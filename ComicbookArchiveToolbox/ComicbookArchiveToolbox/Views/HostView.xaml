@@ -14,17 +14,17 @@
       <ColumnDefinition Width="60"/>
       <ColumnDefinition/>
     </Grid.ColumnDefinitions>
-    <StackPanel Grid.Column="0" Orientation="Vertical" >
+    <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0,10,0,10">
       <Button Content="{iconPacks:Modern HomeEmpty, Height=30, Width=30}" Command="{Binding DisplayToolsCommand}" Height="60" BorderThickness="0"/>
 	  <Button Content="{iconPacks:Modern Cog, Height=30, Width=30}" Command="{Binding DisplaySettingsCommand}" Height="60" BorderThickness="0"/>
 	  <Button Content="{iconPacks:Modern informationcircle, Height=30, Width=30}" Command="{Binding DisplayAboutCommand}" Height="60" BorderThickness="0"/>
 	</StackPanel>
-    <Grid Grid.Column="1" >
+    <Grid Grid.Column="1">
       <Grid.RowDefinitions>
 		<RowDefinition Height="Auto"/>
         <RowDefinition/>
       </Grid.RowDefinitions>
-      <ContentControl Grid.Row="0" prism:RegionManager.RegionName="PluginRegion" Margin="10, 0"/>
+      <ContentControl Grid.Row="0" prism:RegionManager.RegionName="PluginRegion" Margin="10, 10,10, 0"/>
       <TextBox Grid.Row="1" IsReadOnly="true" Margin="10" Text="{Binding CommonLog}"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" TextChanged="TextBox_TextChanged"/>
     </Grid>
 	</Grid>

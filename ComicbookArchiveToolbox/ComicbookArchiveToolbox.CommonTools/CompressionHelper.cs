@@ -49,6 +49,25 @@ namespace ComicbookArchiveToolbox.CommonTools
 
 	public void CompressDirectoryContent(string inputDir, string outputFile)
 	{
+			string compressionArg = GetCompressionMethod();
+			try
+		{
+			ProcessStartInfo pro = new ProcessStartInfo();
+			pro.WindowStyle = ProcessWindowStyle.Hidden;
+			pro.FileName = _pathTo7z;
+			pro.Arguments = $"a -aoa -t{compressionArg} \"{outputFile}\" \"{inputDir}\\*\" ";
+			_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
+			Process x = Process.Start(pro);
+			x.WaitForExit();
+		}
+			catch (Exception e)
+		{
+			_logger.Log($"Failure during compression of {inputDir} in {outputFile} : {e.Message}");
+		}
+	}
+
+		private string GetCompressionMethod()
+		{
 			string compressionArg = "";
 			switch (Settings.Instance.OutputFormat)
 			{
@@ -65,20 +84,48 @@ namespace ComicbookArchiveToolbox.CommonTools
 					compressionArg = "zip";
 					break;
 			}
-			try
-		{
-			ProcessStartInfo pro = new ProcessStartInfo();
-			pro.WindowStyle = ProcessWindowStyle.Hidden;
-			pro.FileName = _pathTo7z;
-			pro.Arguments = $"a -aoa -t{compressionArg} \"{outputFile}\" \"{inputDir}\\*\" ";
-			_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
-			Process x = Process.Start(pro);
-			x.WaitForExit();
+			return compressionArg;
 		}
-			catch (Exception e)
+
+		public void ExtractFileType(string archivePath, string decompressionFolder, string fileExtension)
 		{
-			_logger.Log($"Failure during compression of {inputDir} in {outputFile} : {e.Message}");
+			if (!Directory.Exists(decompressionFolder))
+				Directory.CreateDirectory(decompressionFolder);
+
+			try
+			{
+				ProcessStartInfo pro = new ProcessStartInfo();
+				pro.WindowStyle = ProcessWindowStyle.Hidden;
+				pro.FileName = _pathTo7z;
+				pro.Arguments = $"e  \"{archivePath}\" -o\"{decompressionFolder}\" -aoa -r {fileExtension}";
+				_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
+				Process x = Process.Start(pro);
+				x.WaitForExit();
+			}
+			catch (Exception e)
+			{
+				_logger.Log($"Failure during decompression of {archivePath} in {decompressionFolder}: {e.Message}");
+			}
+
+		}
+
+		public void UpdateFile(string inputArchive, string file)
+		{
+			string compressionArg = GetCompressionMethod();
+			try
+			{
+				ProcessStartInfo pro = new ProcessStartInfo();
+				pro.WindowStyle = ProcessWindowStyle.Hidden;
+				pro.FileName = _pathTo7z;
+				pro.Arguments = $"u \"{inputArchive}\" \"{file}\"";
+				_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
+				Process x = Process.Start(pro);
+				x.WaitForExit();
+			}
+			catch (Exception e)
+			{
+				_logger.Log($"Failure during add of {file} in {inputArchive}: {e.Message}");
+			}
 		}
 	}
-  }
 }
