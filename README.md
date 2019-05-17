@@ -11,6 +11,9 @@ Split strategies are :
 
 Comicbook Archive Toolbox depends on a redistributed executable of 7zip (https://www.7-zip.org) for compression and decompression tasks.
 Window styling is made with Mahapps.metro (https://mahapps.com), 
-and general architecture is made with Prism (https://github.com/PrismLibrary/Prism)
+and general architecture is made with Prism (https://github.com/PrismLibrary/Prism).
+
+Comicbook Archive Toolbox is based on .NET 4.7.2. Download runtime here : https://dotnet.microsoft.com/download/dotnet-framework/net472
+
 
 Comicbook Archive Toolbox is under MIT license (do what you want with it)
