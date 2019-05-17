@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Cat.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Cat.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
@@ -199,9 +199,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Cat.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Cat.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Cat.ico" />
