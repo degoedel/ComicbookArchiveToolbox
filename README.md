@@ -1,7 +1,5 @@
 # ComicbookArchiveToolbox
 
-Find this project on [Github](https://github.com/degoedel/ComicbookArchiveToolbox)
-
 ![Main interface](/ComicbookArchiveToolbox/MainPage.PNG)
 
 **Comicbook Archive Toolbox** is a utility for digital comic book archives such as .cbr or .cbz files.
