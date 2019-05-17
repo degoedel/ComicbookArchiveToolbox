@@ -7,6 +7,8 @@
 		    xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:ComicbookArchiveToolbox"
         mc:Ignorable="d"
+		Icon="pack://application:,,,/ComicbookArchiveToolbox;component/Resources/Cat.png"
+        ShowIconOnTitleBar="True"
         Title="Comicbook Archive Toolbox" Height="520" Width="850">
   <Grid>
 		<ContentControl prism:RegionManager.RegionName="HostRegion" />
