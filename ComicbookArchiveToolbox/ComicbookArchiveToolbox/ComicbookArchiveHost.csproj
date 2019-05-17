@@ -198,9 +198,6 @@
     <Resource Include="Resources\Entypo-license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Cat.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Cat.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
