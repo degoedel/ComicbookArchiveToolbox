@@ -53,3 +53,4 @@ ComicbookArchiveToolbox/packages/*
 Distrib/*
 ComicbookArchiveToolbox/CatPlugin.Merge/obj/*
 ComicbookArchiveToolbox/CatPlugin.Edit/obj/*
+ComicbookArchiveToolbox/CatPlugin.Compress/obj/*

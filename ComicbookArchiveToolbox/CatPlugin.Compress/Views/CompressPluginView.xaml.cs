@@ -13,21 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CatPlugin.Merge.Views
+namespace CatPlugin.Compress.Views
 {
-  /// <summary>
-  /// Interaction logic for MergePluginView.xaml
-  /// </summary>
-  public partial class MergePluginView : UserControl
-  {
-    public MergePluginView()
-    {
-      InitializeComponent();
-    }
-
-		private void NumericOnly(object sender, TextCompositionEventArgs e)
+	/// <summary>
+	/// Interaction logic for CompressPluginView.xaml
+	/// </summary>
+	public partial class CompressPluginView : UserControl
+	{
+		public CompressPluginView()
 		{
-			e.Handled = (!uint.TryParse(e.Text, out uint result));
+			InitializeComponent();
 		}
 	}
 }

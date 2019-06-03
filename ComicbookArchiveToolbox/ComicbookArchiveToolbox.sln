@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatPlugin.Merge", "CatPlugi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatPlugin.Edit", "CatPlugin.Edit\CatPlugin.Edit.csproj", "{9A2A14DD-711A-47CA-B33B-A802DB437DA7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatPlugin.Compress", "CatPlugin.Compress\CatPlugin.Compress.csproj", "{F0BE2374-04DA-4364-BC15-C34D135D4CB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{9A2A14DD-711A-47CA-B33B-A802DB437DA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A2A14DD-711A-47CA-B33B-A802DB437DA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A2A14DD-711A-47CA-B33B-A802DB437DA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0BE2374-04DA-4364-BC15-C34D135D4CB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0BE2374-04DA-4364-BC15-C34D135D4CB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0BE2374-04DA-4364-BC15-C34D135D4CB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0BE2374-04DA-4364-BC15-C34D135D4CB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

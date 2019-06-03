@@ -45,6 +45,24 @@ namespace CatPlugin.Merge.ViewModels
 			}
 		}
 
+		private long _imageQuality = 100;
+		public long ImageQuality
+		{
+			get { return _imageQuality; }
+			set
+			{
+				if (value < 0)
+				{
+					value = 0;
+				}
+				if (value > 100)
+				{
+					value = 100;
+				}
+				SetProperty(ref _imageQuality, value);
+			}
+		}
+
 		public MergePluginViewModel(IUnityContainer container)
 		{
 			_container = container;
@@ -136,7 +154,7 @@ namespace CatPlugin.Merge.ViewModels
 		private void DoMerge()
 		{
       Merger merger = new Merger(_logger);
-      Task.Run(() => merger.Merge(OutputFile, SelectedFiles));
+      Task.Run(() => merger.Merge(OutputFile, SelectedFiles, ImageQuality));
 		}
 
 		private bool CanMerge()

@@ -12,7 +12,8 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
-			<RowDefinition MaxHeight="250"/>
+			<RowDefinition MaxHeight="200"/>
+			<RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
 		</Grid.RowDefinitions>
@@ -34,6 +35,16 @@
 		<Grid Grid.Row="3">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="150"/>
+				<ColumnDefinition Width="100"/>
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0" Text="Image quality: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+			<TextBox Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding ImageQuality, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
+
+		</Grid>
+		<Grid Grid.Row="4">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150"/>
 				<ColumnDefinition/>
 				<ColumnDefinition Width="80"/>
 			</Grid.ColumnDefinitions>
@@ -41,7 +52,7 @@
 			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding OutputFile, Mode=TwoWay}"/>
 			<Button Grid.Column="2" VerticalAlignment="Center" Content="..." Margin="5" Command="{Binding BrowseOutputFileCommand}" HorizontalContentAlignment="Center" Height="40"/>
 		</Grid>
-		<Grid Grid.Row="4">
+		<Grid Grid.Row="5">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>

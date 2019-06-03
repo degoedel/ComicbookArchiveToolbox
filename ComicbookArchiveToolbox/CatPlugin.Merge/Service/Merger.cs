@@ -16,7 +16,7 @@ namespace CatPlugin.Merge.Service
       _logger = logger;
     }
 
-    public void Merge(string outputFile, IList<string> files)
+    public void Merge(string outputFile, IList<string> files, long imageQuality)
     {
       _logger.Log($"Check input validity vs settings");
       FileInfo fi = new FileInfo(outputFile);
@@ -63,12 +63,22 @@ namespace CatPlugin.Merge.Service
       }
       int pagePadSize = pages.Count.ToString().Length;
       int pageAdded = 1;
-      for (int i = 0; i < pages.Count; ++i)
+			JpgConverter jpgConverter = new JpgConverter(_logger, imageQuality);
+			for (int i = 0; i < pages.Count; ++i)
       {
         if (pages[i].Extension != ".xml")
         {
           string destFile = Path.Combine(outputBuffer, $"{nameTemplate}_{pageAdded.ToString().PadLeft(pagePadSize, '0')}{pages[i].Extension}".Replace(' ', '_'));
-          File.Move(pages[i].FullName, destFile);
+					if (imageQuality == 100)
+					{
+						// rename the files in the directories
+						File.Move(pages[i].FullName, destFile);
+					}
+					else
+					{
+						jpgConverter.SaveJpeg(pages[i].FullName, destFile);
+						File.Delete(pages[i].FullName);
+					}
           ++pageAdded;
         }
       }
