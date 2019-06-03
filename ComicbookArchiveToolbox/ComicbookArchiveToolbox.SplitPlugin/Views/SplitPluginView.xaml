@@ -58,8 +58,13 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="150"/>
 				<ColumnDefinition />
+				<ColumnDefinition />
+				<ColumnDefinition Width="100"/>
+				<ColumnDefinition Width="80"/>
 			</Grid.ColumnDefinitions>
 			<CheckBox Content="Follow source file " Grid.Column="1" VerticalAlignment="Center" IsEnabled="{Binding FileSelected}" IsChecked="{Binding FollowFilePath, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="0"/>
+			<TextBlock Grid.Column="2" Text="Image quality: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+			<TextBox Grid.Column="3" VerticalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding ImageQuality, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
 		</Grid>
 		<Grid Grid.Row="6" IsEnabled="{Binding FollowFilePath, Converter={StaticResource InverseConverter}}">
 			<Grid.ColumnDefinitions>

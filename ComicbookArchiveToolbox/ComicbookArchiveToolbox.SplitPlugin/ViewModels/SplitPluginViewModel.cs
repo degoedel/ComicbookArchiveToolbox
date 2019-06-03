@@ -142,6 +142,24 @@ namespace CatPlugin.Split.ViewModels
 			}
 		}
 
+		private long _imageQuality = 100;
+		public long ImageQuality
+		{
+			get { return _imageQuality; }
+			set
+			{
+				if (value < 0)
+				{
+					value = 0;
+				}
+				if (value > 100)
+				{
+					value = 100;
+				}
+				SetProperty(ref _imageQuality, value);
+			}
+		}
+
 	private string _nameTemplate;
 	public string NameTemplate
 	{
@@ -257,7 +275,8 @@ namespace CatPlugin.Split.ViewModels
 			NumberOfSplittedFiles = FileNb,
 			MaxPagesPerSplittedFile = MaxFilePerArchive,
 			MaxSizePerSplittedFile = MaxFileSize,
-			PagesIndexToSplit = _pagesToSplitIndex
+			PagesIndexToSplit = _pagesToSplitIndex,
+			ImageCompression = ImageQuality
 		};
 		var splitter = _container.Resolve<ISplitter>(SelectedStyle);
 		Task.Run(() => splitter.Split(FileToSplit, arctemp));

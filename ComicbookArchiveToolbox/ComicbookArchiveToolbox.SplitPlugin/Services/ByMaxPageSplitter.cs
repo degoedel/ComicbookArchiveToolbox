@@ -73,7 +73,7 @@ namespace CatPlugin.Split.Services
 					}
 					++i;
 				}
-				bool ok = MovePicturesToSubBuffer(subBufferPath, pagesToAdd, archiveTemplate.ComicName, fileIndex == 0);
+				bool ok = MovePicturesToSubBuffer(subBufferPath, pagesToAdd, archiveTemplate.ComicName, fileIndex == 0, archiveTemplate.ImageCompression);
 				if (!ok)
 				{
 					SystemTools.CleanDirectory(subBufferPath, _logger);

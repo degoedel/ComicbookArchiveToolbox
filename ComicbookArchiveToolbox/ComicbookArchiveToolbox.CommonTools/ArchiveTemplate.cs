@@ -21,5 +21,6 @@ namespace ComicbookArchiveToolbox.CommonTools
 		public uint MaxPagesPerSplittedFile { get; set; }
 		public long MaxSizePerSplittedFile { get; set; }
 		public List<uint> PagesIndexToSplit { get; set; }
+		public long ImageCompression { get; set; }
 	}
 }

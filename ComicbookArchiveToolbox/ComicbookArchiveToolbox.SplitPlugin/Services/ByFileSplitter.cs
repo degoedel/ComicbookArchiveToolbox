@@ -101,7 +101,7 @@ namespace CatPlugin.Split.Services
 	  		}
 	  	}
 	  }
-	  bool ok = MovePicturesToSubBuffer(subBufferPath, pagesToAdd, template.ComicName, fileIndex == 0);
+	  bool ok = MovePicturesToSubBuffer(subBufferPath, pagesToAdd, template.ComicName, fileIndex == 0, template.ImageCompression);
     if (!ok)
     {
         SystemTools.CleanDirectory(subBufferPath, _logger);

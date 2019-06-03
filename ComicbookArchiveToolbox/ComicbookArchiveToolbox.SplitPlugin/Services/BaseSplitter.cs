@@ -102,7 +102,7 @@ namespace CatPlugin.Split.Services
 			return metaDataSize;
 		}
 
-		protected bool MovePicturesToSubBuffer(string destFolder, List<FileInfo> files, string archiveName, bool isFirstArchive)
+		protected bool MovePicturesToSubBuffer(string destFolder, List<FileInfo> files, string archiveName, bool isFirstArchive, long imageCompression)
 		{
 			bool result = true;
 			int increaseIndex = 1;
@@ -115,10 +115,20 @@ namespace CatPlugin.Split.Services
 			{
 				Directory.CreateDirectory(destFolder);
 				int padSize = Math.Max(2, files.Count.ToString().Length);
+				JpgConverter jpgConverter = new JpgConverter(_logger, imageCompression);
 				for (int i = 0; i < files.Count; ++i)
 				{
-					// rename the files in the directories
-					File.Move(files[i].FullName, Path.Combine(destFolder, $"{archiveName}_{(i + increaseIndex).ToString().PadLeft(padSize, '0')}{files[i].Extension}".Replace(' ', '_')));
+					string destFile = Path.Combine(destFolder, $"{archiveName}_{(i + increaseIndex).ToString().PadLeft(padSize, '0')}{files[i].Extension}".Replace(' ', '_'));
+					if (imageCompression == 100)
+					{
+						// rename the files in the directories
+						File.Move(files[i].FullName, destFile);
+					}
+					else
+					{
+						jpgConverter.SaveJpeg(files[i].FullName, destFile);
+						File.Delete(files[i].FullName);
+					}
 				}
 			}
 			catch (Exception e)
