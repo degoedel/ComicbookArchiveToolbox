@@ -8,7 +8,7 @@
 			       xmlns:prism="http://prismlibrary.com/"
 			       prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="800">
+             d:DesignHeight="400" d:DesignWidth="800">
 	<UserControl.Resources>
 		<converters:InverseBooleanConverter x:Key="InverseConverter"/>
 	</UserControl.Resources>
@@ -17,8 +17,8 @@
 			<RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
-			<RowDefinition Height="18.966"/>
-			<RowDefinition Height="31.034"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
