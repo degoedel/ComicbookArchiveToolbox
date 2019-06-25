@@ -8,7 +8,7 @@
              xmlns:local="clr-namespace:ComicbookArchiveToolbox.Views"
 			 prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="250" d:DesignWidth="800">
+             d:DesignHeight="300" d:DesignWidth="800">
   <UserControl.Resources>
     <converters:InverseBooleanConverter x:Key="InverseConverter"/>
   </UserControl.Resources>
@@ -18,8 +18,9 @@
       <RowDefinition Height="50"/>
       <RowDefinition Height="50"/>
       <RowDefinition Height="50"/>
-      <RowDefinition Height="50"/>
-    </Grid.RowDefinitions>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
     <Grid Grid.Row="0">
       <Grid.ColumnDefinitions>
         <ColumnDefinition/>
@@ -48,6 +49,7 @@
       <TextBlock Text="Prefered output format: " Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
       <ComboBox Grid.Column="1" ItemsSource="{Binding Formats}" SelectedItem="{Binding SelectedFormat}" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" Margin="5"/>
     </Grid>
-    <Button Grid.Row="4" Content="Save" Command="{Binding SaveSettingsCommand}"  VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" HorizontalAlignment="Center" Width="100" />
-  </Grid>
+		<CheckBox Content="Hide Log window" Grid.Row="4" IsChecked="{Binding HideLog, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
+		<Button Grid.Row="5" Content="Save" Command="{Binding SaveSettingsCommand}"  VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" HorizontalAlignment="Center" Width="100" />
+	</Grid>
 </UserControl>

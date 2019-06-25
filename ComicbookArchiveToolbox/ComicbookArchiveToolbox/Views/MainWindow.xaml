@@ -9,7 +9,7 @@
         mc:Ignorable="d"
 		Icon="pack://application:,,,/ComicbookArchiveToolbox;component/Resources/Cat.ico"
         ShowIconOnTitleBar="True"
-        Title="Comicbook Archive Toolbox" Height="520" Width="850">
+        Title="Comicbook Archive Toolbox" Height="670" Width="850">
   <Grid>
 		<ContentControl prism:RegionManager.RegionName="HostRegion" />
 	</Grid>

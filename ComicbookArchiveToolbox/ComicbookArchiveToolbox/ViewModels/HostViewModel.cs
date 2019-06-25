@@ -89,5 +89,14 @@ namespace ComicbookArchiveToolbox.ViewModels
     {
       CommonLog += line + "\n";
     }
+
+		public Visibility LogVisibility
+		{
+			get
+			{
+				return Settings.Instance.HideLog ? Visibility.Collapsed : Visibility.Visible;
+			}
+		}
+
   }
 }

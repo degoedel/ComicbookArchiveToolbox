@@ -1,6 +1,8 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
+using ComicbookArchiveToolbox.Events;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -29,6 +31,7 @@ namespace ComicbookArchiveToolbox.ViewModels
       BrowseDirectoryCommand = new DelegateCommand(BrowseDirectory, CanExecute);
       SaveSettingsCommand = new DelegateCommand(SaveSettings, CanExecute);
       SelectedFormat = Settings.Instance.OutputFormat.ToString();
+			HideLog = Settings.Instance.HideLog;
     }
 
     bool _useFileDirAsBuffer;
@@ -64,7 +67,18 @@ namespace ComicbookArchiveToolbox.ViewModels
       }
     }
 
-    bool _alwaysIncludeMetadata;
+		bool _hideLog;
+		public bool HideLog
+		{
+			get { return _hideLog; }
+			set
+			{
+				SetProperty(ref _hideLog, value);
+				Settings.Instance.HideLog = value;
+			}
+		}
+
+		bool _alwaysIncludeMetadata;
     public bool AlwaysIncludeMetadata
     {
       get { return _alwaysIncludeMetadata; }

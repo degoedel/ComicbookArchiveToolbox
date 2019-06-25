@@ -31,6 +31,7 @@ namespace ComicbookArchiveToolbox.CommonTools
         IncludeMetadata = true;
         OutputFormat = ArchiveFormat.Cbz;
 				DefaultMetadata = "Series;Number;Web;Summary;Notes;Publisher;Imprint;Genre;PageCount;LanguageISO";
+				HideLog = false;
 
 	  }
     }
@@ -81,6 +82,7 @@ namespace ComicbookArchiveToolbox.CommonTools
       IncludeCover = serializedSettings.IncludeCover;
       IncludeMetadata = serializedSettings.IncludeMetadata;
       OutputFormat = serializedSettings.OutputFormat;
+			HideLog = serializedSettings.HideLog;
     }
 
   }
@@ -104,6 +106,7 @@ namespace ComicbookArchiveToolbox.CommonTools
     public ArchiveFormat OutputFormat { get; set; }
 
 		public string DefaultMetadata { get; set; }
+		public bool HideLog { get; set; }
 
 
   }
