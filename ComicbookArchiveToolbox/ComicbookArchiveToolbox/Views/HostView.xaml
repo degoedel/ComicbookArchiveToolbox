@@ -22,14 +22,36 @@
     <Grid Grid.Column="1">
       <Grid.RowDefinitions>
 		<RowDefinition Height="Auto"/>
-        <RowDefinition/>
-				<RowDefinition Height="100"/>
+				<RowDefinition>
+					<RowDefinition.Style>
+						<Style TargetType="{x:Type RowDefinition}">
+							<Setter Property="Height" Value="*" />
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding HideLog}" Value="True">
+									<Setter Property="Height" Value="0" />
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</RowDefinition.Style>
+				</RowDefinition>
+				<RowDefinition>
+					<RowDefinition.Style>
+					<Style TargetType="{x:Type RowDefinition}">
+						<Setter Property="Height" Value="100" />
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding IsBusy}" Value="False">
+								<Setter Property="Height" Value="0" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+					</RowDefinition.Style>
+				</RowDefinition>
 			</Grid.RowDefinitions>
       <ContentControl Grid.Row="0" prism:RegionManager.RegionName="PluginRegion" Margin="10, 10,10, 0"/>
-			<TextBox Grid.Row="1" IsReadOnly="true" Margin="10" Text="{Binding CommonLog}"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" TextChanged="TextBox_TextChanged" Visibility="{Binding LogVisibility}"/>
+			<TextBox Grid.Row="1" IsReadOnly="true" Margin="10" Text="{Binding CommonLog}"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" TextChanged="TextBox_TextChanged"/>
 			<UserControl Grid.Row="2" Name="BusyIndicator" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 				<Viewbox Width="{Binding Width, ElementName=BusyIndicator}" Height="{Binding Height, ElementName=BusyIndicator}"      
-        HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding BusyIndicatorVisibility}">
+        HorizontalAlignment="Center" VerticalAlignment="Center">
 					<Grid Background="Transparent" ToolTip="Searching...." HorizontalAlignment="Center" VerticalAlignment="Center">
 						<Canvas Name="Canvas1"  
          RenderTransformOrigin="0.5,0.5"  

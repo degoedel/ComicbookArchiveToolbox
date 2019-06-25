@@ -23,6 +23,7 @@ namespace CatPlugin.Edit
 
 		public Canvas Icon => _icon;
 		public string Name => "Edit Metadata";
+		public string ToolDescription => "Edit or create a metadata file in archive. Will create a new archive if format does not support update.";
 
 		public DelegateCommand LoadViewCommand { get; private set; }
 

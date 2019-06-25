@@ -17,7 +17,7 @@
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemTemplate>
         <DataTemplate>
-			<Button Command="{Binding LoadViewCommand}" Margin="0,0,5,5" Width="200" Height="200">
+			<Button Command="{Binding LoadViewCommand}" Margin="0,0,5,5" Width="200" Height="200" ToolTip="{Binding ToolDescription}">
 				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition />

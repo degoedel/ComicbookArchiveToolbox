@@ -29,7 +29,7 @@ namespace CatPlugin.Split
 
 		#region Properties
 		public string Name => "Split";
-
+		public string ToolDescription => "Split the selected archive in several files. Allow images recompression. Available split methods are : by file number, by maximum size per file, or by maximum pages number in files.";
 		public DelegateCommand LoadViewCommand { get; private set; }
 
 		public Canvas Icon => _icon;

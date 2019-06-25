@@ -10,5 +10,7 @@ namespace ComicbookArchiveToolbox.CommonTools.Interfaces
     DelegateCommand LoadViewCommand { get; }
 
 	Canvas Icon { get; }
+
+		string ToolDescription { get; }
   }
 }

@@ -24,6 +24,8 @@ namespace CatPlugin.Compress
 		public Canvas Icon => _icon;
 		public string Name => "Compress";
 
+		public string ToolDescription => "Create a new archive with recompressed (degraded) pictures to allow faster page loading in reader.";
+
 		public DelegateCommand LoadViewCommand { get; private set; }
 
 		public CompressPlugin(IUnityContainer container)

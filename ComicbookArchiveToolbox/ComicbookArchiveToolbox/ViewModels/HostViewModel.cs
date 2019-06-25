@@ -53,9 +53,11 @@ namespace ComicbookArchiveToolbox.ViewModels
       _eventAggregator = eventAggregator;
       _eventAggregator.GetEvent<LogEvent>().Subscribe(AddLogLine, ThreadOption.UIThread);
 			_eventAggregator.GetEvent<BusinessEvent>().Subscribe(SetBusyState, ThreadOption.UIThread);
+			_eventAggregator.GetEvent<HideLogEvent>().Subscribe(CollapseLog, ThreadOption.UIThread);
 			DisplayToolsCommand = new DelegateCommand(DisplayTools, CanExecute);
 	  DisplaySettingsCommand = new DelegateCommand(DisplaySettings, CanExecute);
 	  DisplayAboutCommand = new DelegateCommand(DisplayAbout, CanExecute);
+			HideLog = Settings.Instance.HideLog;
 	}
 	#endregion Constructors
 
@@ -91,12 +93,19 @@ namespace ComicbookArchiveToolbox.ViewModels
       CommonLog += line + "\n";
     }
 
-		public Visibility LogVisibility
+		private bool _hideLog;
+		public bool HideLog
 		{
-			get
+			get { return _hideLog; }
+			set
 			{
-				return Settings.Instance.HideLog ? Visibility.Collapsed : Visibility.Visible;
+				SetProperty(ref _hideLog, value);
 			}
+		}
+
+		private void CollapseLog(bool hide)
+		{
+			HideLog = hide;
 		}
 
 		private bool _isBusy;
@@ -106,12 +115,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 			set
 			{
 				SetProperty(ref _isBusy, value);
-				OnPropertyChanged("BusyIndicatorVisibility");
 			}
-		}
-		public Visibility BusyIndicatorVisibility
-		{
-			get { return IsBusy ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private void SetBusyState(bool busy)

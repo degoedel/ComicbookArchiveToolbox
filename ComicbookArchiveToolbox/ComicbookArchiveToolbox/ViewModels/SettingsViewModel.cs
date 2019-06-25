@@ -16,13 +16,15 @@ namespace ComicbookArchiveToolbox.ViewModels
 	public class SettingsViewModel : BindableBase
 	{
     private Logger _logger;
+		private IEventAggregator _eventAggregator;
     public DelegateCommand BrowseDirectoryCommand { get; private set; }
     public DelegateCommand SaveSettingsCommand { get; private set; }
 
 
-    public SettingsViewModel(IUnityContainer container)
+    public SettingsViewModel(IUnityContainer container, IEventAggregator eventAggregator)
     {
       _logger = container.Resolve<Logger>();
+			_eventAggregator = eventAggregator;
       Formats = Enum.GetNames(typeof(Settings.ArchiveFormat)).ToList();
       UseFileDirAsBuffer = Settings.Instance.UseFileDirAsBuffer;
       BufferPath = Settings.Instance.BufferDirectory;
@@ -75,6 +77,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 			{
 				SetProperty(ref _hideLog, value);
 				Settings.Instance.HideLog = value;
+				_eventAggregator.GetEvent<HideLogEvent>().Publish(value);
 			}
 		}
 

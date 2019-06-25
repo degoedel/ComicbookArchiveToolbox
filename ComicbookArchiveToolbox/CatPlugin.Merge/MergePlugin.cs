@@ -27,10 +27,10 @@ namespace CatPlugin.Merge
 
 		#region Properties
 		public string Name => "Merge";
+		public string ToolDescription => "Merge the selected archives in one file. Allow image recompression.";
 
 
-
-    public DelegateCommand LoadViewCommand { get; private set; }
+		public DelegateCommand LoadViewCommand { get; private set; }
 
 		public Canvas Icon => _icon;
 
