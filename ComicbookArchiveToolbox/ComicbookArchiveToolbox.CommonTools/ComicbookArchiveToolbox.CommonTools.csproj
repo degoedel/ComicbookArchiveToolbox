@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="ArchiveTemplate.cs" />
     <Compile Include="CompressionHelper.cs" />
+    <Compile Include="Events\BusinessEvent.cs" />
     <Compile Include="Events\LogEvent.cs" />
     <Compile Include="Interfaces\ICatPlugin.cs" />
     <Compile Include="InverseBooleanConverter.cs" />

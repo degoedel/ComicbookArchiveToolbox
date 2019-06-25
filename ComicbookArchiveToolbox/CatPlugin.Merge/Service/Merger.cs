@@ -1,4 +1,6 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
+using ComicbookArchiveToolbox.CommonTools.Events;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,14 +13,17 @@ namespace CatPlugin.Merge.Service
   public class Merger
   {
     private Logger _logger;
-    public Merger(Logger logger)
+		private IEventAggregator _eventAggregator;
+    public Merger(Logger logger, IEventAggregator eventAggregator)
     {
       _logger = logger;
+			_eventAggregator = eventAggregator;
     }
 
     public void Merge(string outputFile, IList<string> files, long imageQuality)
     {
-      _logger.Log($"Check input validity vs settings");
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
+			_logger.Log($"Check input validity vs settings");
       FileInfo fi = new FileInfo(outputFile);
       string fileName = fi.Name;
       string settingsExtension = $".{Settings.Instance.OutputFormat.ToString().ToLower()}";
@@ -89,9 +94,10 @@ namespace CatPlugin.Merge.Service
       _logger.Log($"Clean Buffer {bufferPath}");
       SystemTools.CleanDirectory(bufferPath, _logger);
       _logger.Log("Done.");
-    }
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
+		}
 
-    private void ParseArchiveFiles(string pathToBuffer, ref List<FileInfo> metadataFiles, ref List<FileInfo> pages)
+		private void ParseArchiveFiles(string pathToBuffer, ref List<FileInfo> metadataFiles, ref List<FileInfo> pages)
     {
       DirectoryInfo di = new DirectoryInfo(pathToBuffer);
       pages.AddRange(di.GetFiles().OrderBy(f => f.Name));

@@ -3,6 +3,7 @@ using ComicbookArchiveToolbox.CommonTools;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
@@ -18,6 +19,7 @@ namespace CatPlugin.Split.ViewModels
 		private Logger _logger;
 		private IRegionManager _regionManager;
 		private IUnityContainer _container;
+		private IEventAggregator _eventAggregator;
 
 		public List<string> SplitStyles { get; set; }
 
@@ -211,9 +213,10 @@ namespace CatPlugin.Split.ViewModels
     public DelegateCommand BrowseOutputDirCommand { get; private set; }
     public DelegateCommand SplitCommand { get; private set; }
 
-    public SplitPluginViewModel(IUnityContainer container, IRegionManager regionManager)
+    public SplitPluginViewModel(IUnityContainer container, IRegionManager regionManager, IEventAggregator eventAggregator)
     {
 			_container = container;
+			_eventAggregator = eventAggregator;
 			SplitStyles = new List<string>()
 			{
 				"By File Nb",

@@ -1,4 +1,6 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
+using ComicbookArchiveToolbox.CommonTools.Events;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,17 +12,20 @@ namespace CatPlugin.Split.Services
 {
 	public class ByMaxPageSplitter : BaseSplitter, ISplitter
 	{
-		public ByMaxPageSplitter(Logger logger)
+		private IEventAggregator _eventAggregator;
+		public ByMaxPageSplitter(Logger logger, IEventAggregator eventAggregator)
 			: base(logger)
 		{
-
+			_eventAggregator = eventAggregator;
 		}
 
 		public void Split(string filePath, ArchiveTemplate archiveTemplate)
 		{
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
 			if (archiveTemplate.MaxPagesPerSplittedFile < 2)
 			{
 				_logger.Log($"Cannot split archive with {archiveTemplate.MaxPagesPerSplittedFile} page per file");
+				_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
 				return;
 			}
 			//Extract file in buffer
@@ -89,6 +94,7 @@ namespace CatPlugin.Split.Services
 			_logger.Log($"Clean Buffer {archiveTemplate.PathToBuffer}");
 			SystemTools.CleanDirectory(archiveTemplate.PathToBuffer, _logger);
 			_logger.Log("Done.");
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
 		}
 
 		private int ComputeNumberOfSplittedFiles(int totalPagesCount, ArchiveTemplate template)

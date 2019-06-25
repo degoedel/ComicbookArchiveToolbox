@@ -1,6 +1,8 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
+using ComicbookArchiveToolbox.CommonTools.Events;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,7 @@ namespace CatPlugin.Edit.ViewModels
 	{
 		private Logger _logger;
 		private IUnityContainer _container;
+		private IEventAggregator _eventAggregator;
 
 		private string _fileToEdit = "";
 		public string FileToEdit
@@ -50,9 +53,10 @@ namespace CatPlugin.Edit.ViewModels
 		public DelegateCommand SaveCommand { get; private set; }
 
 
-		public EditPluginViewModel(IUnityContainer container)
+		public EditPluginViewModel(IUnityContainer container, IEventAggregator eventAggregator)
 		{
 			_container = container;
+			_eventAggregator = eventAggregator;
 			BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);
 			SaveCommand = new DelegateCommand(LaunchSave, CanSave);
 			_logger = _container.Resolve<Logger>();
@@ -110,6 +114,7 @@ namespace CatPlugin.Edit.ViewModels
 
 		private void DoSave()
 		{
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
 			bool canUpdate = false;
 			FileInfo fi = new FileInfo(_fileToEdit);
 			switch (fi.Extension)
@@ -172,8 +177,8 @@ namespace CatPlugin.Edit.ViewModels
 				_logger.Log($"Clean Buffer {bufferPath}");
 				SystemTools.CleanDirectory(bufferPath, _logger);
 				_logger.Log("Done.");
-
 			}
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
 		}
 
 		private bool CanSave()
@@ -183,6 +188,7 @@ namespace CatPlugin.Edit.ViewModels
 
 		private void LoadMetadata()
 		{
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
 			CompressionHelper ch = new CompressionHelper(_logger);
 			FileInfo fi = new FileInfo(_fileToEdit);
 			string nameTemplate = fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length);
@@ -223,6 +229,7 @@ namespace CatPlugin.Edit.ViewModels
 				_logger.Log("No metadata found. Initializing default ones");
 				InitializeDefaultMetada();
 			}
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
 		}
 
 		private void InitializeDefaultMetada()

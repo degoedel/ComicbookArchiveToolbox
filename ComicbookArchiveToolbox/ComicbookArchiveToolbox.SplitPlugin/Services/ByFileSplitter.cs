@@ -1,4 +1,6 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
+using ComicbookArchiveToolbox.CommonTools.Events;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,17 +12,21 @@ namespace CatPlugin.Split.Services
 {
   public class ByFileSplitter : BaseSplitter, ISplitter
   {
-    public ByFileSplitter(Logger logger)
+		private IEventAggregator _eventAggregator;
+    public ByFileSplitter(Logger logger, IEventAggregator eventAggregator)
 			: base(logger)
     {
+			_eventAggregator = eventAggregator;
     }
 
     public void Split(string filePath, ArchiveTemplate archiveTemplate)
     {
-      if (archiveTemplate.NumberOfSplittedFiles < 2)
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
+			if (archiveTemplate.NumberOfSplittedFiles < 2)
       {
         _logger.Log($"Cannot split archive in {archiveTemplate.NumberOfSplittedFiles} files");
-        return;
+				_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
+				return;
       }
 	  //Extract file in buffer
 	  string pathToBuffer = ExtractArchive(filePath, archiveTemplate);
@@ -33,7 +39,8 @@ namespace CatPlugin.Split.Services
       {
         _logger.Log($"Not enough pages to split into {archiveTemplate.NumberOfSplittedFiles} files.");
         SystemTools.CleanDirectory(pathToBuffer, _logger);
-        return;
+				_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
+				return;
       }
       //Create one folder per resulting file and copy pictures in it
       int pagesPerFile = Math.DivRem(totalPagesCount, (int)archiveTemplate.NumberOfSplittedFiles, out int extraPages);
@@ -71,9 +78,10 @@ namespace CatPlugin.Split.Services
       // compress the resulting file
       // clean the temp directories
       _logger.Log("Done.");
-    }
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
+		}
 
-	private string BuildSplittedArchive(ArchiveTemplate template, int fileIndex, ref int sourcePageIndex)
+		private string BuildSplittedArchive(ArchiveTemplate template, int fileIndex, ref int sourcePageIndex)
 	{
 	  // Create the subBuffer
 	  string subBufferPath = Path.Combine(template.PathToBuffer, $"{template.ComicName}_{(fileIndex + 1).ToString().PadLeft(template.IndexSize, '0')}");

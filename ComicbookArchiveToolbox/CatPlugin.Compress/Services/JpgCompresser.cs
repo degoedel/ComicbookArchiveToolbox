@@ -1,4 +1,6 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
+using ComicbookArchiveToolbox.CommonTools.Events;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,13 +13,16 @@ namespace CatPlugin.Compress.Services
 	public class JpgCompresser
 	{
 		private Logger _logger;
-		public JpgCompresser(Logger logger)
+		private IEventAggregator _eventAggregator;
+		public JpgCompresser(Logger logger, IEventAggregator eventAggregator)
 		{
 			_logger = logger;
+			_eventAggregator = eventAggregator;
 		}
 
 		public void Compress(string inputFile, string outputFile, long imageQuality)
 		{
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
 			_logger.Log($"Check input validity vs settings");
 			FileInfo fi = new FileInfo(outputFile);
 			string fileName = fi.Name;
@@ -87,6 +92,7 @@ namespace CatPlugin.Compress.Services
 			_logger.Log($"Clean Buffer {bufferPath}");
 			SystemTools.CleanDirectory(bufferPath, _logger);
 			_logger.Log("Done.");
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
 		}
 
 		private void ParseArchiveFiles(string pathToBuffer, ref List<FileInfo> metadataFiles, ref List<FileInfo> pages)

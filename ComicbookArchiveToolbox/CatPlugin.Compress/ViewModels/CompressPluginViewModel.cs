@@ -2,6 +2,7 @@
 using ComicbookArchiveToolbox.CommonTools;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace CatPlugin.Compress.ViewModels
 	{
 		private Logger _logger;
 		private IUnityContainer _container;
+		private IEventAggregator _eventAggregator;
 
 		private string _fileToCompress = "";
 		public string FileToCompress
@@ -62,9 +64,10 @@ namespace CatPlugin.Compress.ViewModels
 		public DelegateCommand BrowseOutputFileCommand { get; private set; }
 		public DelegateCommand CompressCommand { get; private set; }
 
-		public CompressPluginViewModel(IUnityContainer container)
+		public CompressPluginViewModel(IUnityContainer container, IEventAggregator eventAggregator)
 		{
 			_container = container;
+			_eventAggregator = eventAggregator;
 			BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);
 			BrowseOutputFileCommand = new DelegateCommand(BrowseOutputFile, CanExecute);
 			CompressCommand = new DelegateCommand(DoCompress, CanCompress);
@@ -140,7 +143,7 @@ namespace CatPlugin.Compress.ViewModels
 
 		private void DoCompress()
 		{
-			JpgCompresser compresser = new JpgCompresser(_logger);
+			JpgCompresser compresser = new JpgCompresser(_logger, _eventAggregator);
 			Task.Run(() => compresser.Compress(FileToCompress, OutputFile, ImageQuality));
 		}
 

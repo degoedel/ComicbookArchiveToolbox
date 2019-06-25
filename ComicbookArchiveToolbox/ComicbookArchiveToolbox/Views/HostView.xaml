@@ -29,7 +29,7 @@
 			<TextBox Grid.Row="1" IsReadOnly="true" Margin="10" Text="{Binding CommonLog}"  TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" TextChanged="TextBox_TextChanged" Visibility="{Binding LogVisibility}"/>
 			<UserControl Grid.Row="2" Name="BusyIndicator" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 				<Viewbox Width="{Binding Width, ElementName=BusyIndicator}" Height="{Binding Height, ElementName=BusyIndicator}"      
-        HorizontalAlignment="Center" VerticalAlignment="Center">
+        HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding BusyIndicatorVisibility}">
 					<Grid Background="Transparent" ToolTip="Searching...." HorizontalAlignment="Center" VerticalAlignment="Center">
 						<Canvas Name="Canvas1"  
          RenderTransformOrigin="0.5,0.5"  

@@ -2,6 +2,7 @@
 using ComicbookArchiveToolbox.CommonTools;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace CatPlugin.Merge.ViewModels
   public class MergePluginViewModel : BindableBase
   {
 		private IUnityContainer _container;
+		private IEventAggregator _eventAggregator;
 		private Logger _logger;
 		public DelegateCommand BrowseFilesCommand { get; private set; }
 		public DelegateCommand ClearFilesCommand { get; private set; }
@@ -63,9 +65,10 @@ namespace CatPlugin.Merge.ViewModels
 			}
 		}
 
-		public MergePluginViewModel(IUnityContainer container)
+		public MergePluginViewModel(IUnityContainer container, IEventAggregator eventAggregator)
 		{
 			_container = container;
+			_eventAggregator = eventAggregator;
 			_logger = _container.Resolve<Logger>();
 			BrowseFilesCommand = new DelegateCommand(BrowseFiles, CanExecute);
 			ClearFilesCommand = new DelegateCommand(ClearFiles, CanExecute);
@@ -153,7 +156,7 @@ namespace CatPlugin.Merge.ViewModels
 
 		private void DoMerge()
 		{
-      Merger merger = new Merger(_logger);
+      Merger merger = new Merger(_logger, _eventAggregator);
       Task.Run(() => merger.Merge(OutputFile, SelectedFiles, ImageQuality));
 		}
 
