@@ -37,5 +37,17 @@ namespace ComicbookArchiveToolbox.CommonTools
 				_logger.Log($"Cannot reencode {inputPath} . {e.Message}");
 			}
 		}
+
+		public void SaveJpeg(Bitmap inputPic, string outputPath)
+		{
+			try
+			{
+				inputPic.Save(outputPath, _codecInfo, _encoderParameters);
+			}
+			catch (Exception e)
+			{
+				_logger.Log($"Cannot reencode provided bitmap. {e.Message}");
+			}
+		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -81,8 +82,32 @@ namespace CatPlugin.Split.Services
 				return coverSize;
 			}
 			FileInfo coverInfo = new FileInfo(coverFile);
+			string destFile = Path.Combine(subBuffer, coverInfo.Name);
+
+			Bitmap bitmap = (Bitmap)Image.FromFile(coverFile);//load the image file
+
+			if (Settings.Instance.AddFileIndexToCovers)
+			{
+				string firstText = "Hello";
+				string secondText = "World";
+				PointF firstLocation = new PointF(10f, 10f);
+				PointF secondLocation = new PointF(10f, 50f);
+
+				using (Graphics graphics = Graphics.FromImage(bitmap))
+				{
+					using (Font arialFont = new Font("Arial", 55))
+					{
+						graphics.DrawString(firstText, arialFont, Brushes.Blue, firstLocation);
+						graphics.DrawString(secondText, arialFont, Brushes.Red, secondLocation);
+					}
+				}
+			}
+
+			JpgConverter jpgConverter = new JpgConverter(_logger, 80);
+			jpgConverter.SaveJpeg(bitmap, destFile);
+
+			coverInfo = new FileInfo(destFile);
 			coverSize = coverInfo.Length;
-			File.Copy(coverFile, Path.Combine(subBuffer, coverInfo.Name));
 			return coverSize;
 		}
 

@@ -15,7 +15,8 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="50"/>
-      <RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
       <RowDefinition Height="50"/>
       <RowDefinition Height="50"/>
 			<RowDefinition Height="50"/>
@@ -29,8 +30,16 @@
       <CheckBox Content="Always include cover in generated files" Grid.Column="0" IsChecked="{Binding AlwaysIncludeCover}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
       <CheckBox Content="Always include metadata if available in generated files" Grid.Column="1"  IsChecked="{Binding AlwaysIncludeMetadata}"  FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
     </Grid>
-    <CheckBox Content="Use input file folder as buffer" Grid.Row="1" IsChecked="{Binding UseFileDirAsBuffer, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
-    <Grid Grid.Row="2"  IsEnabled="{Binding UseFileDirAsBuffer, Converter={StaticResource InverseConverter}}">
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<CheckBox Content="Add File Index to Covers" Grid.Column="0" IsChecked="{Binding AddFileIndexToCovers, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
+		</Grid>
+		<CheckBox Content="Use input file folder as buffer" Grid.Row="2" IsChecked="{Binding UseFileDirAsBuffer, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
+    <Grid Grid.Row="3"  IsEnabled="{Binding UseFileDirAsBuffer, Converter={StaticResource InverseConverter}}">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="160"/>
         <ColumnDefinition/>
@@ -40,7 +49,7 @@
       <TextBox Grid.Column="1" Text="{Binding BufferPath}" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Margin="5" />
       <Button Content="..." Grid.Column="2" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40"/>
     </Grid>
-    <Grid Grid.Row="3">
+    <Grid Grid.Row="4">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="160"/>
         <ColumnDefinition Width="150"/>

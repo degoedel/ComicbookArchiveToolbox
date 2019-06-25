@@ -69,6 +69,17 @@ namespace ComicbookArchiveToolbox.ViewModels
       }
     }
 
+		private bool _addFileIndexToCovers;
+		public bool AddFileIndexToCovers
+		{
+			get { return _addFileIndexToCovers; }
+			set
+			{
+				SetProperty(ref _addFileIndexToCovers, value);
+				Settings.Instance.AddFileIndexToCovers = value;
+			}
+		}
+
 		bool _hideLog;
 		public bool HideLog
 		{
