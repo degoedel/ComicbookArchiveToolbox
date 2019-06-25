@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="CompressPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\JpgCompresser.cs" />
     <Compile Include="ViewModels\CompressPluginViewModel.cs" />
     <Compile Include="Views\CompressPluginView.xaml.cs">
       <DependentUpon>CompressPluginView.xaml</DependentUpon>

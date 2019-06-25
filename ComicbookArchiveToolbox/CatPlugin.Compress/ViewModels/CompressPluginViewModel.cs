@@ -1,4 +1,5 @@
-﻿using ComicbookArchiveToolbox.CommonTools;
+﻿using CatPlugin.Compress.Services;
+using ComicbookArchiveToolbox.CommonTools;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -139,7 +140,8 @@ namespace CatPlugin.Compress.ViewModels
 
 		private void DoCompress()
 		{
-
+			JpgCompresser compresser = new JpgCompresser(_logger);
+			Task.Run(() => compresser.Compress(FileToCompress, OutputFile, ImageQuality));
 		}
 
 		private bool CanCompress()

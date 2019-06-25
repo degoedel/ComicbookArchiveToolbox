@@ -22,7 +22,7 @@
 			</Grid.ColumnDefinitions>
 			<TextBlock Grid.Column="0" Text="Input File: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
 			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding FileToCompress, Mode=TwoWay}"/>
-			<Button Grid.Column="2" Content="..."  Height="40" Margin="5"  />
+			<Button Grid.Column="2" Content="..."  Height="40" Margin="5" Command="{Binding BrowseFileCommand}" HorizontalContentAlignment="Center"  />
 		</Grid>
 		<Grid Grid.Row="1">
 			<Grid.ColumnDefinitions>
@@ -32,7 +32,7 @@
 			</Grid.ColumnDefinitions>
 			<TextBlock Grid.Column="0" Text="Output File: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
 			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding OutputFile, Mode=TwoWay}"/>
-			<Button Grid.Column="2" Content="..."  Height="40" Margin="5" />
+			<Button Grid.Column="2" Content="..."  Height="40" Margin="5"  Command="{Binding BrowseOutputFileCommand}" HorizontalContentAlignment="Center" />
 		</Grid>
 		<Grid Grid.Row="2">
 			<Grid.ColumnDefinitions>
@@ -43,7 +43,7 @@
 			</Grid.ColumnDefinitions>
 			<TextBlock Grid.Column="0" Text="Pictures Compression: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14" />
 			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" PreviewTextInput = "NumericOnly" Text="{Binding ImageQuality, Mode=TwoWay}" />
-			<Button Grid.Column="2" Content="Compress"  Height="40" HorizontalAlignment="Center" Width="150"/>
+			<Button Grid.Column="2" Content="Compress"  Height="40" HorizontalAlignment="Center" Width="150" Command="{Binding CompressCommand}" />
 		</Grid>
     </Grid>
 </UserControl>
