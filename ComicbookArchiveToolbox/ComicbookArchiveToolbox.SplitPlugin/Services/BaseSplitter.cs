@@ -74,7 +74,7 @@ namespace CatPlugin.Split.Services
 			return cover != null;
 		}
 
-		protected long CopyCoverToSubBuffer(string coverFile, string subBuffer)
+		protected long CopyCoverToSubBuffer(string coverFile, string subBuffer, int fileIndex, int archiveNb)
 		{
 			long coverSize = 0;
 			if (string.IsNullOrWhiteSpace(coverFile))
@@ -84,27 +84,31 @@ namespace CatPlugin.Split.Services
 			FileInfo coverInfo = new FileInfo(coverFile);
 			string destFile = Path.Combine(subBuffer, coverInfo.Name);
 
-			Bitmap bitmap = (Bitmap)Image.FromFile(coverFile);//load the image file
-
-			if (Settings.Instance.AddFileIndexToCovers)
+			using (Bitmap bitmap = (Bitmap)Image.FromFile(coverFile))
 			{
-				string firstText = "Hello";
-				string secondText = "World";
-				PointF firstLocation = new PointF(10f, 10f);
-				PointF secondLocation = new PointF(10f, 50f);
-
-				using (Graphics graphics = Graphics.FromImage(bitmap))
+				if (Settings.Instance.AddFileIndexToCovers)
 				{
-					using (Font arialFont = new Font("Arial", 55))
+					string issueText = $"{fileIndex.ToString().PadLeft(archiveNb.ToString().Length, '0')}/{archiveNb}";
+
+					using (Graphics graphics = Graphics.FromImage(bitmap))
 					{
-						graphics.DrawString(firstText, arialFont, Brushes.Blue, firstLocation);
-						graphics.DrawString(secondText, arialFont, Brushes.Red, secondLocation);
+						using (Font arialFont = new Font("Arial", 220f, FontStyle.Regular, GraphicsUnit.Point))
+						{
+							SizeF size = graphics.MeasureString(issueText, arialFont);
+						using (SolidBrush whiteBrush = new SolidBrush(Color.FromArgb(200, 255, 255, 255)))
+						{
+							graphics.FillRectangle(whiteBrush, 5f, 5f, size.Width + 10f , size.Height + 10f);
+						}
+
+
+							graphics.DrawString(issueText, arialFont, Brushes.Black, 10f, 10f);
+						}
 					}
 				}
-			}
 
-			JpgConverter jpgConverter = new JpgConverter(_logger, 80);
-			jpgConverter.SaveJpeg(bitmap, destFile);
+				JpgConverter jpgConverter = new JpgConverter(_logger, 80);
+				jpgConverter.SaveJpeg(bitmap, destFile);
+			}
 
 			coverInfo = new FileInfo(destFile);
 			coverSize = coverInfo.Length;

@@ -64,7 +64,7 @@ namespace CatPlugin.Split.Services
 					{
 						if (Settings.Instance.IncludeCover)
 						{
-							CopyCoverToSubBuffer(archiveTemplate.CoverPath, subBufferPath);
+							CopyCoverToSubBuffer(archiveTemplate.CoverPath, subBufferPath, fileIndex + 1, (int)archiveTemplate.NumberOfSplittedFiles);
 							++pagesAdded;
 						}
 					}

@@ -8,7 +8,7 @@
              xmlns:local="clr-namespace:ComicbookArchiveToolbox.Views"
 			 prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="800">
+             d:DesignHeight="350" d:DesignWidth="800">
   <UserControl.Resources>
     <converters:InverseBooleanConverter x:Key="InverseConverter"/>
   </UserControl.Resources>
@@ -27,8 +27,8 @@
         <ColumnDefinition/>
         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
-      <CheckBox Content="Always include cover in generated files" Grid.Column="0" IsChecked="{Binding AlwaysIncludeCover}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
-      <CheckBox Content="Always include metadata if available in generated files" Grid.Column="1"  IsChecked="{Binding AlwaysIncludeMetadata}"  FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
+      <CheckBox Content="Always include cover in generated files" Grid.Column="0" IsChecked="{Binding AlwaysIncludeCover}" FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, the first found picture in the selected archive(s) will be added to the generated file(s)"/>
+      <CheckBox Content="Always include metadata if available in generated files" Grid.Column="1"  IsChecked="{Binding AlwaysIncludeMetadata}"  FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, the first found metadata file in the selected archive(s) will be added to the generated file(s)"/>
     </Grid>
 		<Grid Grid.Row="1">
 			<Grid.ColumnDefinitions>
@@ -36,9 +36,9 @@
 				<ColumnDefinition/>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			<CheckBox Content="Add File Index to Covers" Grid.Column="0" IsChecked="{Binding AddFileIndexToCovers, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
+			<CheckBox Content="Add File Index to Covers" Grid.Column="0" IsChecked="{Binding AddFileIndexToCovers, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, a label with the file number will be added to the cover of the splitted files (if the option for adding the cover is checked)"/>
 		</Grid>
-		<CheckBox Content="Use input file folder as buffer" Grid.Row="2" IsChecked="{Binding UseFileDirAsBuffer, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
+		<CheckBox Content="Use input file folder as buffer" Grid.Row="2" IsChecked="{Binding UseFileDirAsBuffer, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, the folder containing the selected file(s) will be used as a buffer directory instead of the ProgramData directory"/>
     <Grid Grid.Row="3"  IsEnabled="{Binding UseFileDirAsBuffer, Converter={StaticResource InverseConverter}}">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="160"/>
@@ -56,9 +56,9 @@
         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
       <TextBlock Text="Prefered output format: " Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-      <ComboBox Grid.Column="1" ItemsSource="{Binding Formats}" SelectedItem="{Binding SelectedFormat}" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" Margin="5"/>
+      <ComboBox Grid.Column="1" ItemsSource="{Binding Formats}" SelectedItem="{Binding SelectedFormat}" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" Margin="5" ToolTip="This tool cannot produce CBR files. Select your favourite output format"/>
     </Grid>
-		<CheckBox Content="Hide Log window" Grid.Row="4" IsChecked="{Binding HideLog, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10"/>
-		<Button Grid.Row="5" Content="Save" Command="{Binding SaveSettingsCommand}"  VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" HorizontalAlignment="Center" Width="100" />
+		<CheckBox Content="Hide Log window" Grid.Row="5" IsChecked="{Binding HideLog, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, the log buffer will be hidden"/>
+		<Button Grid.Row="6" Content="Save" Command="{Binding SaveSettingsCommand}"  VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" HorizontalAlignment="Center" Width="100" />
 	</Grid>
 </UserControl>

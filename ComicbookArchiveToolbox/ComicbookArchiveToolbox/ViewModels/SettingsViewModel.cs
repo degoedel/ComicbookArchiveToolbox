@@ -29,6 +29,7 @@ namespace ComicbookArchiveToolbox.ViewModels
       UseFileDirAsBuffer = Settings.Instance.UseFileDirAsBuffer;
       BufferPath = Settings.Instance.BufferDirectory;
       AlwaysIncludeCover = Settings.Instance.IncludeCover;
+			AddFileIndexToCovers = Settings.Instance.AddFileIndexToCovers;
       AlwaysIncludeMetadata = Settings.Instance.IncludeMetadata;
       BrowseDirectoryCommand = new DelegateCommand(BrowseDirectory, CanExecute);
       SaveSettingsCommand = new DelegateCommand(SaveSettings, CanExecute);

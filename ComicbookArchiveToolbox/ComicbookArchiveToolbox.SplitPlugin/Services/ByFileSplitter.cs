@@ -119,7 +119,7 @@ namespace CatPlugin.Split.Services
 	  {
 	  	if (fileIndex != 0)
 	  	{
-	  		CopyCoverToSubBuffer(template.CoverPath, subBufferPath);
+	  		CopyCoverToSubBuffer(template.CoverPath, subBufferPath, fileIndex + 1, (int)template.NumberOfSplittedFiles);
 	  	}
 	  }
 	  if (Settings.Instance.IncludeMetadata)
