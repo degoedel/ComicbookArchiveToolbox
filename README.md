@@ -29,10 +29,10 @@ and general architecture is made with [Prism](https://github.com/PrismLibrary/Pr
 
 **Changelog**  
 * *V1.2*  
- * FIX: The binaries in the distributed zip would crash on launch in .NET 4.8 was installed  
- * FEATURE: The split module now has the option to add the file index on the cover of generated files. (except for the first splitted file (will be fixed later)  
+  * FIX: The binaries in the distributed zip would crash on launch in .NET 4.8 was installed  
+  * FEATURE: The split module now has the option to add the file index on the cover of generated files. (except for the first splitted file (will be fixed later)  
 * *V1.1*  
- * FEATURE: Add a busy notifier during long operations  
- * FEATURE: Add the option to recompress pictures so that the generated files will be easier to load in readers  
- * FEATURE: Add the option to hide the log buffer  
+  * FEATURE: Add a busy notifier during long operations  
+  * FEATURE: Add the option to recompress pictures so that the generated files will be easier to load in readers  
+  * FEATURE: Add the option to hide the log buffer  
 * *V1.0* Initial release  
