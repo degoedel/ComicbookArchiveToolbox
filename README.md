@@ -25,7 +25,7 @@ and general architecture is made with [Prism](https://github.com/PrismLibrary/Pr
 
 **Comicbook Archive Toolbox is under MIT license** (do what you want with it)  
 
-**Download portable version** [Comicbook Archive Toolbox v1.3](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v1.2/ComicbookArchiveToolbox.v1.3.0.zip)  
+**Download portable version** [Comicbook Archive Toolbox v1.3](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v1.3/ComicbookArchiveToolbox.v1.3.0.zip)  
 
 **Changelog**  
 * *V1.3*
