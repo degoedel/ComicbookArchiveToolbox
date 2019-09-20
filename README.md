@@ -5,7 +5,7 @@
 **Comicbook Archive Toolbox** is a utility for digital comic book archives such as .cbr or .cbz files.  
 It was first develloped to split files too big to be comfortably used in digital readers,  
 but rapidly evolved to include several split strategies, a merge tool, and a metadata editor.  
-It also allow to recompress the embedded pictures to ease their load in a reader.  
+It also allow to resize and recompress the embedded pictures to ease their load in a reader.  
 It's designed to be easily extensible.  
 For now only ComicRack (ComicData.xml) metadata files are supported for edition.  
 
@@ -25,9 +25,12 @@ and general architecture is made with [Prism](https://github.com/PrismLibrary/Pr
 
 **Comicbook Archive Toolbox is under MIT license** (do what you want with it)  
 
-**Download portable version** [Comicbook Archive Toolbox v1.2](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v1.2/ComicbookArchiveToolbox.v1.2.0.zip)  
+**Download portable version** [Comicbook Archive Toolbox v1.3](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v1.2/ComicbookArchiveToolbox.v1.3.0.zip)  
 
 **Changelog**  
+* *V1.3*
+  * FEATURE: The Compress module allows to resize the pictures in the archives, by height in pixels or ratio
+  * FEATURE: The default height resize is specifiable in the settings
 * *V1.2*  
   * FIX: The binaries in the distributed zip would crash on launch in .NET 4.8 was installed  
   * FEATURE: The split module now has the option to add the file index on the cover of generated files. (except for the first splitted file (will be fixed later)  

@@ -33,6 +33,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 				DefaultMetadata = "Series;Number;Web;Summary;Notes;Publisher;Imprint;Genre;PageCount;LanguageISO";
 				HideLog = false;
 				AddFileIndexToCovers = false;
+				DefaultImageHeight = 2048;
 
 	  }
     }
@@ -85,6 +86,7 @@ namespace ComicbookArchiveToolbox.CommonTools
       OutputFormat = serializedSettings.OutputFormat;
 			HideLog = serializedSettings.HideLog;
 			AddFileIndexToCovers = serializedSettings.AddFileIndexToCovers;
+			DefaultImageHeight = serializedSettings.DefaultImageHeight;
     }
 
   }
@@ -111,6 +113,8 @@ namespace ComicbookArchiveToolbox.CommonTools
 		public bool HideLog { get; set; }
 
 		public bool AddFileIndexToCovers { get; set; }
+
+		public long DefaultImageHeight { get; set; }
 
 
   }

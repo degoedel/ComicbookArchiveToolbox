@@ -35,6 +35,7 @@ namespace ComicbookArchiveToolbox.ViewModels
       SaveSettingsCommand = new DelegateCommand(SaveSettings, CanExecute);
       SelectedFormat = Settings.Instance.OutputFormat.ToString();
 			HideLog = Settings.Instance.HideLog;
+			DefaultImageHeight = Settings.Instance.DefaultImageHeight;
     }
 
     bool _useFileDirAsBuffer;
@@ -116,6 +117,17 @@ namespace ComicbookArchiveToolbox.ViewModels
         Settings.ArchiveFormat compression = (Settings.ArchiveFormat) Enum.Parse(typeof(Settings.ArchiveFormat), _selectedFormat);
       }
     }
+
+		private long _defaultImageHeight;
+		public long DefaultImageHeight
+		{
+			get { return _defaultImageHeight; }
+			set
+			{
+				SetProperty(ref _defaultImageHeight, value);
+				Settings.Instance.DefaultImageHeight = _defaultImageHeight;
+			}
+		}
 
     private bool CanExecute()
     {

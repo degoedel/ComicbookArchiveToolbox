@@ -3,6 +3,7 @@ using ComicbookArchiveToolbox.CommonTools.Events;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace CatPlugin.Compress.Services
 			_eventAggregator = eventAggregator;
 		}
 
-		public void Compress(string inputFile, string outputFile, long imageQuality)
+		public void Compress(string inputFile, string outputFile, long imageQuality, bool resizeByPx, long size, long ratio)
 		{
 			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
 			_logger.Log($"Check input validity vs settings");
@@ -71,15 +72,35 @@ namespace CatPlugin.Compress.Services
 				if (pages[i].Extension != ".xml")
 				{
 					string destFile = Path.Combine(outputBuffer, $"{nameTemplate}_{pageAdded.ToString().PadLeft(pagePadSize, '0')}{pages[i].Extension}".Replace(' ', '_'));
-					if (imageQuality == 100)
+					if (!resizeByPx && ratio == 100)
 					{
-						// rename the files in the directories
-						File.Move(pages[i].FullName, destFile);
+						// On a pas besoin de faire de resize
+						if (imageQuality == 100)
+						{
+							// rename the files in the directories
+							File.Move(pages[i].FullName, destFile);
+						}
+						else
+						{
+							jpgConverter.SaveJpeg(pages[i].FullName, destFile);
+							File.Delete(pages[i].FullName);
+						}
 					}
 					else
 					{
-						jpgConverter.SaveJpeg(pages[i].FullName, destFile);
-						File.Delete(pages[i].FullName);
+						// Il faut de toute façon redimensionner l’image
+						if (resizeByPx)
+						{
+							Bitmap reduced = jpgConverter.ResizeImageByPx(pages[i].FullName, size);
+							jpgConverter.SaveJpeg(reduced, destFile);
+							File.Delete(pages[i].FullName);
+						}
+						else
+						{
+							Bitmap reduced = jpgConverter.ResizeImageByRatio(pages[i].FullName, ratio);
+							jpgConverter.SaveJpeg(reduced, destFile);
+							File.Delete(pages[i].FullName);
+						}
 					}
 					++pageAdded;
 				}

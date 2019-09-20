@@ -53,11 +53,15 @@
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="160"/>
         <ColumnDefinition Width="150"/>
-        <ColumnDefinition/>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition/>
       </Grid.ColumnDefinitions>
       <TextBlock Text="Prefered output format: " Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
       <ComboBox Grid.Column="1" ItemsSource="{Binding Formats}" SelectedItem="{Binding SelectedFormat}" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" Margin="5" ToolTip="This tool cannot produce CBR files. Select your favourite output format"/>
-    </Grid>
+			<TextBlock Text="Default Image Height: " Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+			<TextBox Grid.Column="3" Text="{Binding DefaultImageHeight, Mode=TwoWay}" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Margin="5" />
+		</Grid>
 		<CheckBox Content="Hide Log window" Grid.Row="5" IsChecked="{Binding HideLog, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, the log buffer will be hidden"/>
 		<Button Grid.Row="6" Content="Save" Command="{Binding SaveSettingsCommand}"  VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" HorizontalAlignment="Center" Width="100" />
 	</Grid>

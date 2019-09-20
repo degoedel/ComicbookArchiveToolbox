@@ -60,6 +60,36 @@ namespace CatPlugin.Compress.ViewModels
 			}
 		}
 
+		private bool _strictRatio = true;
+		public bool StrictRatio
+		{
+			get { return _strictRatio; }
+			set
+			{
+				SetProperty(ref _strictRatio, value);
+			}
+		}
+
+		private long _imageRatio = 100;
+		public long ImageRatio
+		{
+			get { return _imageRatio; }
+			set
+			{
+				SetProperty(ref _imageRatio, value);
+			}
+		}
+
+		private long _imageHeight = Settings.Instance.DefaultImageHeight;
+		public long ImageHeight
+		{
+			get { return _imageHeight; }
+			set
+			{
+				SetProperty(ref _imageHeight, value);
+			}
+		}
+
 		public DelegateCommand BrowseFileCommand { get; private set; }
 		public DelegateCommand BrowseOutputFileCommand { get; private set; }
 		public DelegateCommand CompressCommand { get; private set; }
@@ -72,6 +102,7 @@ namespace CatPlugin.Compress.ViewModels
 			BrowseOutputFileCommand = new DelegateCommand(BrowseOutputFile, CanExecute);
 			CompressCommand = new DelegateCommand(DoCompress, CanCompress);
 			_logger = _container.Resolve<Logger>();
+			ImageHeight = Settings.Instance.DefaultImageHeight;
 		}
 
 		private void BrowseFile()
@@ -144,7 +175,7 @@ namespace CatPlugin.Compress.ViewModels
 		private void DoCompress()
 		{
 			JpgCompresser compresser = new JpgCompresser(_logger, _eventAggregator);
-			Task.Run(() => compresser.Compress(FileToCompress, OutputFile, ImageQuality));
+			Task.Run(() => compresser.Compress(FileToCompress, OutputFile, ImageQuality, StrictRatio, ImageHeight, ImageRatio));
 		}
 
 		private bool CanCompress()
