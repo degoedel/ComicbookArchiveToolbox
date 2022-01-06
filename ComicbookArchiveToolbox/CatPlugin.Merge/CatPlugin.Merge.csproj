@@ -30,6 +30,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.4\lib\net47\CommonServiceLocator.dll</HintPath>
@@ -106,9 +109,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Merger.cs" />
     <Compile Include="ViewModels\MergePluginViewModel.cs" />
+    <Compile Include="Views\DragAdorner.cs" />
+    <Compile Include="Views\ListViewDragDropManager.cs" />
     <Compile Include="Views\MergePluginView.xaml.cs">
       <DependentUpon>MergePluginView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MouseUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComicbookArchiveToolbox.CommonTools\ComicbookArchiveToolbox.CommonTools.csproj">

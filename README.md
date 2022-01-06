@@ -19,15 +19,18 @@ Split strategies are :
 **Comicbook Archive Toolbox** depends on a redistributed executable of [7zip](https://www.7-zip.org) for compression and decompression tasks.  
 Window styling is made with [Mahapps.metro](https://mahapps.com),  
 and general architecture is made with [Prism](https://github.com/PrismLibrary/Prism).  
+Drag'n'drop on the merge files list uses Josh Smith code [ListViewDragDropManager] (https://www.codeproject.com/script/Articles/ViewDownloads.aspx?aid=17266) .
 
 **Comicbook Archive Toolbox is based on .NET 4.7.2.** Download runtime [here](https://dotnet.microsoft.com/download/dotnet-framework/net472)  
 
 
 **Comicbook Archive Toolbox is under MIT license** (do what you want with it)  
 
-**Download portable version** [Comicbook Archive Toolbox v1.3](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v1.3/ComicbookArchiveToolbox.v1.3.0.zip)  
+**Download portable version** [Comicbook Archive Toolbox v1.4](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v1.4/ComicbookArchiveToolbox.v1.4.0.zip)  
 
 **Changelog**  
+* *V1.4*
+  * FEATURE: The Merge module allows reordering of files through drag'n'drop
 * *V1.3*
   * FEATURE: The Compress module allows to resize the pictures in the archives, by height in pixels or ratio
   * FEATURE: The default height resize is specifiable in the settings

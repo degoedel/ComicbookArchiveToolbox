@@ -8,6 +8,35 @@
 			       prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+  <UserControl.Resources>
+    <Style x:Key="ItemContStyle" TargetType="ListViewItem">
+      <Style.Resources>
+        <LinearGradientBrush x:Key="MouseOverBrush" StartPoint="0.5, 0" EndPoint="0.5, 1">
+          <GradientStop Color="#22000000" Offset="0" />
+          <GradientStop Color="#44000000" Offset="0.4" />
+          <GradientStop Color="#55000000" Offset="0.6" />
+          <GradientStop Color="#33000000" Offset="0.9" />
+          <GradientStop Color="#22000000" Offset="1" />
+        </LinearGradientBrush>
+      </Style.Resources>
+      <Setter Property="Padding" Value="0,4" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+      <!-- The default control template for ListViewItem has a Border 
+           which contains the item's content. -->
+      <Setter Property="Border.BorderThickness" Value="0,0,0,0.5" />
+      <Setter Property="Border.BorderBrush" Value="LightGray" />
+      <!-- These triggers react to changes in the attached properties set
+           during a managed drag-drop operation. -->
+      <Style.Triggers>
+        <Trigger Property="local:ListViewItemDragState.IsBeingDragged" Value="True">
+          <Setter Property="FontWeight" Value="DemiBold" />
+        </Trigger>
+        <Trigger Property="local:ListViewItemDragState.IsUnderDragCursor" Value="True">
+          <Setter Property="Background" Value="{StaticResource MouseOverBrush}" />
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+  </UserControl.Resources>
     <Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="50"/>
@@ -30,7 +59,7 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
-			<ListView Grid.Column="0" Margin="5" ItemsSource="{Binding SelectedFiles}" MaxHeight="240"/>
+      <ListView Grid.Column="0" Margin="5" ItemsSource="{Binding SelectedFiles}" MaxHeight="240" ItemContainerStyle="{StaticResource ItemContStyle}" SelectionMode="Single" Name="_filesListView"/>
 		</Grid>
 		<Grid Grid.Row="3">
 			<Grid.ColumnDefinitions>

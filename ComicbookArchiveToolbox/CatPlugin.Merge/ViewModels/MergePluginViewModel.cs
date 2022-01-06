@@ -36,8 +36,8 @@ namespace CatPlugin.Merge.ViewModels
 			}
 		}
 
-		private List<string> _selectedFiles = new List<string>();
-		public List<string> SelectedFiles
+		private ObservableCollection<string> _selectedFiles = new ObservableCollection<string>();
+		public ObservableCollection<string> SelectedFiles
 		{
 			get { return _selectedFiles; }
 			set
@@ -109,18 +109,17 @@ namespace CatPlugin.Merge.ViewModels
 				CommonFileDialogResult result = dialog.ShowDialog();
 				if (result == CommonFileDialogResult.Ok)
 				{
-					List<string> newValue = new List<string>(SelectedFiles);
 					List<string> dialogSelection = dialog.FileNames.ToList();
 					dialogSelection.Sort();
-					newValue.AddRange(dialogSelection);
-					SelectedFiles = newValue;
+          ClearFiles();
+					SelectedFiles.AddRange(dialogSelection);
 				}
 			}
 		}
 
 		private void ClearFiles()
 		{
-			SelectedFiles = new List<string>();
+      SelectedFiles.Clear();
 		}
 
 		private void BrowseOutputFile()
