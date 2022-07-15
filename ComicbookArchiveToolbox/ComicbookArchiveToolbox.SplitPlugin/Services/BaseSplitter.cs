@@ -74,6 +74,7 @@ namespace CatPlugin.Split.Services
 			return cover != null;
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		protected long CopyCoverToSubBuffer(string coverFile, string subBuffer, int fileIndex, int archiveNb)
 		{
 			long coverSize = 0;

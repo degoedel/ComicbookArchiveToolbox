@@ -63,20 +63,24 @@ namespace ComicbookArchiveToolbox.ViewModels
 
 	public string HostTextContent => "This is the host from vm";
 
-
-    private void DisplayTools()
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		private void DisplayTools()
     {
       IRegion region = _regionManager.Regions["PluginRegion"];
       var view = region.GetView("ToolsView");
       region.Activate(view);
     }
-	private void DisplaySettings()
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		private void DisplaySettings()
 	{
 		IRegion region = _regionManager.Regions["PluginRegion"];
 		var view = region.GetView("SettingsView");
 		region.Activate(view);
 	}
-	private void DisplayAbout()
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		private void DisplayAbout()
 	{
 		IRegion region = _regionManager.Regions["PluginRegion"];
 		var view = region.GetView("AboutView");

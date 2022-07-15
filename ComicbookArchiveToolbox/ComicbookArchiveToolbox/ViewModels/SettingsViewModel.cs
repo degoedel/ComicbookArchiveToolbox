@@ -1,6 +1,5 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.Events;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Unity;
 
 namespace ComicbookArchiveToolbox.ViewModels
@@ -136,19 +136,16 @@ namespace ComicbookArchiveToolbox.ViewModels
 
     private void BrowseDirectory()
     {
-      using (var dialog = new CommonOpenFileDialog())
-      {
-        dialog.IsFolderPicker = true;
+      var dialog = new FolderBrowserDialog();
         if (!string.IsNullOrWhiteSpace(BufferPath))
         {
           dialog.InitialDirectory = BufferPath;
         }
-        CommonFileDialogResult result = dialog.ShowDialog();
-        if (result == CommonFileDialogResult.Ok)
+        DialogResult result = dialog.ShowDialog();
+        if (result == DialogResult.OK)
         {
-          BufferPath = dialog.FileName;
+          BufferPath = dialog.SelectedPath;
         }
-      }
     }
 
     private void SaveSettings()

@@ -48,10 +48,11 @@ namespace CatPlugin.Merge
 			LoadViewCommand = new DelegateCommand(LoadView, CanExecute);
     }
 
-    #endregion Constructors
+		#endregion Constructors
 
-    #region Command
-    private void LoadView()
+		#region Command
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		private void LoadView()
     {
       var regionManager = _container.Resolve<IRegionManager>();
       IRegion region = regionManager.Regions["PluginRegion"];
@@ -63,10 +64,11 @@ namespace CatPlugin.Merge
     {
       return true;
     }
-    #endregion Command
+		#endregion Command
 
-    #region IModule
-    public void OnInitialized(IContainerProvider containerProvider)
+		#region IModule
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		public void OnInitialized(IContainerProvider containerProvider)
     {
       var regionManager = containerProvider.Resolve<IRegionManager>();
       IRegion region = regionManager.Regions["PluginRegion"];

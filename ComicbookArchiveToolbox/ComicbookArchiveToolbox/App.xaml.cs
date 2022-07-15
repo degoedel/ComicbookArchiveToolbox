@@ -24,11 +24,13 @@ namespace ComicbookArchiveToolbox
 			
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		protected override Window CreateShell()
 		{
 			return Container.Resolve<MainWindow>();
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		protected override IModuleCatalog CreateModuleCatalog()
 		{
 			return new DirectoryModuleCatalog() { ModulePath = @"." };

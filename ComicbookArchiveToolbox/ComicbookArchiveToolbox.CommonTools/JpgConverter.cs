@@ -15,6 +15,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 		EncoderParameters _encoderParameters;
 		ImageCodecInfo _codecInfo;
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		public JpgConverter(Logger logger, long quality)
 		{
 			_logger = logger;
@@ -24,6 +25,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 			_codecInfo = ImageCodecInfo.GetImageDecoders().First(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		public void SaveJpeg(string inputPath, string outputPath)
 		{
 			try
@@ -39,6 +41,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 			}
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		public void SaveJpeg(Bitmap inputPic, string outputPath)
 		{
 			try
@@ -51,6 +54,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 			}
 		}
 
+
 		/// <summary>
 		/// Resize the image to the specified width and height.
 		/// </summary>
@@ -58,6 +62,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 		/// <param name="width">The width to resize to.</param>
 		/// <param name="height">The height to resize to.</param>
 		/// <returns>The resized image.</returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		public Bitmap ResizeImageByPx(string inputPath, long height)
 		{
 			Bitmap destImage = null;
@@ -77,12 +82,14 @@ namespace ComicbookArchiveToolbox.CommonTools
 			return destImage;
 		}
 
+
 		/// <summary>
 		/// Resize the image to the specified ratio.
 		/// </summary>
 		/// <param name="inputPath">Path to the image to resize.</param>
 		/// <param name="ratio">The ratio to resize to.</param>
 		/// <returns>The resized image.</returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		public Bitmap ResizeImageByRatio(string inputPath, long ratio)
 		{
 			Bitmap destImage = null;
@@ -95,8 +102,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 			return destImage;
 		}
 
-
-
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private Bitmap ResizeImage(Image image, int width, int height)
 		{
 			var destRect = new Rectangle(0, 0, width, height);

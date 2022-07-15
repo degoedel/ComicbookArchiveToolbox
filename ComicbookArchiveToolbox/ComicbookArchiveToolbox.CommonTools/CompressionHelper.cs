@@ -18,7 +18,7 @@ namespace ComicbookArchiveToolbox.CommonTools
     {
       _logger = logger;
 
-      string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+      string codeBase = Assembly.GetExecutingAssembly().Location;
       UriBuilder uri = new UriBuilder(codeBase);
       string path = Uri.UnescapeDataString(uri.Path);
       DirectoryInfo installDir = new DirectoryInfo(System.IO.Path.GetDirectoryName(path));

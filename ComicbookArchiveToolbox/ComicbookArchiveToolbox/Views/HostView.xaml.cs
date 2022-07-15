@@ -36,7 +36,8 @@ namespace ComicbookArchiveToolbox.Views
       this.Loaded += HostControl_Loaded;
 	}
 
-    private void HostControl_Loaded(object sender, RoutedEventArgs e)
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		private void HostControl_Loaded(object sender, RoutedEventArgs e)
     {
       IRegion region = _regionManager.Regions["PluginRegion"];
 	  var tools = _container.Resolve<ToolsView>();

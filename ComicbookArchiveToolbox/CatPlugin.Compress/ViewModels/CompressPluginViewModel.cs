@@ -1,6 +1,5 @@
 ﻿using CatPlugin.Compress.Services;
 using ComicbookArchiveToolbox.CommonTools;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -109,10 +108,8 @@ namespace CatPlugin.Compress.ViewModels
 		{
 			_logger.Log("Browse for file to split");
 
-			using (var dialog = new CommonOpenFileDialog())
-			{
-				dialog.Filters.Add(new CommonFileDialogFilter("Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)", "*.cb7;*.cba;*cbr;*cbt;*.cbz"));
-				dialog.Filters.Add(new CommonFileDialogFilter("All files (*.*)", "*.*"));
+			var dialog = new Microsoft.Win32.OpenFileDialog();
+				dialog.Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz" ;
 				string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 				if (!string.IsNullOrEmpty(_fileToCompress))
 				{
@@ -136,18 +133,16 @@ namespace CatPlugin.Compress.ViewModels
 
 				}
 				dialog.InitialDirectory = defaultPath;
-				CommonFileDialogResult result = dialog.ShowDialog();
-				if (result == CommonFileDialogResult.Ok)
+				bool? result = dialog.ShowDialog();
+				if (result.HasValue && result.Value == true)
 				{
 					FileToCompress = dialog.FileName;
 				}
-			}
 		}
 
 		private void BrowseOutputFile()
 		{
-			using (var dialog = new CommonOpenFileDialog())
-			{
+			var dialog = new Microsoft.Win32.OpenFileDialog();
 				string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 				if (!string.IsNullOrWhiteSpace(OutputFile))
 				{
@@ -159,12 +154,11 @@ namespace CatPlugin.Compress.ViewModels
 					outputPath = (new FileInfo(FileToCompress)).Directory.FullName;
 				}
 				dialog.InitialDirectory = outputPath;
-				CommonFileDialogResult result = dialog.ShowDialog();
-				if (result == CommonFileDialogResult.Ok)
+				bool? result = dialog.ShowDialog();
+				if (result.HasValue && result.Value == true)
 				{
 					OutputFile = dialog.FileName;
 				}
-			}
 		}
 
 		private bool CanExecute()

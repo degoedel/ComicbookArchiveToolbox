@@ -30,7 +30,8 @@ namespace ComicbookArchiveToolbox.Views
   {
     public IEnumerable<ICatPlugin> Plugins { get; set; }
 
-    public MainWindow(IRegionManager regionManager)
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		public MainWindow(IRegionManager regionManager)
     {
       InitializeComponent();
 	    regionManager.RegisterViewWithRegion("HostRegion", typeof(HostView));

@@ -33,13 +33,14 @@ namespace CatPlugin.Compress
 			_container = container;
 			_container.RegisterType<ICatPlugin, CompressPlugin>("Compress");
 			var myResourceDictionary = new ResourceDictionary();
-			myResourceDictionary.Source = new Uri("/CatPlugin.Edit;component/Resources/Icons.xaml", UriKind.RelativeOrAbsolute);
+			myResourceDictionary.Source = new Uri("/CatPlugin.Compress;component/Resources/Icons.xaml", UriKind.RelativeOrAbsolute);
 			_icon = myResourceDictionary["appbar_archive"] as Canvas;
 
 			LoadViewCommand = new DelegateCommand(LoadView, CanExecute);
 		}
 
 		#region Command
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void LoadView()
 		{
 			var regionManager = _container.Resolve<IRegionManager>();
@@ -55,6 +56,7 @@ namespace CatPlugin.Compress
 		#endregion Command
 
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		public void OnInitialized(IContainerProvider containerProvider)
 		{
 			var regionManager = containerProvider.Resolve<IRegionManager>();

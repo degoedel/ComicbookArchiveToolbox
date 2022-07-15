@@ -1,6 +1,5 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Events;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -67,10 +66,8 @@ namespace CatPlugin.Edit.ViewModels
 		{
 			_logger.Log("Browse for file to split");
 
-			using (var dialog = new CommonOpenFileDialog())
-			{
-				dialog.Filters.Add(new CommonFileDialogFilter("Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)", "*.cb7;*.cba;*cbr;*cbt;*.cbz"));
-				dialog.Filters.Add(new CommonFileDialogFilter("All files (*.*)", "*.*"));
+			var dialog = new Microsoft.Win32.OpenFileDialog();
+				dialog.Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz";
 				string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 				if (!string.IsNullOrEmpty(_fileToEdit))
 				{
@@ -94,12 +91,11 @@ namespace CatPlugin.Edit.ViewModels
 
 				}
 				dialog.InitialDirectory = defaultPath;
-				CommonFileDialogResult result = dialog.ShowDialog();
-				if (result == CommonFileDialogResult.Ok)
+				bool? result = dialog.ShowDialog();
+				if (result.HasValue && result.Value == true)
 				{
 					FileToEdit = dialog.FileName;
 				}
-			}
 		}
 
 		private bool CanExecute()

@@ -55,6 +55,7 @@ namespace CatPlugin.Split
 		#endregion Constructors
 
 		#region Command
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void LoadView()
     {
       var regionManager = _container.Resolve<IRegionManager>();
@@ -67,10 +68,11 @@ namespace CatPlugin.Split
     {
       return true;
     }
-    #endregion Command
-    
-    #region IModule
-    public void OnInitialized(IContainerProvider containerProvider)
+		#endregion Command
+
+		#region IModule
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		public void OnInitialized(IContainerProvider containerProvider)
 		{
 			var regionManager = containerProvider.Resolve<IRegionManager>();
       IRegion region = regionManager.Regions["PluginRegion"];

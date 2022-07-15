@@ -1,7 +1,6 @@
 ﻿using CatPlugin.Split.Services;
 using ComicbookArchiveToolbox.CommonTools;
 using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -10,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Unity;
 
 namespace CatPlugin.Split.ViewModels
@@ -34,6 +34,7 @@ namespace CatPlugin.Split.ViewModels
 			}
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void SetSplitterView(string selectedView)
 		{
 			string viewToActivate = "";
@@ -234,10 +235,8 @@ namespace CatPlugin.Split.ViewModels
     {
       _logger.Log("Browse for file to split");
 
-      using (var dialog = new CommonOpenFileDialog())
-      {
-        dialog.Filters.Add(new CommonFileDialogFilter("Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)", "*.cb7;*.cba;*cbr;*cbt;*.cbz"));
-        dialog.Filters.Add(new CommonFileDialogFilter("All files (*.*)", "*.*"));
+	  var dialog = new Microsoft.Win32.OpenFileDialog();
+        dialog.Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz";
         string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         if (!string.IsNullOrEmpty(_fileToSplit))
         {
@@ -261,12 +260,11 @@ namespace CatPlugin.Split.ViewModels
 
         }
         dialog.InitialDirectory = defaultPath;
-        CommonFileDialogResult result = dialog.ShowDialog();
-        if (result == CommonFileDialogResult.Ok)
+        bool? result = dialog.ShowDialog();
+        if (result.HasValue && result.Value == true)
         {
           FileToSplit = dialog.FileName;
         }
-      }
 	}
 
     private void DoSplit()
@@ -317,19 +315,16 @@ namespace CatPlugin.Split.ViewModels
 
     private void BrowseDirectory()
     {
-      using (var dialog = new CommonOpenFileDialog())
-      {
-        dialog.IsFolderPicker = true;
+		var dialog = new FolderBrowserDialog();
         if (!string.IsNullOrWhiteSpace(FileToSplit))
         {
           dialog.InitialDirectory = (new FileInfo(FileToSplit)).Directory.FullName;
         }
-        CommonFileDialogResult result = dialog.ShowDialog();
-        if (result == CommonFileDialogResult.Ok)
+        DialogResult result = dialog.ShowDialog();
+        if (result == DialogResult.OK)
         {
-          OutputDir = dialog.FileName;
+          OutputDir = dialog.SelectedPath;
         }
-      }
     }
 
 

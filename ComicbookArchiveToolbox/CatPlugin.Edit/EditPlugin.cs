@@ -39,6 +39,7 @@ namespace CatPlugin.Edit
 		}
 
 		#region Command
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void LoadView()
 		{
 			var regionManager = _container.Resolve<IRegionManager>();
@@ -54,6 +55,7 @@ namespace CatPlugin.Edit
 		#endregion Command
 
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		public void OnInitialized(IContainerProvider containerProvider)
 		{
 			var regionManager = containerProvider.Resolve<IRegionManager>();

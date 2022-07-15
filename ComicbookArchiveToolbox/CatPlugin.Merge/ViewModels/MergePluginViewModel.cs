@@ -1,6 +1,5 @@
 ﻿using CatPlugin.Merge.Service;
 using ComicbookArchiveToolbox.CommonTools;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -76,12 +75,11 @@ namespace CatPlugin.Merge.ViewModels
 			BrowseOutputFileCommand = new DelegateCommand(BrowseOutputFile, CanExecute);
 		}
 
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void BrowseFiles()
 		{
-			using (var dialog = new CommonOpenFileDialog())
-			{
-				dialog.Filters.Add(new CommonFileDialogFilter("Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)", "*.cb7;*.cba;*cbr;*cbt;*.cbz"));
-				dialog.Filters.Add(new CommonFileDialogFilter("All files (*.*)", "*.*"));
+			var dialog = new Microsoft.Win32.OpenFileDialog();
+				dialog.Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz";
 				string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 				if (SelectedFiles != null && SelectedFiles.Count > 0)
 				{
@@ -106,15 +104,14 @@ namespace CatPlugin.Merge.ViewModels
 				}
 				dialog.InitialDirectory = defaultPath;
 				dialog.Multiselect = true;
-				CommonFileDialogResult result = dialog.ShowDialog();
-				if (result == CommonFileDialogResult.Ok)
+				bool? result = dialog.ShowDialog();
+				if (result.HasValue && result.Value == true)
 				{
 					List<string> dialogSelection = dialog.FileNames.ToList();
 					dialogSelection.Sort();
-          ClearFiles();
+					ClearFiles();
 					SelectedFiles.AddRange(dialogSelection);
 				}
-			}
 		}
 
 		private void ClearFiles()
@@ -124,8 +121,7 @@ namespace CatPlugin.Merge.ViewModels
 
 		private void BrowseOutputFile()
 		{
-			using (var dialog = new CommonOpenFileDialog())
-			{
+			var dialog = new Microsoft.Win32.SaveFileDialog();
 				string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 				if (!string.IsNullOrWhiteSpace(OutputFile))
 				{
@@ -140,12 +136,11 @@ namespace CatPlugin.Merge.ViewModels
 					}
 				}
 				dialog.InitialDirectory = outputPath;
-				CommonFileDialogResult result = dialog.ShowDialog();
-				if (result == CommonFileDialogResult.Ok)
+				bool? result = dialog.ShowDialog();
+				if (result.HasValue && result.Value == true)
 				{
 					OutputFile = dialog.FileName;
 				}
-			}
 		}
 
 		private bool CanExecute()
