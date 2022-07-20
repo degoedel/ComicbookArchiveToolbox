@@ -21,14 +21,16 @@ Window styling is made with [Mahapps.metro](https://mahapps.com),
 and general architecture is made with [Prism](https://github.com/PrismLibrary/Prism).  
 Drag'n'drop on the merge files list uses Josh Smith code [ListViewDragDropManager](https://www.codeproject.com/script/Articles/ViewDownloads.aspx?aid=17266) .
 
-**Comicbook Archive Toolbox is based on .NET 4.7.2.** Download runtime [here](https://dotnet.microsoft.com/download/dotnet-framework/net472)  
+**Comicbook Archive Toolbox is based on .NET 6.0 for Desktop Apps.** Download runtime [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0/runtime)  
 
 
 **Comicbook Archive Toolbox is under MIT license** (do what you want with it)  
 
-**Download portable version** [Comicbook Archive Toolbox v1.4](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v1.4/ComicbookArchiveToolbox.v1.4.0.zip)  
+**Download portable version** [Comicbook Archive Toolbox v1.4](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v2.0/ComicbookArchiveToolbox.v2.0.0.zip)  
 
-**Changelog**  
+**Changelog** 
+* *V2.0*
+  * FIX: The app is adapted to .Net 6 and should fix compatibility issues like crash on startup
 * *V1.4*
   * FEATURE: The Merge module allows reordering of files through drag'n'drop
 * *V1.3*

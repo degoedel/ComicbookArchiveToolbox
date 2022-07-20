@@ -23,7 +23,7 @@
 						<RowDefinition />
 						<RowDefinition Height="60"/>
 					</Grid.RowDefinitions>
-					<ContentControl Content="{Binding Icon}" Width="160" Grid.Row="0"/>
+					<ContentControl Content="{Binding Icon}" Width="160" Grid.Row="0" Foreground="White"/>
 					<TextBlock Text="{Binding Name}" FontSize="20" TextAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1"/>
 				</Grid>
 			</Button>
