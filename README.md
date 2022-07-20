@@ -26,7 +26,7 @@ Drag'n'drop on the merge files list uses Josh Smith code [ListViewDragDropManage
 
 **Comicbook Archive Toolbox is under MIT license** (do what you want with it)  
 
-**Download portable version** [Comicbook Archive Toolbox v2.0](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v2.0/ComicbookArchiveToolbox.v2.0.0.zip)  
+**Download portable version** [Comicbook Archive Toolbox v2.0](https://github.com/degoedel/ComicbookArchiveToolbox/files/9149276/ComicbookArchiveToolbox.v2.0.0.zip)  
 
 **Changelog** 
 * *V2.0*
