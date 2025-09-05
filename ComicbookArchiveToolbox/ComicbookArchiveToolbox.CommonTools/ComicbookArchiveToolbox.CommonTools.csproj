@@ -23,7 +23,7 @@
     <PackageReference Include="Prism.Core" Version="9.0.537" />
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(SolutionDir)packages\7ZipExe.18.5.0\tools\x64\7z.exe" "$(SolutionDir)..\Distrib\7z.exe"
-copy /Y "$(SolutionDir)packages\7ZipExe.18.5.0\tools\x64\7z.dll" "$(SolutionDir)..\Distrib\7z.dll"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(SolutionDir)packages\7ZipExe.18.5.0\tools\x64\7z.exe" "$(SolutionDir)..\Distrib\net8.0-windows7.0\7z.exe"
+copy /Y "$(SolutionDir)packages\7ZipExe.18.5.0\tools\x64\7z.dll" "$(SolutionDir)..\Distrib\net8.0-windows7.0\7z.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>
