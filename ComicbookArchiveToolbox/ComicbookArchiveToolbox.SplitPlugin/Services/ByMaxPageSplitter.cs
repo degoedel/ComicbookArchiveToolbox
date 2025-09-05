@@ -68,7 +68,7 @@ namespace CatPlugin.Split.Services
 				}
 				while (pagesAdded < archiveTemplate.MaxPagesPerSplittedFile && i < totalPagesCount)
 				{
-					if (archiveTemplate.Pages[i].Extension != ".xml")
+					if (SystemTools.IsImageFile(archiveTemplate.Pages[i]))
 					{
 						pagesToAdd.Add(archiveTemplate.Pages[i]);
 						++pagesAdded;

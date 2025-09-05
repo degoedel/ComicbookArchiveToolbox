@@ -62,7 +62,7 @@ namespace CatPlugin.Split.Services
 			cover = null;
 			while (i < files.Count && cover == null)
 			{
-				if (files[i].Extension != ".xml")
+				if (SystemTools.IsImageFile(files[i]))
 				{
 					cover = files[i];
 					break;

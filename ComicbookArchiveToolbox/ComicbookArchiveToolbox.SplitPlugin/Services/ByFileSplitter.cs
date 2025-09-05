@@ -89,7 +89,7 @@ namespace CatPlugin.Split.Services
 	  
 	  for (int currentPageIndex = sourcePageIndex; (pagesAdded < template.PagesPerFile) && (currentPageIndex < template.Pages.Count); ++currentPageIndex)
 	  {
-	  	if (template.Pages[currentPageIndex].Extension != ".xml")
+	  	if (SystemTools.IsImageFile(template.Pages[currentPageIndex]))
 	  	{
 	  		pagesToAdd.Add(template.Pages[currentPageIndex]);
 	  		++pagesAdded;
@@ -100,7 +100,7 @@ namespace CatPlugin.Split.Services
 	  {
 	  	for (int i = sourcePageIndex; i < template.Pages.Count; ++i)
 	  	{
-	  		if (template.Pages[i].Extension != ".xml")
+	  		if (SystemTools.IsImageFile(template.Pages[i]))
 	  		{
 	  			pagesToAdd.Add(template.Pages[i]);
 	  		}
