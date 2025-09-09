@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CatPlugin.Merge.Service
 {
@@ -71,7 +69,7 @@ namespace CatPlugin.Merge.Service
 			JpgConverter jpgConverter = new JpgConverter(_logger, imageQuality);
 			for (int i = 0; i < pages.Count; ++i)
       {
-        if (pages[i].Extension != ".xml")
+        if (SystemTools.IsImageFile(pages[i]))
         {
           string destFile = Path.Combine(outputBuffer, $"{nameTemplate}_{pageAdded.ToString().PadLeft(pagePadSize, '0')}{pages[i].Extension}".Replace(' ', '_'));
 					if (imageQuality == 100)

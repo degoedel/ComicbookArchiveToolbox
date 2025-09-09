@@ -4,9 +4,6 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CatPlugin.Split.Services
 {
@@ -70,7 +67,7 @@ namespace CatPlugin.Split.Services
 				}
 				while (sizeAdded < maxSizeAsBytes && i < totalPagesCount)
 				{
-					if (archiveTemplate.Pages[i].Extension != ".xml")
+					if (SystemTools.IsImageFile(archiveTemplate.Pages[i]))
 					{
 						pagesToAdd.Add(archiveTemplate.Pages[i]);
 						sizeAdded += archiveTemplate.Pages[i].Length;

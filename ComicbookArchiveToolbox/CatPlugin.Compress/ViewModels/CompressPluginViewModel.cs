@@ -4,10 +4,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Unity;
 
@@ -106,7 +103,7 @@ namespace CatPlugin.Compress.ViewModels
 
 		private void BrowseFile()
 		{
-			_logger.Log("Browse for file to split");
+			_logger.Log("Browse for file to compress");
 
 			var dialog = new Microsoft.Win32.OpenFileDialog();
 				dialog.Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz" ;
@@ -142,7 +139,7 @@ namespace CatPlugin.Compress.ViewModels
 
 		private void BrowseOutputFile()
 		{
-			var dialog = new Microsoft.Win32.OpenFileDialog();
+			var dialog = new Microsoft.Win32.SaveFileDialog();
 				string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 				if (!string.IsNullOrWhiteSpace(OutputFile))
 				{

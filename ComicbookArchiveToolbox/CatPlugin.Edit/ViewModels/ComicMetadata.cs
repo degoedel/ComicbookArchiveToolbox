@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CatPlugin.Edit.ViewModels
+﻿namespace CatPlugin.Edit.ViewModels
 {
 	public class ComicMetadata
 	{

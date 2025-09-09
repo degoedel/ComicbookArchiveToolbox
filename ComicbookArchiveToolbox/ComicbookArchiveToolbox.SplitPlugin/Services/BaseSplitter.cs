@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CatPlugin.Split.Services
 {
@@ -64,7 +62,7 @@ namespace CatPlugin.Split.Services
 			cover = null;
 			while (i < files.Count && cover == null)
 			{
-				if (files[i].Extension != ".xml")
+				if (SystemTools.IsImageFile(files[i]))
 				{
 					cover = files[i];
 					break;

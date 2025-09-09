@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.RightsManagement;
 
 namespace ComicbookArchiveToolbox.CommonTools
 {
@@ -41,5 +39,21 @@ namespace ComicbookArchiveToolbox.CommonTools
       }
     }
 
-  }
+		/// <summary>
+		/// Determines if a file is an image file based on its extension.
+		/// </summary>
+		/// <param name="fileName">The file name or path to check.</param>
+		/// <returns>True if the file has an image extension, false otherwise.</returns>
+		public static bool IsImageFile(FileInfo fileName)
+		{
+			string extension = fileName.Extension.ToLowerInvariant();
+
+			return extension switch
+			{
+				".jpg" or ".jpeg" or ".png" or ".gif" or ".bmp" or ".webp" or ".tiff" or ".tif" => true,
+				_ => false
+			};
+		}
+
+	}
 }

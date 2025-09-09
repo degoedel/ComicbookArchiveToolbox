@@ -1,18 +1,11 @@
-﻿using CatPlugin.Merge.ViewModels;
-using CatPlugin.Merge.Views;
-using ComicbookArchiveToolbox.CommonTools;
+﻿using CatPlugin.Merge.Views;
 using ComicbookArchiveToolbox.CommonTools.Interfaces;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Regions;
+using Prism.Navigation.Regions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using Unity;
 
 namespace CatPlugin.Merge
