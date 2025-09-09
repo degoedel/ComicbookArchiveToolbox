@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:prism="http://prismlibrary.com/"
-			 xmlns:converters="clr-namespace:ComicbookArchiveToolbox.CommonTools;assembly=ComicbookArchiveToolbox.CommonTools"
+			 xmlns:converters="clr-namespace:ComicbookArchiveToolbox.CommonTools"
              xmlns:local="clr-namespace:ComicbookArchiveToolbox.Views"
 			 prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
@@ -47,7 +47,7 @@
       </Grid.ColumnDefinitions>
       <TextBlock Text="Buffer Path: " Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
       <TextBox Grid.Column="1" Text="{Binding BufferPath}" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Margin="5" />
-      <Button Content="..." Grid.Column="2" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40"/>
+			<Button Content="..." Grid.Column="2" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" Command="{Binding BrowseDirectoryCommand}"/>
     </Grid>
     <Grid Grid.Row="4">
       <Grid.ColumnDefinitions>

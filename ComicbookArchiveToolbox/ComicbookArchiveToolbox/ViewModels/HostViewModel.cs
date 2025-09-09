@@ -9,81 +9,119 @@ using Prism.Navigation.Regions;
 
 namespace ComicbookArchiveToolbox.ViewModels
 {
-  public class HostViewModel : BindableBase
-  {
+	public class HostViewModel : BindableBase
+	{
 
-    #region Attributes
+		#region Attributes
 
-    private string _commonLog = "";
-	private IContainerExtension _container;
-    private IRegionManager _regionManager;
-    private IEventAggregator _eventAggregator;
-    public DelegateCommand DisplayToolsCommand { get; private set; }
-	public DelegateCommand DisplaySettingsCommand { get; private set; }
-	public DelegateCommand DisplayAboutCommand { get; private set; }
+		private string _commonLog = "";
+		private IContainerExtension _container;
+		private IRegionManager _regionManager;
+		private IEventAggregator _eventAggregator;
+		public DelegateCommand DisplayToolsCommand { get; private set; }
+		public DelegateCommand DisplaySettingsCommand { get; private set; }
+		public DelegateCommand DisplayAboutCommand { get; private set; }
+		public DelegateCommand DisplayCompressCommand { get; private set; }
+		public DelegateCommand DisplayMergeCommand { get; private set; }
+		public DelegateCommand DisplaySplitCommand { get; private set; }
+		public DelegateCommand DisplayEditCommand { get; private set; }
 
-	#endregion Attributes
+		#endregion Attributes
 
-    public string CommonLog
-    {
-      get { return _commonLog;}
-      set
-      {
-        SetProperty(ref _commonLog, value);
-      }
-    }
+		public string CommonLog
+		{
+			get { return _commonLog; }
+			set
+			{
+				SetProperty(ref _commonLog, value);
+			}
+		}
 
-	#region Constructors
-	public HostViewModel(IContainerExtension container, IRegionManager regionManager, IEventAggregator eventAggregator)
-    {
-		  _container = container;
-      _regionManager = regionManager;
-      _eventAggregator = eventAggregator;
-      _eventAggregator.GetEvent<LogEvent>().Subscribe(AddLogLine, ThreadOption.UIThread);
+		#region Constructors
+		public HostViewModel(IContainerExtension container, IRegionManager regionManager, IEventAggregator eventAggregator)
+		{
+			_container = container;
+			_regionManager = regionManager;
+			_eventAggregator = eventAggregator;
+			_eventAggregator.GetEvent<LogEvent>().Subscribe(AddLogLine, ThreadOption.UIThread);
 			_eventAggregator.GetEvent<BusinessEvent>().Subscribe(SetBusyState, ThreadOption.UIThread);
 			_eventAggregator.GetEvent<HideLogEvent>().Subscribe(CollapseLog, ThreadOption.UIThread);
-			DisplayToolsCommand = new DelegateCommand(DisplayTools, CanExecute);
-	  DisplaySettingsCommand = new DelegateCommand(DisplaySettings, CanExecute);
-	  DisplayAboutCommand = new DelegateCommand(DisplayAbout, CanExecute);
+			DisplaySettingsCommand = new DelegateCommand(DisplaySettings, CanExecute);
+			DisplayAboutCommand = new DelegateCommand(DisplayAbout, CanExecute);
+			DisplayCompressCommand = new DelegateCommand(DisplayCompress, CanExecute);
+			DisplayMergeCommand = new DelegateCommand(DisplayMerge, CanExecute);
+			DisplaySplitCommand = new DelegateCommand(DisplaySplit, CanExecute);
+			DisplayEditCommand = new DelegateCommand(DisplayEdit, CanExecute);
 			HideLog = Settings.Instance.HideLog;
-	}
-	#endregion Constructors
+		}
+		#endregion Constructors
 
-	public string HostTextContent => "This is the host from vm";
+		public string HostTextContent => "This is the host from vm";
+		public string ToolCompressDescription => "Compress File: Create a new archive with recompressed (degraded) pictures to allow faster page loading in reader.";
+		public string ToolEditDescription => "Edit Metadata: Edit or create a metadata file in archive. Will create a new archive if format does not support update.";
+		public string ToolMergeDescription => "Merge Files: Merge the selected archives in one file. Allow image recompression.";
+		public string ToolSplitDescription => "Split File: Split the selected archive in several files. Allow images recompression. Available split methods are : by file number, by maximum size per file, or by maximum pages number in files.";
+		public string ToolSettingsDescription => "Application settings";
+		public string ToolAboutDescription => "About the app";
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-		private void DisplayTools()
-    {
-      IRegion region = _regionManager.Regions["PluginRegion"];
-      var view = region.GetView("ToolsView");
-      region.Activate(view);
-    }
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void DisplaySettings()
-	{
-		IRegion region = _regionManager.Regions["PluginRegion"];
-		var view = region.GetView("SettingsView");
-		region.Activate(view);
-	}
+		{
+			IRegion region = _regionManager.Regions["PluginRegion"];
+			var view = region.GetView("SettingsView");
+			region.Activate(view);
+		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void DisplayAbout()
-	{
-		IRegion region = _regionManager.Regions["PluginRegion"];
-		var view = region.GetView("AboutView");
-		region.Activate(view);
-	}
+		{
+			IRegion region = _regionManager.Regions["PluginRegion"];
+			var view = region.GetView("AboutView");
+			region.Activate(view);
+		}
 
-	  private bool CanExecute()
-    {
-      return true;
-    }
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		private void DisplayCompress()
+		{
+			IRegion region = _regionManager.Regions["PluginRegion"];
+			var view = region.GetView("CompressView");
+			region.Activate(view);
+		}
 
-    private void AddLogLine(string line)
-    {
-      CommonLog += line + "\n";
-    }
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		private void DisplayMerge()
+		{
+			IRegion region = _regionManager.Regions["PluginRegion"];
+			var view = region.GetView("MergeView");
+			region.Activate(view);
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		private void DisplaySplit()
+		{
+			IRegion region = _regionManager.Regions["PluginRegion"];
+			var view = region.GetView("SplitView");
+			region.Activate(view);
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		private void DisplayEdit()
+		{
+			IRegion region = _regionManager.Regions["PluginRegion"];
+			var view = region.GetView("EditView");
+			region.Activate(view);
+		}
+
+		private bool CanExecute()
+		{
+			return true;
+		}
+
+		private void AddLogLine(string line)
+		{
+			CommonLog += line + "\n";
+		}
 
 		private bool _hideLog;
 		public bool HideLog
@@ -115,5 +153,5 @@ namespace ComicbookArchiveToolbox.ViewModels
 			IsBusy = busy;
 		}
 
-  }
+	}
 }

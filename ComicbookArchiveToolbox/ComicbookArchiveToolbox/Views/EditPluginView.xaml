@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="ComicbookArchiveToolbox.Module.Edit.Views.EditPluginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ComicbookArchiveToolbox.Module.Edit.Views"
+             xmlns:prism="http://prismlibrary.com/"
+			       prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="350" d:DesignWidth="800">
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="200"/>
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
+		<TextBlock Grid.Row="0" Text="Edit Metadata" TextAlignment="Center" FontSize="30" VerticalAlignment="Center"/>
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="80"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0" Text="File To Edit: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding FileToEdit, Mode=TwoWay}"/>
+			<Button Grid.Column="2" VerticalAlignment="Center" Content="..." Margin="5" Command="{Binding BrowseFileCommand}" HorizontalContentAlignment="Center" Height="40"/>
+		</Grid>
+		<DataGrid Grid.Row="2" Margin="5"  ItemsSource="{Binding MetadataCollection}"  CanUserDeleteRows="True" CanUserAddRows="True" MaxHeight="190"
+      ScrollViewer.CanContentScroll="True" 
+      ScrollViewer.VerticalScrollBarVisibility="Auto"
+      ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
+		<Grid Grid.Row="3">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Button Grid.Column="0" VerticalAlignment="Center" Content="Save" Margin="5" Width="200" HorizontalAlignment="Center" Command="{Binding SaveCommand}" Height="40"/>
+		</Grid>
+	</Grid>
+</UserControl>

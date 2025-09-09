@@ -2,7 +2,7 @@
 
 namespace ComicbookArchiveToolbox.Events
 {
-  public class InterfaceLoadedEvent : PubSubEvent
-  {
-  }
+	public class InterfaceLoadedEvent : PubSubEvent
+	{
+	}
 }

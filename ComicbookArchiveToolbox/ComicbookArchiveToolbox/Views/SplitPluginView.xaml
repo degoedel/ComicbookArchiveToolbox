@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="ComicbookArchiveToolbox.Module.Split.Views.SplitPluginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:converters="clr-namespace:ComicbookArchiveToolbox.CommonTools"
+         xmlns:local="clr-namespace:ComicbookArchiveToolbox.Module.Split.Views"
+			       xmlns:prism="http://prismlibrary.com/"
+			       prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="800">
+	<UserControl.Resources>
+		<converters:InverseBooleanConverter x:Key="InverseConverter"/>
+	</UserControl.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
+		<TextBlock Grid.Row="0" Text="Split File" TextAlignment="Center" FontSize="30" VerticalAlignment="Center" Margin="0,5"/>
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="80"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0" Text="File To Split: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding FileToSplit, Mode=TwoWay}"/>
+			<Button Grid.Column="2" VerticalAlignment="Center" Content="..." Margin="5" Command="{Binding BrowseFileCommand}" HorizontalContentAlignment="Center" Height="40"/>
+		</Grid>
+		<Grid Grid.Row="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="80"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0" Text="Output Files Template: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding NameTemplate, Mode=TwoWay}"/>
+		</Grid>
+		<Grid Grid.Row="3" Grid.RowSpan="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition />
+				<ColumnDefinition Width="80"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0" Text="Split style: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+			<ComboBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="40" ItemsSource="{Binding SplitStyles}" SelectedItem="{Binding SelectedStyle}" />
+			<ContentControl Grid.Column="2" prism:RegionManager.RegionName="SplitArgsRegion"/>
+		</Grid>
+		<Grid Grid.Row="5">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition />
+				<ColumnDefinition />
+				<ColumnDefinition Width="100"/>
+				<ColumnDefinition Width="80"/>
+			</Grid.ColumnDefinitions>
+			<CheckBox Content="Follow source file " Grid.Column="1" VerticalAlignment="Center" IsEnabled="{Binding FileSelected}" IsChecked="{Binding FollowFilePath, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="0"/>
+			<TextBlock Grid.Column="2" Text="Image quality: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+			<TextBox Grid.Column="3" VerticalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding ImageQuality, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
+		</Grid>
+		<Grid Grid.Row="6" IsEnabled="{Binding FollowFilePath, Converter={StaticResource InverseConverter}}">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="80"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0" Text="Output Path: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding OutputDir, Mode=TwoWay}"/>
+			<Button Grid.Column="2" VerticalAlignment="Center" Content="..." Margin="5" Command="{Binding BrowseOutputDirCommand}" HorizontalContentAlignment="Center" Height="40"/>
+		</Grid>
+		<Grid Grid.Row="7">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Button Grid.Column="0" VerticalAlignment="Center" Content="Split" Margin="5" Width="200" HorizontalAlignment="Center" Command="{Binding SplitCommand}" Height="40"/>
+		</Grid>
+	</Grid>
+</UserControl>

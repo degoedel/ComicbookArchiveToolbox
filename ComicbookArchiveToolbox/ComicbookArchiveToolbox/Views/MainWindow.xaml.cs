@@ -1,7 +1,5 @@
-﻿using ComicbookArchiveToolbox.CommonTools.Interfaces;
-using MahApps.Metro.Controls;
+﻿using MahApps.Metro.Controls;
 using Prism.Navigation.Regions;
-using System.Collections.Generic;
 
 namespace ComicbookArchiveToolbox.Views
 {
@@ -10,8 +8,6 @@ namespace ComicbookArchiveToolbox.Views
   /// </summary>
   public partial class MainWindow : MetroWindow
   {
-    public IEnumerable<ICatPlugin> Plugins { get; set; }
-
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		public MainWindow(IRegionManager regionManager)
     {

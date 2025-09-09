@@ -1,6 +1,5 @@
 ﻿using ComicbookArchiveToolbox.Views;
 using Prism.Ioc;
-using Prism.Modularity;
 using Prism.Unity;
 using System.Windows;
 
@@ -22,10 +21,10 @@ namespace ComicbookArchiveToolbox
 			return Container.Resolve<MainWindow>();
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-		protected override IModuleCatalog CreateModuleCatalog()
-		{
-			return new DirectoryModuleCatalog() { ModulePath = @"." };
-		}
+		//[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+		//protected override IModuleCatalog CreateModuleCatalog()
+		//{
+		//	return new DirectoryModuleCatalog() { ModulePath = @"." };
+		//}
 	}
 }

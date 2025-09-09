@@ -1,4 +1,7 @@
-﻿using Prism.Ioc;
+﻿using ComicbookArchiveToolbox.Module.Edit.Views;
+using ComicbookArchiveToolbox.Module.Merge.Views;
+using ComicbookArchiveToolbox.Module.Split.Views;
+using Prism.Ioc;
 using Prism.Navigation.Regions;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,29 +17,32 @@ namespace ComicbookArchiveToolbox.Views
 		IRegionManager _regionManager;
 
 
-    public HostView(IContainerExtension container, IRegionManager regionManager)
-	{
-	  InitializeComponent();
-	  _container = container;
-	  _regionManager = regionManager;
-      this.Loaded += HostControl_Loaded;
-	}
+		public HostView(IContainerExtension container, IRegionManager regionManager)
+		{
+			InitializeComponent();
+			_container = container;
+			_regionManager = regionManager;
+			this.Loaded += HostControl_Loaded;
+		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void HostControl_Loaded(object sender, RoutedEventArgs e)
-    {
-      IRegion region = _regionManager.Regions["PluginRegion"];
-	  var tools = _container.Resolve<ToolsView>();
-	  region.Add(tools, "ToolsView");
-	  region.Add(_container.Resolve<SettingsView>(), "SettingsView");
-	  region.Add(_container.Resolve<AboutView>(), "AboutView");
-	  region.Activate(tools);
-	}
+		{
+			IRegion region = _regionManager.Regions["PluginRegion"];
+			region.Add(_container.Resolve<SettingsView>(), "SettingsView");
+			var about = _container.Resolve<AboutView>();
+			region.Add(about, "AboutView");
+			region.Add(_container.Resolve<MergePluginView>(), "MergeView");
+			region.Add(_container.Resolve<CompressPluginView>(), "CompressView");
+			region.Add(_container.Resolve<SplitPluginView>(), "SplitView");
+			region.Add(_container.Resolve<EditPluginView>(), "EditView");
+			region.Activate(about);
+		}
 
-    private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-    {
-      var tb = sender as TextBox;
-      tb.ScrollToEnd();
-    }
-  }
+		private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			var tb = sender as TextBox;
+			tb.ScrollToEnd();
+		}
+	}
 }

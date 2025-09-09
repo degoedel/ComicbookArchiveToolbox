@@ -8,7 +8,17 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-		<TextBox Text="{Binding AboutContent, Mode=OneWay}" IsReadOnly="True" Margin="10" BorderThickness="0" Padding="-2,0,-2,0" TextWrapping="Wrap"/>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="50"/>
+			<RowDefinition/>
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
+		<TextBlock Grid.Row="0" Text="ComicbookArchiveToolbox 3.0" TextAlignment="Center" FontSize="30" VerticalAlignment="Center"/>
+		<TextBox Grid.Row="1" Text="{Binding AboutContent, Mode=OneWay}" IsReadOnly="True" Margin="10" BorderThickness="0" Padding="-2,0,-2,0" TextWrapping="Wrap"/>
+		<TextBlock Grid.Row="2" Margin="10" TextWrapping="Wrap">
+			For more details, source code and other dependencies, see:        
+    <Hyperlink NavigateUri="https://degoedel.github.io/ComicbookArchiveToolbox/" Click="Url_Click">Comicbook Archive Toolbox Github</Hyperlink>
+		</TextBlock>
 	</Grid>
 </UserControl>

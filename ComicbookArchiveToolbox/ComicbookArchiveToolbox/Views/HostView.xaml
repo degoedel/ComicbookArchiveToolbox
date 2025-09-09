@@ -15,9 +15,12 @@
       <ColumnDefinition/>
     </Grid.ColumnDefinitions>
     <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0,10,0,10">
-      <Button Content="{iconPacks:Modern HomeEmpty, Height=30, Width=30}" Command="{Binding DisplayToolsCommand}" Height="60" BorderThickness="0"/>
-	  <Button Content="{iconPacks:Modern Cog, Height=30, Width=30}" Command="{Binding DisplaySettingsCommand}" Height="60" BorderThickness="0"/>
-	  <Button Content="{iconPacks:Modern informationcircle, Height=30, Width=30}" Command="{Binding DisplayAboutCommand}" Height="60" BorderThickness="0"/>
+		<Button Content="{iconPacks:Modern Archive, Height=30, Width=30}" Command="{Binding DisplayCompressCommand}" ToolTip="{Binding ToolCompressDescription}" Height="60" BorderThickness="0"/>
+		<Button Content="{iconPacks:Modern Slice, Height=30, Width=30}" Command="{Binding DisplaySplitCommand}" ToolTip="{Binding ToolSplitDescription}" Height="60" BorderThickness="0"/>
+		<Button Content="{iconPacks:Modern Paperclip, Height=30, Width=30}" Command="{Binding DisplayMergeCommand}" ToolTip="{Binding ToolMergeDescription}" Height="60" BorderThickness="0"/>
+		<Button Content="{iconPacks:Modern PageEdit, Height=30, Width=30}" Command="{Binding DisplayEditCommand}" ToolTip="{Binding ToolEditDescription}" Height="60" BorderThickness="0"/>
+		<Button Content="{iconPacks:Modern Cog, Height=30, Width=30}" Command="{Binding DisplaySettingsCommand}" ToolTip="{Binding ToolSettingsDescription}" Height="60" BorderThickness="0"/>
+		<Button Content="{iconPacks:Modern informationcircle, Height=30, Width=30}" Command="{Binding DisplayAboutCommand}" ToolTip="{Binding ToolAboutDescription}" Height="60" BorderThickness="0"/>
 	</StackPanel>
     <Grid Grid.Column="1">
       <Grid.RowDefinitions>
