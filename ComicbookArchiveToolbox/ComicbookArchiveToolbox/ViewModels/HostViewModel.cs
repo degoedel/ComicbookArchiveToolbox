@@ -129,7 +129,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 			get { return _hideLog; }
 			set
 			{
-				SetProperty(ref _hideLog, value);
+				SetProperty<bool>(ref _hideLog, value);
 			}
 		}
 

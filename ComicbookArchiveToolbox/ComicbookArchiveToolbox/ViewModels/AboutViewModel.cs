@@ -9,7 +9,6 @@ namespace ComicbookArchiveToolbox.ViewModels
 			"and to edit their metadata.\n\n" +
 			"Comicbook Archive Toolbox requires .NET 8.0 to work properly,\n" +
 			"and depends on 7zip (redistributed) for compression/decompression of archives.\n\n" +
-			"This app is developped by Damien Galban under MIT license.\n\n" +
-			"See https://degoedel.github.io/ComicbookArchiveToolbox/ for more details, source code and other dependencies";
+			"This app is developped by Damien Galban under MIT license.";
 	}
 }
