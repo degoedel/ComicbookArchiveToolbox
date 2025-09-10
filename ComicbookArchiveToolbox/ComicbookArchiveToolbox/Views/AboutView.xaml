@@ -5,53 +5,102 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              prism:ViewModelLocator.AutoWireViewModel="True">
-	<Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
-		<Border Style="{StaticResource ModernCard}" 
-                HorizontalAlignment="Center" 
-                VerticalAlignment="Center"
-                MaxWidth="600">
-			<StackPanel HorizontalAlignment="Center">
-				<!-- Icon and Title Section -->
-				<StackPanel Orientation="Horizontal" 
-                            HorizontalAlignment="Center"
-                            Margin="0,0,0,24">
-					<!-- App Icon -->
-					<Image Source="pack://application:,,,/ComicbookArchiveToolbox;component/Resources/Cat.ico" 
-                           Width="32" 
-                           Height="32" 
-                           Margin="0,0,16,0"
+
+	<ScrollViewer>
+		<StackPanel Margin="24">
+			<!-- Modern Header -->
+			<StackPanel Orientation="Horizontal" Margin="0,0,0,32">
+				<iconPacks:PackIconModern Kind="InformationCircle" 
+                                          Width="32" 
+                                          Height="32" 
+                                          Foreground="{DynamicResource MahApps.Brushes.Text}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,16,0"/>
+				<TextBlock Text="About" 
+                           Style="{DynamicResource MahApps.Styles.TextBlock.Title}"
+                           FontSize="28"
                            VerticalAlignment="Center"/>
-
-					<!-- App Title -->
-					<TextBlock Text="Comicbook Archive Toolbox" 
-                               Style="{DynamicResource MahApps.Styles.TextBlock.Title}"
-                               FontSize="28"
-                               VerticalAlignment="Center"/>
-				</StackPanel>
-
-				<TextBlock Text="Version 3.0" 
-                           Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
-                           Foreground="{DynamicResource MahApps.Brushes.Gray1}"
-                           TextAlignment="Center" 
-                           Margin="0,0,0,24"/>
-
-				<!-- About Content -->
-				<TextBlock Text="{Binding AboutContent}" 
-                           TextWrapping="Wrap" 
-                           Style="{DynamicResource MahApps.Styles.TextBlock}"
-                           TextAlignment="Left"
-                           Margin="0,0,0,24"/>
-
-				<!-- Website Link -->
-				<TextBlock TextAlignment="Center">
-                    <Run Text="For more details, source code and dependencies, visit: "/>
-                    <Hyperlink NavigateUri="https://degoedel.github.io/ComicbookArchiveToolbox/"
-                               RequestNavigate="Url_Click"
-                               Foreground="{DynamicResource MahApps.Brushes.Accent}">
-                        <Run Text="Project Website"/>
-                    </Hyperlink>
-				</TextBlock>
 			</StackPanel>
-		</Border>
-	</Grid>
+
+			<!-- Application Information Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="Application Information" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<!-- Icon and Title Section -->
+					<StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Left"
+                                Margin="0,0,0,16">
+						<!-- App Icon -->
+						<Image Source="pack://application:,,,/ComicbookArchiveToolbox;component/Resources/Cat.ico" 
+                               Width="32" 
+                               Height="32" 
+                               Margin="0,0,16,0"
+                               VerticalAlignment="Center"/>
+
+						<!-- App Title and Version -->
+						<StackPanel>
+							<TextBlock Text="Comicbook Archive Toolbox" 
+                                       Style="{DynamicResource MahApps.Styles.TextBlock}"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"/>
+							<TextBlock Text="Version 3.0" 
+                                       Style="{DynamicResource MahApps.Styles.TextBlock}"
+                                       Foreground="{DynamicResource MahApps.Brushes.Gray1}"
+                                       FontSize="14"/>
+						</StackPanel>
+					</StackPanel>
+
+					<!-- About Content -->
+					<TextBlock Text="{Binding AboutContent}" 
+                               TextWrapping="Wrap" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock}"
+                               TextAlignment="Left"
+                               Margin="0,0,0,16"/>
+
+					<!-- Website Link -->
+					<TextBlock>
+                        <Run Text="For more details, source code and dependencies, visit: "/>
+                        <Hyperlink NavigateUri="https://degoedel.github.io/ComicbookArchiveToolbox/"
+                                   RequestNavigate="Url_Click"
+                                   Foreground="{DynamicResource MahApps.Brushes.Accent}">
+                            <Run Text="Project Website"/>
+                        </Hyperlink>
+					</TextBlock>
+				</StackPanel>
+			</Border>
+
+			<!-- Additional Information Card (if needed for future expansion) -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="System Information" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<UniformGrid Columns="2">
+						<StackPanel Margin="0,0,16,0">
+							<TextBlock Text=".NET Version" 
+                                       Style="{DynamicResource MahApps.Styles.TextBlock}"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,4"/>
+							<TextBlock Text=".NET 8.0" 
+                                       Style="{DynamicResource MahApps.Styles.TextBlock}"
+                                       Foreground="{DynamicResource MahApps.Brushes.Text}"/>
+						</StackPanel>
+						<StackPanel>
+							<TextBlock Text="UI Framework" 
+                                       Style="{DynamicResource MahApps.Styles.TextBlock}"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,4"/>
+							<TextBlock Text="WPF with MahApps.Metro" 
+                                       Style="{DynamicResource MahApps.Styles.TextBlock}"
+                                       Foreground="{DynamicResource MahApps.Brushes.Text}"/>
+						</StackPanel>
+					</UniformGrid>
+				</StackPanel>
+			</Border>
+		</StackPanel>
+	</ScrollViewer>
 </UserControl>

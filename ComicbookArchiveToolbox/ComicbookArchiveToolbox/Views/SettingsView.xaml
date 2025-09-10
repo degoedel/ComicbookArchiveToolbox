@@ -17,7 +17,7 @@
 				<iconPacks:PackIconModern Kind="Settings" 
                                           Width="32" 
                                           Height="32" 
-                                          Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                          Foreground="{DynamicResource MahApps.Brushes.Text}"
                                           VerticalAlignment="Center"
                                           Margin="0,0,16,0"/>
 				<TextBlock Text="Settings" 

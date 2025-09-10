@@ -4,15 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ComicbookArchiveToolbox.Module.Split.Views"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="300">
-    <Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition />
-			<ColumnDefinition Width="150"/>
-			<ColumnDefinition Width="100"/>
-		</Grid.ColumnDefinitions>
-		<TextBlock Grid.Column="1" Text="Max Size: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-		<TextBox Grid.Column="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="40" Text="{Binding MaxFileSize, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
-	</Grid>
+             d:DesignHeight="80" d:DesignWidth="400">
+
+	<StackPanel Margin="8">
+		<mah:MetroHeader Header="Maximum File Size (MB)">
+			<StackPanel Orientation="Horizontal">
+				<iconPacks:PackIconModern Kind="HardDrive" 
+                                          Width="16" 
+                                          Height="16" 
+                                          Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,8,0"/>
+				<mah:NumericUpDown Value="{Binding MaxFileSize, Mode=TwoWay}"
+                                   Minimum="1"
+                                   Maximum="10000"
+                                   Width="100"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"/>
+			</StackPanel>
+		</mah:MetroHeader>
+	</StackPanel>
 </UserControl>

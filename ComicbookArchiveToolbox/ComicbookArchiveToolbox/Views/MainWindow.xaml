@@ -4,13 +4,70 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		    xmlns:prism="http://prismlibrary.com/"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:ComicbookArchiveToolbox"
         mc:Ignorable="d"
-		Icon="pack://application:,,,/ComicbookArchiveToolbox;component/Resources/Cat.ico"
+        Icon="pack://application:,,,/ComicbookArchiveToolbox;component/Resources/Cat.ico"
         ShowIconOnTitleBar="True"
-        Title="Comicbook Archive Toolbox" Height="670" Width="850">
-  <Grid>
-		<ContentControl prism:RegionManager.RegionName="HostRegion" />
-	</Grid>
+        ShowTitleBar="True"
+        Title="Comicbook Archive Toolbox" 
+        Height="750" 
+        Width="1100"
+        MinHeight="600"
+        MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+        TitleCharacterCasing="Normal"
+        TitleBarHeight="35"
+        WindowTitleBrush="{DynamicResource MahApps.Brushes.WindowTitle}"
+        NonActiveWindowTitleBrush="{DynamicResource MahApps.Brushes.WindowTitleInactive}">
+
+	<!-- Custom Window Button Commands with Dark Theme -->
+	<Controls:MetroWindow.WindowButtonCommands>
+		<Controls:WindowButtonCommands Style="{DynamicResource MahApps.Styles.WindowButtonCommands}"
+                                       Background="{DynamicResource MahApps.Brushes.WindowButtonCommands.Background}"
+                                       Foreground="{DynamicResource MahApps.Brushes.WindowButtonCommands.Foreground}"
+                                       LightMinButtonStyle="{DynamicResource MahApps.Styles.Button.Window.Min}"
+                                       LightMaxButtonStyle="{DynamicResource MahApps.Styles.Button.Window.Max}"
+                                       LightCloseButtonStyle="{DynamicResource MahApps.Styles.Button.Window.Close}"/>
+	</Controls:MetroWindow.WindowButtonCommands>
+
+	<!-- Custom Title Bar Content -->
+	<Controls:MetroWindow.TitleTemplate>
+		<DataTemplate>
+			<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+				<Image Source="pack://application:,,,/ComicbookArchiveToolbox;component/Resources/Cat.ico" 
+                       Width="20" 
+                       Height="20" 
+                       Margin="8,0,12,0"/>
+				<TextBlock Text="{Binding}" 
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource MahApps.Brushes.WindowTitle}"
+                           VerticalAlignment="Center"/>
+			</StackPanel>
+		</DataTemplate>
+	</Controls:MetroWindow.TitleTemplate>
+
+	<!-- Enhanced Content Area -->
+	<Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+            BorderBrush="{DynamicResource MahApps.Brushes.Gray5}"
+            BorderThickness="1">
+		<Grid>
+			<!-- Subtle gradient overlay for depth -->
+			<Border>
+				<Border.Background>
+					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.2">
+						<GradientStop Color="#1A1A2E" Offset="0"/>
+						<GradientStop Color="#0F1A2E" Offset="1"/>
+					</LinearGradientBrush>
+				</Border.Background>
+			</Border>
+
+			<!-- Main Content -->
+			<ContentControl prism:RegionManager.RegionName="HostRegion" 
+                            Margin="2"/>
+		</Grid>
+	</Border>
 </Controls:MetroWindow>

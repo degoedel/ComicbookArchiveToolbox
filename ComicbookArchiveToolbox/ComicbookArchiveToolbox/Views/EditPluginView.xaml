@@ -5,36 +5,97 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ComicbookArchiveToolbox.Module.Edit.Views"
              xmlns:prism="http://prismlibrary.com/"
-			       prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="800">
-    <Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="200"/>
-			<RowDefinition Height="50"/>
-		</Grid.RowDefinitions>
-		<TextBlock Grid.Row="0" Text="Edit Metadata" TextAlignment="Center" FontSize="30" VerticalAlignment="Center"/>
-		<Grid Grid.Row="1">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="80"/>
-			</Grid.ColumnDefinitions>
-			<TextBlock Grid.Column="0" Text="File To Edit: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding FileToEdit, Mode=TwoWay}"/>
-			<Button Grid.Column="2" VerticalAlignment="Center" Content="..." Margin="5" Command="{Binding BrowseFileCommand}" HorizontalContentAlignment="Center" Height="40"/>
-		</Grid>
-		<DataGrid Grid.Row="2" Margin="5"  ItemsSource="{Binding MetadataCollection}"  CanUserDeleteRows="True" CanUserAddRows="True" MaxHeight="190"
-      ScrollViewer.CanContentScroll="True" 
-      ScrollViewer.VerticalScrollBarVisibility="Auto"
-      ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
-		<Grid Grid.Row="3">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
-			<Button Grid.Column="0" VerticalAlignment="Center" Content="Save" Margin="5" Width="200" HorizontalAlignment="Center" Command="{Binding SaveCommand}" Height="40"/>
-		</Grid>
-	</Grid>
+             d:DesignHeight="600" d:DesignWidth="800">
+
+	<ScrollViewer>
+		<StackPanel Margin="24">
+			<!-- Modern Header -->
+			<StackPanel Orientation="Horizontal" Margin="0,0,0,32">
+				<iconPacks:PackIconModern Kind="Edit" 
+                                          Width="32" 
+                                          Height="32" 
+                                          Foreground="{DynamicResource MahApps.Brushes.Text}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,16,0"/>
+				<TextBlock Text="Edit Metadata" 
+                           Style="{DynamicResource MahApps.Styles.TextBlock.Title}"
+                           FontSize="28"
+                           VerticalAlignment="Center"/>
+			</StackPanel>
+
+			<!-- File Selection Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="File Selection" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<mah:MetroHeader Header="File To Edit">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<TextBox Grid.Column="0" 
+                                     Text="{Binding FileToEdit, Mode=TwoWay}"
+                                     Style="{StaticResource MahApps.Styles.TextBox}"
+                                     Margin="0,0,8,0"/>
+							<Button Grid.Column="1" 
+                                    Content="Browse..."
+                                    Style="{StaticResource MahApps.Styles.Button.Square}"
+                                    Command="{Binding BrowseFileCommand}"/>
+						</Grid>
+					</mah:MetroHeader>
+				</StackPanel>
+			</Border>
+
+			<!-- Metadata Editing Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="Metadata" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<TextBlock Text="Edit the metadata fields below. You can add new rows or delete existing ones."
+                               Style="{DynamicResource MahApps.Styles.TextBlock}"
+                               Foreground="{DynamicResource MahApps.Brushes.Gray1}"
+                               Margin="0,0,0,16"/>
+
+					<DataGrid ItemsSource="{Binding MetadataCollection}"  
+                              CanUserDeleteRows="True" 
+                              CanUserAddRows="True" 
+                              MinHeight="200"
+                              MaxHeight="350"
+                              ScrollViewer.CanContentScroll="True" 
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              Style="{DynamicResource MahApps.Styles.DataGrid}"
+                              Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                              Foreground="{DynamicResource MahApps.Brushes.Text}"/>
+				</StackPanel>
+			</Border>
+
+			<!-- Action Button -->
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+				<Button Content="Save Changes" 
+                        Style="{StaticResource MahApps.Styles.Button.Square.Accent}"
+                        Command="{Binding SaveCommand}"
+                        Width="160"
+                        Height="40">
+					<Button.ContentTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Horizontal">
+								<iconPacks:PackIconModern Kind="Save" Width="16" Height="16" Margin="0,0,8,0"/>
+								<TextBlock Text="{Binding}"/>
+							</StackPanel>
+						</DataTemplate>
+					</Button.ContentTemplate>
+				</Button>
+			</StackPanel>
+		</StackPanel>
+	</ScrollViewer>
 </UserControl>

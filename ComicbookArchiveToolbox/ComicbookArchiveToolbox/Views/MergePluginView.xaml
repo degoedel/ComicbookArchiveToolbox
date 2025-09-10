@@ -5,87 +5,134 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ComicbookArchiveToolbox.Module.Merge.Views"
              xmlns:prism="http://prismlibrary.com/"
-			       prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-  <UserControl.Resources>
-    <Style x:Key="ItemContStyle" TargetType="ListViewItem">
-      <Style.Resources>
-        <LinearGradientBrush x:Key="MouseOverBrush" StartPoint="0.5, 0" EndPoint="0.5, 1">
-          <GradientStop Color="#22000000" Offset="0" />
-          <GradientStop Color="#44000000" Offset="0.4" />
-          <GradientStop Color="#55000000" Offset="0.6" />
-          <GradientStop Color="#33000000" Offset="0.9" />
-          <GradientStop Color="#22000000" Offset="1" />
-        </LinearGradientBrush>
-      </Style.Resources>
-      <Setter Property="Padding" Value="0,4" />
-      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-      <!-- The default control template for ListViewItem has a Border 
+	<UserControl.Resources>
+		<Style x:Key="ItemContStyle" TargetType="ListViewItem">
+			<Style.Resources>
+				<LinearGradientBrush x:Key="MouseOverBrush" StartPoint="0.5, 0" EndPoint="0.5, 1">
+					<GradientStop Color="#22000000" Offset="0" />
+					<GradientStop Color="#44000000" Offset="0.4" />
+					<GradientStop Color="#55000000" Offset="0.6" />
+					<GradientStop Color="#33000000" Offset="0.9" />
+					<GradientStop Color="#22000000" Offset="1" />
+				</LinearGradientBrush>
+			</Style.Resources>
+			<Setter Property="Padding" Value="0,4" />
+			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+			<!-- The default control template for ListViewItem has a Border 
            which contains the item's content. -->
-      <Setter Property="Border.BorderThickness" Value="0,0,0,0.5" />
-      <Setter Property="Border.BorderBrush" Value="LightGray" />
-      <!-- These triggers react to changes in the attached properties set
+			<Setter Property="Border.BorderThickness" Value="0,0,0,0.5" />
+			<Setter Property="Border.BorderBrush" Value="LightGray" />
+			<!-- These triggers react to changes in the attached properties set
            during a managed drag-drop operation. -->
-      <Style.Triggers>
-        <Trigger Property="local:ListViewItemDragState.IsBeingDragged" Value="True">
-          <Setter Property="FontWeight" Value="DemiBold" />
-        </Trigger>
-        <Trigger Property="local:ListViewItemDragState.IsUnderDragCursor" Value="True">
-          <Setter Property="Background" Value="{StaticResource MouseOverBrush}" />
-        </Trigger>
-      </Style.Triggers>
-    </Style>
-  </UserControl.Resources>
-    <Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition MaxHeight="200"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-		</Grid.RowDefinitions>
-		<TextBlock Grid.Row="0" Text="Merge Files" TextAlignment="Center" FontSize="30" VerticalAlignment="Center"/>
-		<Grid Grid.Row="1">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
-			<Button Grid.Column="0" VerticalAlignment="Center" Content="Select Files..." Margin="5" Width="200" HorizontalAlignment="Right" Command="{Binding BrowseFilesCommand}" Height="40"/>
-			<Button Grid.Column="1" VerticalAlignment="Center" Content="Clear Selection" Margin="5" Width="200" HorizontalAlignment="Left" Command="{Binding ClearFilesCommand}" Height="40"/>
-		</Grid>
-		<Grid Grid.Row="2">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
-      <ListView Grid.Column="0" Margin="5" ItemsSource="{Binding SelectedFiles}" MaxHeight="240" ItemContainerStyle="{StaticResource ItemContStyle}" SelectionMode="Single" Name="_filesListView"/>
-		</Grid>
-		<Grid Grid.Row="3">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition Width="100"/>
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
-			<TextBlock Grid.Column="0" Text="Image quality: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-			<TextBox Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding ImageQuality, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
+			<Style.Triggers>
+				<Trigger Property="local:ListViewItemDragState.IsBeingDragged" Value="True">
+					<Setter Property="FontWeight" Value="DemiBold" />
+				</Trigger>
+				<Trigger Property="local:ListViewItemDragState.IsUnderDragCursor" Value="True">
+					<Setter Property="Background" Value="{StaticResource MouseOverBrush}" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+	</UserControl.Resources>
 
-		</Grid>
-		<Grid Grid.Row="4">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="80"/>
-			</Grid.ColumnDefinitions>
-			<TextBlock Grid.Column="0" Text="Output Path: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding OutputFile, Mode=TwoWay}"/>
-			<Button Grid.Column="2" VerticalAlignment="Center" Content="..." Margin="5" Command="{Binding BrowseOutputFileCommand}" HorizontalContentAlignment="Center" Height="40"/>
-		</Grid>
-		<Grid Grid.Row="5">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
-			<Button Grid.Column="0" VerticalAlignment="Center" Content="Merge" Margin="5" Width="200" HorizontalAlignment="Center" Command="{Binding MergeCommand}" Height="40"/>
-		</Grid>
-	</Grid>
+	<ScrollViewer>
+		<StackPanel Margin="24">
+			<!-- Modern Header -->
+			<StackPanel Orientation="Horizontal" Margin="0,0,0,32">
+				<iconPacks:PackIconModern Kind="Paperclip" 
+                                          Width="32" 
+                                          Height="32" 
+                                          Foreground="{DynamicResource MahApps.Brushes.Text}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,16,0"/>
+				<TextBlock Text="Merge Files" 
+                           Style="{DynamicResource MahApps.Styles.TextBlock.Title}"
+                           FontSize="28"
+                           VerticalAlignment="Center"/>
+			</StackPanel>
+
+			<!-- File Selection Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="Files" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<mah:MetroHeader Header="Input Files">
+						<StackPanel>
+							<StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+								<Button Content="Select Files..."
+                                        Style="{StaticResource MahApps.Styles.Button.Square}"
+                                        Command="{Binding BrowseFilesCommand}"
+                                        Margin="0,0,8,0"/>
+								<Button Content="Clear Selection"
+                                        Style="{StaticResource MahApps.Styles.Button.Square}"
+                                        Command="{Binding ClearFilesCommand}"/>
+							</StackPanel>
+							<ListView ItemsSource="{Binding SelectedFiles}" 
+                                      MaxHeight="200" 
+                                      ItemContainerStyle="{StaticResource ItemContStyle}" 
+                                      SelectionMode="Single" 
+                                      Name="_filesListView"
+                                      Style="{StaticResource MahApps.Styles.ListView}"/>
+						</StackPanel>
+					</mah:MetroHeader>
+
+					<mah:MetroHeader Header="Output File" Margin="0,16,0,0">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<TextBox Grid.Column="0" 
+                                     Text="{Binding OutputFile, Mode=TwoWay}"
+                                     Style="{StaticResource MahApps.Styles.TextBox}"
+                                     Margin="0,0,8,0"/>
+							<Button Grid.Column="1" 
+                                    Content="Browse..."
+                                    Style="{StaticResource MahApps.Styles.Button.Square}"
+                                    Command="{Binding BrowseOutputFileCommand}"/>
+						</Grid>
+					</mah:MetroHeader>
+				</StackPanel>
+			</Border>
+
+			<!-- Compression Quality Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="Image Quality (%)" 
+                               VerticalAlignment="Center"
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,16,0"/>
+					<mah:NumericUpDown Value="{Binding ImageQuality, Mode=TwoWay}"
+                                       Minimum="1"
+                                       Maximum="100"
+                                       Width="80"/>
+				</StackPanel>
+			</Border>
+
+			<!-- Action Button -->
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+				<Button Content="Start Merge" 
+                        Style="{StaticResource MahApps.Styles.Button.Square.Accent}"
+                        Command="{Binding MergeCommand}"
+                        Width="160"
+                        Height="40">
+					<Button.ContentTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Horizontal">
+								<iconPacks:PackIconModern Kind="Paperclip" Width="16" Height="16" Margin="0,0,8,0"/>
+								<TextBlock Text="{Binding}"/>
+							</StackPanel>
+						</DataTemplate>
+					</Button.ContentTemplate>
+				</Button>
+			</StackPanel>
+		</StackPanel>
+	</ScrollViewer>
 </UserControl>

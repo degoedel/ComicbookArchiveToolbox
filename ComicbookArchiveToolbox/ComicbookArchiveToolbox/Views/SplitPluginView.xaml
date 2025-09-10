@@ -3,84 +3,165 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-			 xmlns:converters="clr-namespace:ComicbookArchiveToolbox.CommonTools"
-         xmlns:local="clr-namespace:ComicbookArchiveToolbox.Module.Split.Views"
-			       xmlns:prism="http://prismlibrary.com/"
-			       prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:converters="clr-namespace:ComicbookArchiveToolbox.CommonTools"
+             xmlns:local="clr-namespace:ComicbookArchiveToolbox.Module.Split.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800">
+
 	<UserControl.Resources>
 		<converters:InverseBooleanConverter x:Key="InverseConverter"/>
 	</UserControl.Resources>
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-		</Grid.RowDefinitions>
-		<TextBlock Grid.Row="0" Text="Split File" TextAlignment="Center" FontSize="30" VerticalAlignment="Center" Margin="0,5"/>
-		<Grid Grid.Row="1">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="80"/>
-			</Grid.ColumnDefinitions>
-			<TextBlock Grid.Column="0" Text="File To Split: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding FileToSplit, Mode=TwoWay}"/>
-			<Button Grid.Column="2" VerticalAlignment="Center" Content="..." Margin="5" Command="{Binding BrowseFileCommand}" HorizontalContentAlignment="Center" Height="40"/>
-		</Grid>
-		<Grid Grid.Row="2">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="80"/>
-			</Grid.ColumnDefinitions>
-			<TextBlock Grid.Column="0" Text="Output Files Template: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding NameTemplate, Mode=TwoWay}"/>
-		</Grid>
-		<Grid Grid.Row="3" Grid.RowSpan="2">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition />
-				<ColumnDefinition Width="80"/>
-			</Grid.ColumnDefinitions>
-			<TextBlock Grid.Column="0" Text="Split style: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-			<ComboBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="40" ItemsSource="{Binding SplitStyles}" SelectedItem="{Binding SelectedStyle}" />
-			<ContentControl Grid.Column="2" prism:RegionManager.RegionName="SplitArgsRegion"/>
-		</Grid>
-		<Grid Grid.Row="5">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition />
-				<ColumnDefinition />
-				<ColumnDefinition Width="100"/>
-				<ColumnDefinition Width="80"/>
-			</Grid.ColumnDefinitions>
-			<CheckBox Content="Follow source file " Grid.Column="1" VerticalAlignment="Center" IsEnabled="{Binding FileSelected}" IsChecked="{Binding FollowFilePath, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="0"/>
-			<TextBlock Grid.Column="2" Text="Image quality: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-			<TextBox Grid.Column="3" VerticalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding ImageQuality, Mode=TwoWay}" PreviewTextInput = "NumericOnly"/>
-		</Grid>
-		<Grid Grid.Row="6" IsEnabled="{Binding FollowFilePath, Converter={StaticResource InverseConverter}}">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="80"/>
-			</Grid.ColumnDefinitions>
-			<TextBlock Grid.Column="0" Text="Output Path: " TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-			<TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Text="{Binding OutputDir, Mode=TwoWay}"/>
-			<Button Grid.Column="2" VerticalAlignment="Center" Content="..." Margin="5" Command="{Binding BrowseOutputDirCommand}" HorizontalContentAlignment="Center" Height="40"/>
-		</Grid>
-		<Grid Grid.Row="7">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
-			<Button Grid.Column="0" VerticalAlignment="Center" Content="Split" Margin="5" Width="200" HorizontalAlignment="Center" Command="{Binding SplitCommand}" Height="40"/>
-		</Grid>
-	</Grid>
+
+	<ScrollViewer>
+		<StackPanel Margin="24">
+			<!-- Modern Header -->
+			<StackPanel Orientation="Horizontal" Margin="0,0,0,32">
+				<iconPacks:PackIconModern Kind="Slice" 
+                                          Width="32" 
+                                          Height="32" 
+                                          Foreground="{DynamicResource MahApps.Brushes.Text}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,16,0"/>
+				<TextBlock Text="Split File" 
+                           Style="{DynamicResource MahApps.Styles.TextBlock.Title}"
+                           FontSize="28"
+                           VerticalAlignment="Center"/>
+			</StackPanel>
+
+			<!-- File Selection Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="File Selection" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<mah:MetroHeader Header="File To Split">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<TextBox Grid.Column="0" 
+                                     Text="{Binding FileToSplit, Mode=TwoWay}"
+                                     Style="{StaticResource MahApps.Styles.TextBox}"
+                                     Margin="0,0,8,0"/>
+							<Button Grid.Column="1" 
+                                    Content="Browse..."
+                                    Style="{StaticResource MahApps.Styles.Button.Square}"
+                                    Command="{Binding BrowseFileCommand}"/>
+						</Grid>
+					</mah:MetroHeader>
+
+					<mah:MetroHeader Header="Output Files Template" Margin="0,16,0,0">
+						<TextBox Text="{Binding NameTemplate, Mode=TwoWay}"
+                                 Style="{StaticResource MahApps.Styles.TextBox}"/>
+					</mah:MetroHeader>
+				</StackPanel>
+			</Border>
+
+			<!-- Split Configuration Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="Split Configuration" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<mah:MetroHeader Header="Split Style">
+						<ComboBox ItemsSource="{Binding SplitStyles}" 
+                                  SelectedItem="{Binding SelectedStyle}"
+                                  Style="{StaticResource MahApps.Styles.ComboBox}"
+                                  Width="200"
+                                  HorizontalAlignment="Left"/>
+					</mah:MetroHeader>
+
+					<!-- Split Arguments Region -->
+					<Border Background="{DynamicResource MahApps.Brushes.Gray1}"
+                            BorderBrush="{DynamicResource MahApps.Brushes.Gray4}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Margin="0,16,0,0"
+                            Padding="12">
+						<ContentControl prism:RegionManager.RegionName="SplitArgsRegion"/>
+					</Border>
+				</StackPanel>
+			</Border>
+
+			<!-- Output Settings Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="Output Settings" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<!-- Path Options -->
+					<CheckBox Content="Follow source file location" 
+                              IsEnabled="{Binding FileSelected}" 
+                              IsChecked="{Binding FollowFilePath, Mode=TwoWay}"
+                              Style="{StaticResource MahApps.Styles.CheckBox}"
+                              FontSize="14"
+                              Margin="0,0,0,16"/>
+
+					<!-- Image Quality and Output Path -->
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="16"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+
+						<!-- Image Quality -->
+						<mah:MetroHeader Grid.Column="0" Header="Image Quality (%)">
+							<mah:NumericUpDown Value="{Binding ImageQuality, Mode=TwoWay}"
+                                               Minimum="1"
+                                               Maximum="100"
+                                               Width="120"
+                                               HorizontalAlignment="Left"/>
+						</mah:MetroHeader>
+
+						<!-- Output Directory -->
+						<mah:MetroHeader Grid.Column="2" 
+                                         Header="Output Directory"
+                                         IsEnabled="{Binding FollowFilePath, Converter={StaticResource InverseConverter}}">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+								<TextBox Grid.Column="0" 
+                                         Text="{Binding OutputDir, Mode=TwoWay}"
+                                         Style="{StaticResource MahApps.Styles.TextBox}"
+                                         Margin="0,0,8,0"/>
+								<Button Grid.Column="1" 
+                                        Content="Browse..."
+                                        Style="{StaticResource MahApps.Styles.Button.Square}"
+                                        Command="{Binding BrowseOutputDirCommand}"/>
+							</Grid>
+						</mah:MetroHeader>
+					</Grid>
+				</StackPanel>
+			</Border>
+
+			<!-- Action Button -->
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+				<Button Content="Start Split" 
+                        Style="{StaticResource MahApps.Styles.Button.Square.Accent}"
+                        Command="{Binding SplitCommand}"
+                        Width="160"
+                        Height="40">
+					<Button.ContentTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Horizontal">
+								<iconPacks:PackIconModern Kind="Slice" Width="16" Height="16" Margin="0,0,8,0"/>
+								<TextBlock Text="{Binding}"/>
+							</StackPanel>
+						</DataTemplate>
+					</Button.ContentTemplate>
+				</Button>
+			</StackPanel>
+		</StackPanel>
+	</ScrollViewer>
 </UserControl>

@@ -17,7 +17,7 @@
 				<iconPacks:PackIconModern Kind="Archive" 
                                           Width="32" 
                                           Height="32" 
-                                          Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                          Foreground="{DynamicResource MahApps.Brushes.Text}"
                                           VerticalAlignment="Center"
                                           Margin="0,0,16,0"/>
 				<TextBlock Text="Compress Pictures" 
@@ -27,8 +27,12 @@
 			</StackPanel>
 
 			<!-- File Selection Card -->
-			<GroupBox Header="Files" Style="{StaticResource ModernGroupBox}">
+			<Border Style="{StaticResource ModernCard}">
 				<StackPanel>
+					<TextBlock Text="Files" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
 					<mah:MetroHeader Header="Input File">
 						<Grid>
 							<Grid.ColumnDefinitions>
@@ -37,12 +41,12 @@
 							</Grid.ColumnDefinitions>
 							<TextBox Grid.Column="0" 
                                      Text="{Binding FileToCompress}"
-                                     Style="{StaticResource MahApps.Styles.TextBox}"/>
+                                     Style="{StaticResource MahApps.Styles.TextBox}"
+                                     Margin="0,0,8,0"/>
 							<Button Grid.Column="1" 
                                     Content="Browse..."
                                     Style="{StaticResource MahApps.Styles.Button.Square}"
-                                    Command="{Binding BrowseFileCommand}"
-                                    Margin="8,0,0,0"/>
+                                    Command="{Binding BrowseFileCommand}"/>
 						</Grid>
 					</mah:MetroHeader>
 
@@ -54,20 +58,24 @@
 							</Grid.ColumnDefinitions>
 							<TextBox Grid.Column="0" 
                                      Text="{Binding OutputFile}"
-                                     Style="{StaticResource MahApps.Styles.TextBox}"/>
+                                     Style="{StaticResource MahApps.Styles.TextBox}"
+                                     Margin="0,0,8,0"/>
 							<Button Grid.Column="1" 
                                     Content="Browse..."
                                     Style="{StaticResource MahApps.Styles.Button.Square}"
-                                    Command="{Binding BrowseOutputFileCommand}"
-                                    Margin="8,0,0,0"/>
+                                    Command="{Binding BrowseOutputFileCommand}"/>
 						</Grid>
 					</mah:MetroHeader>
 				</StackPanel>
-			</GroupBox>
+			</Border>
 
 			<!-- Resize Options Card -->
-			<GroupBox Header="Resize Options" Style="{StaticResource ModernGroupBox}">
+			<Border Style="{StaticResource ModernCard}">
 				<StackPanel>
+					<TextBlock Text="Resize Options" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
 					<RadioButton Content="Ratio (%)" 
                                  GroupName="ResizeStrategy"
                                  IsChecked="{Binding StrictRatio, Converter={StaticResource InverseBooleanConverter}}"
@@ -95,24 +103,24 @@
                                        HorizontalAlignment="Left"
                                        Margin="24,0,0,0"/>
 				</StackPanel>
-			</GroupBox>
+			</Border>
 
 			<!-- Compression Quality Card -->
-			<GroupBox Header="Compression" Style="{StaticResource ModernGroupBox}">
+			<Border Style="{StaticResource ModernCard}">
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Text="Image Quality (%)" 
                                VerticalAlignment="Center"
-                               Style="{DynamicResource MahApps.Styles.TextBlock}"/>
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,16,0"/>
 					<mah:NumericUpDown Value="{Binding ImageQuality}"
                                        Minimum="1"
                                        Maximum="100"
-                                       Width="80"
-                                       Margin="16,0,0,0"/>
+                                       Width="80"/>
 				</StackPanel>
-			</GroupBox>
+			</Border>
 
 			<!-- Action Button -->
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,24,0,0">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
 				<Button Content="Start Compression" 
                         Style="{StaticResource MahApps.Styles.Button.Square.Accent}"
                         Command="{Binding CompressCommand}"

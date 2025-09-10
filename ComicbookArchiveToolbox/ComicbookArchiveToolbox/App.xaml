@@ -9,33 +9,33 @@
 				<!-- MahApps.Metro resource dictionaries -->
 				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
 				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-				<!-- Dark Theme with Blue Accent -->
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Blue.xaml" />
+				<!-- Dark Grey Theme -->
+				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Steel.xaml" />
 
-				<!-- Custom styles optimized for dark blue theme -->
+				<!-- Custom styles optimized for Vivaldi Private theme -->
 				<ResourceDictionary>
-					<!-- Custom Dark Blue Color Resources -->
-					<SolidColorBrush x:Key="DarkBlue.Background" Color="#0F1419"/>
-					<SolidColorBrush x:Key="DarkBlue.Surface" Color="#1A2332"/>
-					<SolidColorBrush x:Key="DarkBlue.Surface2" Color="#233246"/>
-					<SolidColorBrush x:Key="DarkBlue.Surface3" Color="#2C4159"/>
-					<SolidColorBrush x:Key="DarkBlue.Accent" Color="#5DADE2"/>
-					<SolidColorBrush x:Key="DarkBlue.AccentDark" Color="#2E86AB"/>
-					<SolidColorBrush x:Key="DarkBlue.Border" Color="#34495E"/>
-					<SolidColorBrush x:Key="DarkBlue.Text" Color="#E8F4FD"/>
-					<SolidColorBrush x:Key="DarkBlue.TextSecondary" Color="#BDC3C7"/>
+					<!-- Vivaldi Private Theme Color Resources -->
+					<SolidColorBrush x:Key="DarkGrey.Background" Color="#1A1A2E"/>
+					<SolidColorBrush x:Key="DarkGrey.Surface" Color="#16213E"/>
+					<SolidColorBrush x:Key="DarkGrey.Surface2" Color="#0F3460"/>
+					<SolidColorBrush x:Key="DarkGrey.Surface3" Color="#533483"/>
+					<SolidColorBrush x:Key="DarkGrey.Accent" Color="#64B5F6"/>
+					<SolidColorBrush x:Key="DarkGrey.AccentDark" Color="#42A5F5"/>
+					<SolidColorBrush x:Key="DarkGrey.Border" Color="#2E2E54"/>
+					<SolidColorBrush x:Key="DarkGrey.Text" Color="#F0F0F5"/>
+					<SolidColorBrush x:Key="DarkGrey.TextSecondary" Color="#B8B8D1"/>
 
-					<!-- Modern Card Style for Dark Blue Theme -->
+					<!-- Modern Card Style for Vivaldi Private Theme -->
 					<Style x:Key="ModernCard" TargetType="Border">
-						<Setter Property="Background" Value="{StaticResource DarkBlue.Surface}"/>
-						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Border}"/>
+						<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
+						<Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
 						<Setter Property="BorderThickness" Value="1"/>
 						<Setter Property="CornerRadius" Value="8"/>
 						<Setter Property="Padding" Value="20"/>
 						<Setter Property="Margin" Value="8"/>
 						<Setter Property="Effect">
 							<Setter.Value>
-								<DropShadowEffect Color="#0A0E14" 
+								<DropShadowEffect Color="#1A1A2E" 
                                                   BlurRadius="20" 
                                                   ShadowDepth="4" 
                                                   Opacity="0.8"/>
@@ -43,135 +43,142 @@
 						</Setter>
 					</Style>
 
-					<!-- Modern Navigation Button Style for Dark Blue Theme -->
+					<!-- Modern Navigation Button Style for Vivaldi Private Theme -->
 					<Style x:Key="NavigationButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Square}">
 						<Setter Property="Width" Value="60"/>
 						<Setter Property="Height" Value="60"/>
 						<Setter Property="Margin" Value="0,4"/>
 						<Setter Property="Background" Value="Transparent"/>
 						<Setter Property="BorderThickness" Value="0"/>
-						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Text}"/>
+						<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
 						<Style.Triggers>
 							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" Value="{StaticResource DarkBlue.Surface2}"/>
-								<Setter Property="Foreground" Value="{StaticResource DarkBlue.Accent}"/>
+								<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+								<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
 							</Trigger>
 							<Trigger Property="IsPressed" Value="True">
-								<Setter Property="Background" Value="{StaticResource DarkBlue.AccentDark}"/>
-								<Setter Property="Foreground" Value="{StaticResource DarkBlue.Text}"/>
+								<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+								<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
 							</Trigger>
 						</Style.Triggers>
 					</Style>
 
-					<!-- Modern GroupBox Style for Dark Blue Theme -->
+					<!-- Modern GroupBox Style for Vivaldi Private Theme -->
 					<Style x:Key="ModernGroupBox" TargetType="GroupBox" BasedOn="{StaticResource MahApps.Styles.GroupBox}">
 						<Setter Property="Margin" Value="0,8"/>
 						<Setter Property="Padding" Value="16"/>
-						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Accent}"/>
+						<Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
 						<Setter Property="BorderThickness" Value="2"/>
-						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Text}"/>
-						<Setter Property="Background" Value="{StaticResource DarkBlue.Surface}"/>
+						<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
+						<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
 					</Style>
 
-					<!-- Dark Blue Log Panel Style -->
+					<!-- Vivaldi Private Log Panel Style -->
 					<Style x:Key="LogPanel" TargetType="Border">
-						<Setter Property="Background" Value="{StaticResource DarkBlue.Background}"/>
-						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Accent}"/>
+						<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray1}"/>
+						<Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
 						<Setter Property="BorderThickness" Value="1,1,1,0"/>
 						<Setter Property="CornerRadius" Value="8,8,0,0"/>
 						<Setter Property="Padding" Value="12"/>
 					</Style>
 
-					<!-- Dark Blue Text Styles -->
+					<!-- Vivaldi Private Text Styles -->
 					<Style x:Key="HeaderText" TargetType="TextBlock">
-						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Accent}"/>
+						<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
 						<Setter Property="FontWeight" Value="SemiBold"/>
 						<Setter Property="FontSize" Value="20"/>
 					</Style>
 
 					<Style x:Key="SubHeaderText" TargetType="TextBlock">
-						<Setter Property="Foreground" Value="{StaticResource DarkBlue.TextSecondary}"/>
+						<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray1}"/>
 						<Setter Property="FontSize" Value="16"/>
 					</Style>
 
-					<!-- Enhanced Button Styles for Dark Blue Theme -->
+					<!-- Enhanced Button Styles for Vivaldi Private Theme -->
 					<Style x:Key="AccentButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Square.Accent}">
 						<Setter Property="Height" Value="40"/>
 						<Setter Property="MinWidth" Value="120"/>
 						<Setter Property="FontWeight" Value="SemiBold"/>
-						<Setter Property="Background" Value="{StaticResource DarkBlue.Accent}"/>
-						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Accent}"/>
-						<Setter Property="Foreground" Value="#FFFFFF"/>
 						<Setter Property="Effect">
 							<Setter.Value>
-								<DropShadowEffect Color="#2E86AB" 
+								<DropShadowEffect Color="{DynamicResource MahApps.Colors.Accent}" 
                                                   BlurRadius="12" 
                                                   ShadowDepth="0" 
                                                   Opacity="0.5"/>
 							</Setter.Value>
 						</Setter>
-						<Style.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" Value="{StaticResource DarkBlue.AccentDark}"/>
-								<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.AccentDark}"/>
-							</Trigger>
-						</Style.Triggers>
 					</Style>
 
 					<Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Square}">
 						<Setter Property="Height" Value="40"/>
 						<Setter Property="MinWidth" Value="100"/>
-						<Setter Property="Background" Value="{StaticResource DarkBlue.Surface2}"/>
-						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Border}"/>
-						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Text}"/>
+						<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+						<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
 						<Style.Triggers>
 							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" Value="{StaticResource DarkBlue.Surface3}"/>
-								<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Accent}"/>
+								<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
+								<Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
 							</Trigger>
 						</Style.Triggers>
 					</Style>
 
-					<!-- Navigation Sidebar Style -->
+					<!-- Flat Navigation Sidebar Style for Vivaldi Private Theme -->
 					<Style x:Key="NavigationSidebar" TargetType="Border">
-						<Setter Property="Background">
-							<Setter.Value>
-								<LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-									<GradientStop Color="#0F1419" Offset="0"/>
-									<GradientStop Color="#1A2332" Offset="1"/>
-								</LinearGradientBrush>
-							</Setter.Value>
-						</Setter>
-						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Border}"/>
+						<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
+						<Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
 						<Setter Property="BorderThickness" Value="0,0,1,0"/>
 					</Style>
 
-					<!-- Enhanced TextBox Style for Dark Blue Theme -->
+					<!-- Enhanced TextBox Style for Vivaldi Private Theme -->
 					<Style x:Key="ModernTextBox" TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
-						<Setter Property="Background" Value="{StaticResource DarkBlue.Surface}"/>
-						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Border}"/>
-						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Text}"/>
+						<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+						<Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray6}"/>
+						<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
 						<Setter Property="BorderThickness" Value="1"/>
 						<Setter Property="Padding" Value="8,6"/>
 						<Style.Triggers>
 							<Trigger Property="IsFocused" Value="True">
-								<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Accent}"/>
-								<Setter Property="Background" Value="{StaticResource DarkBlue.Surface2}"/>
+								<Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+								<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray4}"/>
 							</Trigger>
 						</Style.Triggers>
 					</Style>
 
-					<!-- Progress Ring Style for Dark Blue Theme -->
+					<!-- Progress Ring Style for Vivaldi Private Theme -->
 					<Style x:Key="ModernProgressRing" TargetType="Control">
-						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Accent}"/>
+						<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
 						<Setter Property="Width" Value="60"/>
 						<Setter Property="Height" Value="60"/>
 					</Style>
 
 					<!-- Override Application Background -->
 					<Style TargetType="Window">
-						<Setter Property="Background" Value="{StaticResource DarkBlue.Background}"/>
+						<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
 					</Style>
+
+					<!-- Override MahApps colors to match Vivaldi Private theme -->
+					<SolidColorBrush x:Key="MahApps.Brushes.Gray1" Color="#0F1A2E"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.Gray2" Color="#16213E"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.Gray3" Color="#1E2A4A"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.Gray4" Color="#243356"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.Gray5" Color="#2A3C62"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.Gray6" Color="#30456E"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.Gray7" Color="#364E7A"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.Accent" Color="#64B5F6"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.Text" Color="#F0F0F5"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.ThemeBackground" Color="#1A1A2E"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.ThemeForeground" Color="#F0F0F5"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.IdealForeground" Color="#F0F0F5"/>
+
+					<!-- Title Bar Specific Brushes for Dark Theme -->
+					<SolidColorBrush x:Key="MahApps.Brushes.WindowTitle" Color="#F0F0F5"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.WindowTitleInactive" Color="#B8B8D1"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.WindowButtonCommands.Background" Color="#16213E"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.WindowButtonCommands.Foreground" Color="#F0F0F5"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.WindowButtonCommands.MouseOver.Background" Color="#2A3C62"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.WindowButtonCommands.MouseOver.Foreground" Color="#64B5F6"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.WindowButtonCommands.Pressed.Background" Color="#64B5F6"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.WindowButtonCommands.Pressed.Foreground" Color="#F0F0F5"/>
 				</ResourceDictionary>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>

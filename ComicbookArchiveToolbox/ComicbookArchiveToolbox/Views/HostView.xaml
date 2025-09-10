@@ -54,79 +54,86 @@
 			</StackPanel>
 		</Border>
 
-		<!-- Main Content Area -->
-		<Grid Grid.Column="1" Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="*"/>
-				<RowDefinition Height="Auto"/>
-			</Grid.RowDefinitions>
+		<!-- Main Content Area with SettingsView-style Layout -->
+		<ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="24">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
 
-			<!-- Content Region with Dark Theme Card -->
-			<Border Grid.Row="0" Style="{StaticResource ModernCard}" Margin="16">
-				<ContentControl prism:RegionManager.RegionName="PluginRegion"/>
-			</Border>
+					<!-- Content Region with ModernCard Style -->
+					<Border Grid.Row="0" Style="{StaticResource ModernCard}" Margin="0,0,0,16">
+						<ContentControl prism:RegionManager.RegionName="PluginRegion"/>
+					</Border>
 
-			<!-- Dark Theme Log Panel -->
-			<Border Grid.Row="1" 
-                    Style="{StaticResource LogPanel}" 
-                    Margin="16,0,16,16"
-                    Visibility="{Binding HideLog, Converter={StaticResource InverseVisibilityConverter}}">
-				<StackPanel>
-					<DockPanel Margin="0,0,0,8">
-						<iconPacks:PackIconModern Kind="Console" 
-                                                  Width="16" 
-                                                  Height="16" 
-                                                  Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                                                  DockPanel.Dock="Left" 
-                                                  VerticalAlignment="Center"/>
-						<TextBlock Text="Application Log" 
-                                   Foreground="{DynamicResource MahApps.Brushes.Accent}" 
-                                   FontWeight="SemiBold" 
-                                   DockPanel.Dock="Left" 
-                                   VerticalAlignment="Center"
-                                   Margin="8,0,0,0"/>
-						<Button Width="20" 
-                                Height="20" 
-                                DockPanel.Dock="Right" 
-                                Command="{Binding HideLogCommand}" 
-                                ToolTip="Hide log"
-                                Style="{StaticResource MahApps.Styles.Button.Circle}"
-                                Background="{DynamicResource MahApps.Brushes.Gray4}"
-                                Foreground="{DynamicResource MahApps.Brushes.Text}">
-							<iconPacks:PackIconModern Kind="Close" Width="12" Height="12"/>
-						</Button>
-					</DockPanel>
-					<ScrollViewer MaxHeight="120" VerticalScrollBarVisibility="Auto">
-						<TextBox Text="{Binding CommonLog, Mode=OneWay}" 
-                                 IsReadOnly="True"
-                                 Background="{DynamicResource MahApps.Brushes.Gray1}"
-                                 Foreground="{DynamicResource MahApps.Brushes.Gray9}"
-                                 BorderThickness="1"
-                                 BorderBrush="{DynamicResource MahApps.Brushes.Gray4}"
-                                 TextWrapping="Wrap"
-                                 FontFamily="Consolas"
-                                 FontSize="11"
-                                 Padding="8"/>
-					</ScrollViewer>
-				</StackPanel>
-			</Border>
+					<!-- Log Panel with ModernCard Style -->
+					<Border Grid.Row="1" 
+                            Style="{StaticResource ModernCard}"
+                            Visibility="{Binding HideLog, Converter={StaticResource InverseVisibilityConverter}}">
+						<StackPanel>
+							<TextBlock Text="Application Log" 
+                                       Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                                       Margin="0,0,0,16"/>
 
-			<!-- Enhanced Dark Theme Busy Indicator -->
-			<Grid Grid.RowSpan="2" 
-                  Background="#DD000000"
-                  Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<mah:ProgressRing IsActive="{Binding IsBusy}" 
-                                      Width="60" 
-                                      Height="60"
-                                      Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
-					<TextBlock Text="Processing..." 
-                               Foreground="{DynamicResource MahApps.Brushes.Text}"
-                               FontSize="14"
-                               HorizontalAlignment="Center"
-                               Margin="0,16,0,0"/>
-				</StackPanel>
-			</Grid>
+							<DockPanel Margin="0,0,0,8">
+								<iconPacks:PackIconModern Kind="Console" 
+                                                          Width="16" 
+                                                          Height="16" 
+                                                          Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                          DockPanel.Dock="Left" 
+                                                          VerticalAlignment="Center"/>
+								<TextBlock Text="Live Output" 
+                                           Foreground="{DynamicResource MahApps.Brushes.Text}" 
+                                           FontWeight="Normal" 
+                                           DockPanel.Dock="Left" 
+                                           VerticalAlignment="Center"
+                                           Margin="8,0,0,0"/>
+								<Button Width="20" 
+                                        Height="20" 
+                                        DockPanel.Dock="Right" 
+                                        Command="{Binding HideLogCommand}" 
+                                        ToolTip="Hide log"
+                                        Style="{StaticResource MahApps.Styles.Button.Circle}"
+                                        Background="{DynamicResource MahApps.Brushes.Gray4}"
+                                        Foreground="{DynamicResource MahApps.Brushes.Text}">
+									<iconPacks:PackIconModern Kind="Close" Width="12" Height="12"/>
+								</Button>
+							</DockPanel>
+							<ScrollViewer MaxHeight="120" VerticalScrollBarVisibility="Auto">
+								<TextBox Text="{Binding CommonLog, Mode=OneWay}" 
+                                         IsReadOnly="True"
+                                         Background="{DynamicResource MahApps.Brushes.Gray1}"
+                                         Foreground="{DynamicResource MahApps.Brushes.Text}"
+                                         BorderThickness="1"
+                                         BorderBrush="{DynamicResource MahApps.Brushes.Gray4}"
+                                         TextWrapping="Wrap"
+                                         FontFamily="Consolas"
+                                         FontSize="11"
+                                         Padding="8"/>
+							</ScrollViewer>
+						</StackPanel>
+					</Border>
+				</Grid>
+			</StackPanel>
+		</ScrollViewer>
+
+		<!-- Enhanced Dark Theme Busy Indicator -->
+		<Grid Grid.ColumnSpan="2" 
+              Background="#DD000000"
+              Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+			<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+				<mah:ProgressRing IsActive="{Binding IsBusy}" 
+                                  Width="60" 
+                                  Height="60"
+                                  Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+				<TextBlock Text="Processing..." 
+                           Foreground="{DynamicResource MahApps.Brushes.Text}"
+                           FontSize="14"
+                           HorizontalAlignment="Center"
+                           Margin="0,16,0,0"/>
+			</StackPanel>
 		</Grid>
 	</Grid>
 </UserControl>
