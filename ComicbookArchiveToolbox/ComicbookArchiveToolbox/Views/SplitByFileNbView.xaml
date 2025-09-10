@@ -12,7 +12,7 @@
 	<StackPanel Margin="8">
 		<mah:MetroHeader Header="Number of Files">
 			<StackPanel Orientation="Horizontal">
-				<iconPacks:PackIconModern Kind="Hash" 
+				<iconPacks:PackIconModern Kind="SocialTwitterHashtag" 
                                           Width="16" 
                                           Height="16" 
                                           Foreground="{DynamicResource MahApps.Brushes.Accent}"

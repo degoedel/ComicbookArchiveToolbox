@@ -20,7 +20,7 @@
 		<StackPanel Margin="24">
 			<!-- Modern Header -->
 			<StackPanel Orientation="Horizontal" Margin="0,0,0,32">
-				<iconPacks:PackIconModern Kind="Slice" 
+				<iconPacks:PackIconPhosphorIcons Kind="ArrowsSplitBold" 
                                           Width="32" 
                                           Height="32" 
                                           Foreground="{DynamicResource MahApps.Brushes.Text}"

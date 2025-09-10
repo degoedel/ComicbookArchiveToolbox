@@ -19,7 +19,9 @@
     <PackageReference Include="7ZipExe" Version="18.5.0" />
     <PackageReference Include="ControlzEx" Version="7.0.1" />
     <PackageReference Include="MahApps.Metro" Version="3.0.0-rc0516" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="6.1.0" />
     <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="6.1.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.PhosphorIcons" Version="6.1.0" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.9" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Prism.Core" Version="9.0.537" />

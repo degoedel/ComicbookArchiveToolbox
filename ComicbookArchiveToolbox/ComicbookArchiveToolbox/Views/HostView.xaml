@@ -28,12 +28,12 @@
 				<Button Style="{StaticResource NavigationButton}" 
                         Command="{Binding DisplaySplitCommand}" 
                         ToolTip="{Binding ToolSplitDescription}">
-					<iconPacks:PackIconModern Kind="Slice" Width="24" Height="24"/>
+					<iconPacks:PackIconPhosphorIcons Kind="ArrowsSplitBold" Width="24" Height="24"/>
 				</Button>
 				<Button Style="{StaticResource NavigationButton}" 
                         Command="{Binding DisplayMergeCommand}" 
                         ToolTip="{Binding ToolMergeDescription}">
-					<iconPacks:PackIconModern Kind="Paperclip" Width="24" Height="24"/>
+					<iconPacks:PackIconPhosphorIcons Kind="ArrowsMergeBold" Width="24" Height="24"/>
 				</Button>
 				<Button Style="{StaticResource NavigationButton}" 
                         Command="{Binding DisplayEditCommand}" 

@@ -12,7 +12,7 @@
 	<StackPanel Margin="8">
 		<mah:MetroHeader Header="Maximum File Size (MB)">
 			<StackPanel Orientation="Horizontal">
-				<iconPacks:PackIconModern Kind="HardDrive" 
+				<iconPacks:PackIconMaterial Kind="HardDisk" 
                                           Width="16" 
                                           Height="16" 
                                           Foreground="{DynamicResource MahApps.Brushes.Accent}"
