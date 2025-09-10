@@ -1,68 +1,127 @@
 ﻿<UserControl x:Class="ComicbookArchiveToolbox.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			 xmlns:prism="http://prismlibrary.com/"
-			 xmlns:converters="clr-namespace:ComicbookArchiveToolbox.CommonTools"
-             xmlns:local="clr-namespace:ComicbookArchiveToolbox.Views"
-			 prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="800">
-  <UserControl.Resources>
-    <converters:InverseBooleanConverter x:Key="InverseConverter"/>
-  </UserControl.Resources>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-      <RowDefinition Height="50"/>
-      <RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="50"/>
-		</Grid.RowDefinitions>
-    <Grid Grid.Row="0">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition/>
-        <ColumnDefinition/>
-      </Grid.ColumnDefinitions>
-      <CheckBox Content="Always include cover in generated files" Grid.Column="0" IsChecked="{Binding AlwaysIncludeCover}" FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, the first found picture in the selected archive(s) will be added to the generated file(s)"/>
-      <CheckBox Content="Always include metadata if available in generated files" Grid.Column="1"  IsChecked="{Binding AlwaysIncludeMetadata}"  FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, the first found metadata file in the selected archive(s) will be added to the generated file(s)"/>
-    </Grid>
-		<Grid Grid.Row="1">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-			</Grid.ColumnDefinitions>
-			<CheckBox Content="Add File Index to Covers" Grid.Column="0" IsChecked="{Binding AddFileIndexToCovers, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, a label with the file number will be added to the cover of the splitted files (if the option for adding the cover is checked)"/>
-		</Grid>
-		<CheckBox Content="Use input file folder as buffer" Grid.Row="2" IsChecked="{Binding UseFileDirAsBuffer, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, the folder containing the selected file(s) will be used as a buffer directory instead of the ProgramData directory"/>
-    <Grid Grid.Row="3"  IsEnabled="{Binding UseFileDirAsBuffer, Converter={StaticResource InverseConverter}}">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="160"/>
-        <ColumnDefinition/>
-        <ColumnDefinition Width="80"/>
-      </Grid.ColumnDefinitions>
-      <TextBlock Text="Buffer Path: " Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-      <TextBox Grid.Column="1" Text="{Binding BufferPath}" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Margin="5" />
-			<Button Content="..." Grid.Column="2" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" Command="{Binding BrowseDirectoryCommand}"/>
-    </Grid>
-    <Grid Grid.Row="4">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="160"/>
-        <ColumnDefinition Width="150"/>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition Width="150"/>
-				<ColumnDefinition/>
-      </Grid.ColumnDefinitions>
-      <TextBlock Text="Prefered output format: " Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-      <ComboBox Grid.Column="1" ItemsSource="{Binding Formats}" SelectedItem="{Binding SelectedFormat}" VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" Margin="5" ToolTip="This tool cannot produce CBR files. Select your favourite output format"/>
-			<TextBlock Text="Default Image Height: " Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
-			<TextBox Grid.Column="3" Text="{Binding DefaultImageHeight, Mode=TwoWay}" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40" Margin="5" />
-		</Grid>
-		<CheckBox Content="Hide Log window" Grid.Row="5" IsChecked="{Binding HideLog, Mode=TwoWay}" FontSize="14" VerticalContentAlignment="Center" Margin="10" ToolTip="If checked, the log buffer will be hidden"/>
-		<Button Grid.Row="6" Content="Save" Command="{Binding SaveSettingsCommand}"  VerticalAlignment="Center"  HorizontalContentAlignment="Center" Height="40" HorizontalAlignment="Center" Width="100" />
-	</Grid>
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:converters="clr-namespace:ComicbookArchiveToolbox.CommonTools"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+	<UserControl.Resources>
+		<converters:InverseBooleanConverter x:Key="InverseConverter"/>
+	</UserControl.Resources>
+
+	<ScrollViewer>
+		<StackPanel Margin="24">
+			<!-- Modern Header -->
+			<StackPanel Orientation="Horizontal" Margin="0,0,0,32">
+				<iconPacks:PackIconModern Kind="Settings" 
+                                          Width="32" 
+                                          Height="32" 
+                                          Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,16,0"/>
+				<TextBlock Text="Settings" 
+                           Style="{DynamicResource MahApps.Styles.TextBlock.Title}"
+                           FontSize="28"
+                           VerticalAlignment="Center"/>
+			</StackPanel>
+
+			<!-- General Settings Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="General" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<mah:ToggleSwitch Header="Always include cover in generated files"
+                                      IsOn="{Binding AlwaysIncludeCover}"
+                                      Margin="0,8"/>
+
+					<mah:ToggleSwitch Header="Always include metadata if available"
+                                      IsOn="{Binding AlwaysIncludeMetadata}"
+                                      Margin="0,8"/>
+
+					<mah:ToggleSwitch Header="Add File Index to Covers"
+                                      IsOn="{Binding AddFileIndexToCovers}"
+                                      Margin="0,8"/>
+
+					<mah:ToggleSwitch Header="Hide Log window"
+                                      IsOn="{Binding HideLog}"
+                                      Margin="0,8"/>
+				</StackPanel>
+			</Border>
+
+			<!-- Buffer Directory Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="Buffer Directory" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<mah:ToggleSwitch Header="Use input file folder as buffer"
+                                      IsOn="{Binding UseFileDirAsBuffer}"
+                                      Margin="0,0,0,16"/>
+
+					<StackPanel IsEnabled="{Binding UseFileDirAsBuffer, Converter={StaticResource InverseConverter}}">
+						<TextBlock Text="Buffer Path" Margin="0,0,0,8"/>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<TextBox Grid.Column="0" 
+                                     Text="{Binding BufferPath}"
+                                     Style="{StaticResource MahApps.Styles.TextBox}"
+                                     Margin="0,0,8,0"/>
+							<Button Grid.Column="1" 
+                                    Content="Browse..."
+                                    Style="{StaticResource MahApps.Styles.Button.Square.Accent}"
+                                    Command="{Binding BrowseDirectoryCommand}"/>
+						</Grid>
+					</StackPanel>
+				</StackPanel>
+			</Border>
+
+			<!-- Output Settings Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<UniformGrid Columns="2">
+					<StackPanel Margin="0,0,16,0">
+						<TextBlock Text="Preferred output format" 
+                                   Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                                   Margin="0,0,0,8"/>
+						<ComboBox ItemsSource="{Binding Formats}"
+                                  SelectedItem="{Binding SelectedFormat}"
+                                  Style="{StaticResource MahApps.Styles.ComboBox}"/>
+					</StackPanel>
+					<StackPanel>
+						<TextBlock Text="Default Image Height" 
+                                   Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                                   Margin="0,0,0,8"/>
+						<mah:NumericUpDown Value="{Binding DefaultImageHeight}"
+                                           Minimum="100"
+                                           Maximum="4096"
+                                           Interval="100"/>
+					</StackPanel>
+				</UniformGrid>
+			</Border>
+
+			<!-- Action Buttons -->
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+				<Button Content="Save Settings" 
+                        Style="{StaticResource MahApps.Styles.Button.Square.Accent}"
+                        Command="{Binding SaveSettingsCommand}"
+                        Width="140"
+                        Height="40">
+					<Button.ContentTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Horizontal">
+								<iconPacks:PackIconModern Kind="Save" Width="16" Height="16" Margin="0,0,8,0"/>
+								<TextBlock Text="{Binding}"/>
+							</StackPanel>
+						</DataTemplate>
+					</Button.ContentTemplate>
+				</Button>
+			</StackPanel>
+		</StackPanel>
+	</ScrollViewer>
 </UserControl>

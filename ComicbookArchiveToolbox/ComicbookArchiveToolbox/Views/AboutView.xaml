@@ -1,24 +1,57 @@
 ﻿<UserControl x:Class="ComicbookArchiveToolbox.Views.AboutView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-			 xmlns:prism="http://prismlibrary.com/"             
-			 xmlns:local="clr-namespace:ComicbookArchiveToolbox.Views"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
-			<RowDefinition/>
-			<RowDefinition Height="50"/>
-		</Grid.RowDefinitions>
-		<TextBlock Grid.Row="0" Text="ComicbookArchiveToolbox 3.0" TextAlignment="Center" FontSize="30" VerticalAlignment="Center"/>
-		<TextBox Grid.Row="1" Text="{Binding AboutContent, Mode=OneWay}" IsReadOnly="True" Margin="10" BorderThickness="0" Padding="-2,0,-2,0" TextWrapping="Wrap"/>
-		<TextBlock Grid.Row="2" Margin="10" TextWrapping="Wrap">
-			For more details, source code and other dependencies, see:        
-    <Hyperlink NavigateUri="https://degoedel.github.io/ComicbookArchiveToolbox/" Click="Url_Click">Comicbook Archive Toolbox Github</Hyperlink>
-		</TextBlock>
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+	<Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+		<Border Style="{StaticResource ModernCard}" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                MaxWidth="600">
+			<StackPanel HorizontalAlignment="Center">
+				<!-- Icon and Title Section -->
+				<StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,24">
+					<!-- App Icon -->
+					<Image Source="pack://application:,,,/ComicbookArchiveToolbox;component/Resources/Cat.ico" 
+                           Width="32" 
+                           Height="32" 
+                           Margin="0,0,16,0"
+                           VerticalAlignment="Center"/>
+
+					<!-- App Title -->
+					<TextBlock Text="Comicbook Archive Toolbox" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.Title}"
+                               FontSize="28"
+                               VerticalAlignment="Center"/>
+				</StackPanel>
+
+				<TextBlock Text="Version 3.0" 
+                           Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                           Foreground="{DynamicResource MahApps.Brushes.Gray1}"
+                           TextAlignment="Center" 
+                           Margin="0,0,0,24"/>
+
+				<!-- About Content -->
+				<TextBlock Text="{Binding AboutContent}" 
+                           TextWrapping="Wrap" 
+                           Style="{DynamicResource MahApps.Styles.TextBlock}"
+                           TextAlignment="Left"
+                           Margin="0,0,0,24"/>
+
+				<!-- Website Link -->
+				<TextBlock TextAlignment="Center">
+                    <Run Text="For more details, source code and dependencies, visit: "/>
+                    <Hyperlink NavigateUri="https://degoedel.github.io/ComicbookArchiveToolbox/"
+                               RequestNavigate="Url_Click"
+                               Foreground="{DynamicResource MahApps.Brushes.Accent}">
+                        <Run Text="Project Website"/>
+                    </Hyperlink>
+				</TextBlock>
+			</StackPanel>
+		</Border>
 	</Grid>
 </UserControl>

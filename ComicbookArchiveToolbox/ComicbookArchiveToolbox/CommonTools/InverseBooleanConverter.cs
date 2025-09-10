@@ -1,30 +1,40 @@
-﻿using System;
+using System;
+using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace ComicbookArchiveToolbox.CommonTools
 {
-	[ValueConversion(typeof(bool), typeof(bool))]
+	public class InverseBoolToVisibilityConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value is bool boolValue)
+				return boolValue ? Visibility.Collapsed : Visibility.Visible;
+			return Visibility.Visible;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value is Visibility visibility)
+				return visibility != Visibility.Visible;
+			return true;
+		}
+	}
 	public class InverseBooleanConverter : IValueConverter
 	{
-		#region IValueConverter Members
-
-		public object Convert(object value, Type targetType, object parameter,
-			System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (targetType != typeof(bool?) && targetType != typeof(bool))
-			{
-				throw new InvalidOperationException("The target must be a nullable boolean");
-			}
-			bool? b = (bool?)value;
-			return b.HasValue && !b.Value;
+			if (value is bool b)
+				return !b;
+			return value;
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter,
-			System.Globalization.CultureInfo culture)
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return !(value as bool?);
+			if (value is bool b)
+				return !b;
+			return value;
 		}
-
-		#endregion
 	}
 }

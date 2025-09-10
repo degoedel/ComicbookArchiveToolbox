@@ -4,14 +4,176 @@
              xmlns:local="clr-namespace:ComicbookArchiveToolbox"
              xmlns:prism="http://prismlibrary.com/">
 	<prism:PrismApplication.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-        <!-- Accent and AppTheme setting -->
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Steel.xaml" />
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </prism:PrismApplication.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<!-- MahApps.Metro resource dictionaries -->
+				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+				<!-- Dark Theme with Blue Accent -->
+				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Blue.xaml" />
+
+				<!-- Custom styles optimized for dark blue theme -->
+				<ResourceDictionary>
+					<!-- Custom Dark Blue Color Resources -->
+					<SolidColorBrush x:Key="DarkBlue.Background" Color="#0F1419"/>
+					<SolidColorBrush x:Key="DarkBlue.Surface" Color="#1A2332"/>
+					<SolidColorBrush x:Key="DarkBlue.Surface2" Color="#233246"/>
+					<SolidColorBrush x:Key="DarkBlue.Surface3" Color="#2C4159"/>
+					<SolidColorBrush x:Key="DarkBlue.Accent" Color="#5DADE2"/>
+					<SolidColorBrush x:Key="DarkBlue.AccentDark" Color="#2E86AB"/>
+					<SolidColorBrush x:Key="DarkBlue.Border" Color="#34495E"/>
+					<SolidColorBrush x:Key="DarkBlue.Text" Color="#E8F4FD"/>
+					<SolidColorBrush x:Key="DarkBlue.TextSecondary" Color="#BDC3C7"/>
+
+					<!-- Modern Card Style for Dark Blue Theme -->
+					<Style x:Key="ModernCard" TargetType="Border">
+						<Setter Property="Background" Value="{StaticResource DarkBlue.Surface}"/>
+						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Border}"/>
+						<Setter Property="BorderThickness" Value="1"/>
+						<Setter Property="CornerRadius" Value="8"/>
+						<Setter Property="Padding" Value="20"/>
+						<Setter Property="Margin" Value="8"/>
+						<Setter Property="Effect">
+							<Setter.Value>
+								<DropShadowEffect Color="#0A0E14" 
+                                                  BlurRadius="20" 
+                                                  ShadowDepth="4" 
+                                                  Opacity="0.8"/>
+							</Setter.Value>
+						</Setter>
+					</Style>
+
+					<!-- Modern Navigation Button Style for Dark Blue Theme -->
+					<Style x:Key="NavigationButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Square}">
+						<Setter Property="Width" Value="60"/>
+						<Setter Property="Height" Value="60"/>
+						<Setter Property="Margin" Value="0,4"/>
+						<Setter Property="Background" Value="Transparent"/>
+						<Setter Property="BorderThickness" Value="0"/>
+						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Text}"/>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="{StaticResource DarkBlue.Surface2}"/>
+								<Setter Property="Foreground" Value="{StaticResource DarkBlue.Accent}"/>
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Setter Property="Background" Value="{StaticResource DarkBlue.AccentDark}"/>
+								<Setter Property="Foreground" Value="{StaticResource DarkBlue.Text}"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+
+					<!-- Modern GroupBox Style for Dark Blue Theme -->
+					<Style x:Key="ModernGroupBox" TargetType="GroupBox" BasedOn="{StaticResource MahApps.Styles.GroupBox}">
+						<Setter Property="Margin" Value="0,8"/>
+						<Setter Property="Padding" Value="16"/>
+						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Accent}"/>
+						<Setter Property="BorderThickness" Value="2"/>
+						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Text}"/>
+						<Setter Property="Background" Value="{StaticResource DarkBlue.Surface}"/>
+					</Style>
+
+					<!-- Dark Blue Log Panel Style -->
+					<Style x:Key="LogPanel" TargetType="Border">
+						<Setter Property="Background" Value="{StaticResource DarkBlue.Background}"/>
+						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Accent}"/>
+						<Setter Property="BorderThickness" Value="1,1,1,0"/>
+						<Setter Property="CornerRadius" Value="8,8,0,0"/>
+						<Setter Property="Padding" Value="12"/>
+					</Style>
+
+					<!-- Dark Blue Text Styles -->
+					<Style x:Key="HeaderText" TargetType="TextBlock">
+						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Accent}"/>
+						<Setter Property="FontWeight" Value="SemiBold"/>
+						<Setter Property="FontSize" Value="20"/>
+					</Style>
+
+					<Style x:Key="SubHeaderText" TargetType="TextBlock">
+						<Setter Property="Foreground" Value="{StaticResource DarkBlue.TextSecondary}"/>
+						<Setter Property="FontSize" Value="16"/>
+					</Style>
+
+					<!-- Enhanced Button Styles for Dark Blue Theme -->
+					<Style x:Key="AccentButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Square.Accent}">
+						<Setter Property="Height" Value="40"/>
+						<Setter Property="MinWidth" Value="120"/>
+						<Setter Property="FontWeight" Value="SemiBold"/>
+						<Setter Property="Background" Value="{StaticResource DarkBlue.Accent}"/>
+						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Accent}"/>
+						<Setter Property="Foreground" Value="#FFFFFF"/>
+						<Setter Property="Effect">
+							<Setter.Value>
+								<DropShadowEffect Color="#2E86AB" 
+                                                  BlurRadius="12" 
+                                                  ShadowDepth="0" 
+                                                  Opacity="0.5"/>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="{StaticResource DarkBlue.AccentDark}"/>
+								<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.AccentDark}"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+
+					<Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Square}">
+						<Setter Property="Height" Value="40"/>
+						<Setter Property="MinWidth" Value="100"/>
+						<Setter Property="Background" Value="{StaticResource DarkBlue.Surface2}"/>
+						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Border}"/>
+						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Text}"/>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="{StaticResource DarkBlue.Surface3}"/>
+								<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Accent}"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+
+					<!-- Navigation Sidebar Style -->
+					<Style x:Key="NavigationSidebar" TargetType="Border">
+						<Setter Property="Background">
+							<Setter.Value>
+								<LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+									<GradientStop Color="#0F1419" Offset="0"/>
+									<GradientStop Color="#1A2332" Offset="1"/>
+								</LinearGradientBrush>
+							</Setter.Value>
+						</Setter>
+						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Border}"/>
+						<Setter Property="BorderThickness" Value="0,0,1,0"/>
+					</Style>
+
+					<!-- Enhanced TextBox Style for Dark Blue Theme -->
+					<Style x:Key="ModernTextBox" TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+						<Setter Property="Background" Value="{StaticResource DarkBlue.Surface}"/>
+						<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Border}"/>
+						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Text}"/>
+						<Setter Property="BorderThickness" Value="1"/>
+						<Setter Property="Padding" Value="8,6"/>
+						<Style.Triggers>
+							<Trigger Property="IsFocused" Value="True">
+								<Setter Property="BorderBrush" Value="{StaticResource DarkBlue.Accent}"/>
+								<Setter Property="Background" Value="{StaticResource DarkBlue.Surface2}"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+
+					<!-- Progress Ring Style for Dark Blue Theme -->
+					<Style x:Key="ModernProgressRing" TargetType="Control">
+						<Setter Property="Foreground" Value="{StaticResource DarkBlue.Accent}"/>
+						<Setter Property="Width" Value="60"/>
+						<Setter Property="Height" Value="60"/>
+					</Style>
+
+					<!-- Override Application Background -->
+					<Style TargetType="Window">
+						<Setter Property="Background" Value="{StaticResource DarkBlue.Background}"/>
+					</Style>
+				</ResourceDictionary>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</prism:PrismApplication.Resources>
 </prism:PrismApplication>
