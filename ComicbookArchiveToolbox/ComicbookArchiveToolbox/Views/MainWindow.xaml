@@ -10,14 +10,14 @@
         mc:Ignorable="d"
         Icon="pack://application:,,,/ComicbookArchiveToolbox;component/Resources/Cat.ico"
         ShowIconOnTitleBar="True"
-        ShowTitleBar="True"
+        ShowTitleBar="False"
         Title="Comicbook Archive Toolbox" 
         Height="750" 
         Width="1100"
         MinHeight="600"
         MinWidth="900"
         WindowStartupLocation="CenterScreen"
-        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+        Background="{DynamicResource MahApps.Brushes.WindowTitleBar}"
         TitleCharacterCasing="Normal"
         TitleBarHeight="35"
         WindowTitleBrush="{DynamicResource MahApps.Brushes.WindowTitle}"
@@ -50,24 +50,12 @@
 		</DataTemplate>
 	</Controls:MetroWindow.TitleTemplate>
 
-	<!-- Enhanced Content Area -->
+	<!-- Flat Content Area -->
 	<Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
             BorderBrush="{DynamicResource MahApps.Brushes.Gray5}"
-            BorderThickness="1">
-		<Grid>
-			<!-- Subtle gradient overlay for depth -->
-			<Border>
-				<Border.Background>
-					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.2">
-						<GradientStop Color="#1A1A2E" Offset="0"/>
-						<GradientStop Color="#0F1A2E" Offset="1"/>
-					</LinearGradientBrush>
-				</Border.Background>
-			</Border>
-
-			<!-- Main Content -->
-			<ContentControl prism:RegionManager.RegionName="HostRegion" 
-                            Margin="2"/>
-		</Grid>
+            BorderThickness="0">
+		<!-- Main Content -->
+		<ContentControl prism:RegionManager.RegionName="HostRegion" 
+                        Margin="0"/>
 	</Border>
 </Controls:MetroWindow>

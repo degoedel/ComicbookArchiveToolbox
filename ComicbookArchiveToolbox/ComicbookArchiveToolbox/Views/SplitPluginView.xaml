@@ -155,7 +155,7 @@
 					<Button.ContentTemplate>
 						<DataTemplate>
 							<StackPanel Orientation="Horizontal">
-								<iconPacks:PackIconModern Kind="Slice" Width="16" Height="16" Margin="0,0,8,0"/>
+								<iconPacks:PackIconPhosphorIcons Kind="ArrowsMergeBold" Width="16" Height="16" Margin="0,0,8,0"/>
 								<TextBlock Text="{Binding}"/>
 							</StackPanel>
 						</DataTemplate>
