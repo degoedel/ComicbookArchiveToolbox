@@ -11,6 +11,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\Cat.ico</ApplicationIcon>
+    <BaseOutputPath>$(SolutionDir)..\Distrib</BaseOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="Resources\Cat.ico" />
@@ -28,7 +29,19 @@
     <PackageReference Include="Prism.Unity" Version="9.0.537" />
     <PackageReference Include="Unity.Container" Version="5.11.11" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <Target Name="Copy7ZipFiles" AfterTargets="Build">
+    <ItemGroup>
+      <!-- Search common NuGet package locations for 7-Zip files -->
+      <SevenZipFiles Include="$(NuGetPackageRoot)\7zipexe\18.5.0\tools\x64\7z.dll" />
+      <SevenZipFiles Include="$(NuGetPackageRoot)\7zipexe\18.5.0\tools\x64\7z.exe" />
+    </ItemGroup>
+    
+    <Copy SourceFiles="@(SevenZipFiles)" 
+          DestinationFolder="$(OutputPath)" 
+          SkipUnchangedFiles="true" 
+          ContinueOnError="true" />
+    
+    <Message Text="Copied 7-Zip files to output directory" Importance="high" Condition="'@(SevenZipFiles)' != ''" />
+    <Warning Text="No 7-Zip files found in packages directory" Condition="'@(SevenZipFiles)' == ''" />
+  </Target>
 </Project>
