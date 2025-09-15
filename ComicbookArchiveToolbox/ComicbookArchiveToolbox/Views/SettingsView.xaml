@@ -44,10 +44,6 @@
 					<mah:ToggleSwitch Header="Add File Index to Covers"
                                       IsOn="{Binding AddFileIndexToCovers}"
                                       Margin="0,8"/>
-
-					<mah:ToggleSwitch Header="Hide Log window"
-                                      IsOn="{Binding HideLog}"
-                                      Margin="0,8"/>
 				</StackPanel>
 			</Border>
 
@@ -79,6 +75,11 @@
                                     Command="{Binding BrowseDirectoryCommand}"/>
 						</Grid>
 					</StackPanel>
+
+					<mah:ToggleSwitch Header="Flatten archive structure"
+                                      IsOn="{Binding FlattenStructure}"
+                                      Margin="0,8"/>
+
 				</StackPanel>
 			</Border>
 

@@ -45,14 +45,12 @@ namespace ComicbookArchiveToolbox.ViewModels
 			_eventAggregator = eventAggregator;
 			_eventAggregator.GetEvent<LogEvent>().Subscribe(AddLogLine, ThreadOption.UIThread);
 			_eventAggregator.GetEvent<BusinessEvent>().Subscribe(SetBusyState, ThreadOption.UIThread);
-			_eventAggregator.GetEvent<HideLogEvent>().Subscribe(CollapseLog, ThreadOption.UIThread);
 			DisplaySettingsCommand = new DelegateCommand(DisplaySettings, CanExecute);
 			DisplayAboutCommand = new DelegateCommand(DisplayAbout, CanExecute);
 			DisplayCompressCommand = new DelegateCommand(DisplayCompress, CanExecute);
 			DisplayMergeCommand = new DelegateCommand(DisplayMerge, CanExecute);
 			DisplaySplitCommand = new DelegateCommand(DisplaySplit, CanExecute);
 			DisplayEditCommand = new DelegateCommand(DisplayEdit, CanExecute);
-			HideLog = Settings.Instance.HideLog;
 		}
 		#endregion Constructors
 
@@ -121,21 +119,6 @@ namespace ComicbookArchiveToolbox.ViewModels
 		private void AddLogLine(string line)
 		{
 			CommonLog += line + "\n";
-		}
-
-		private bool _hideLog;
-		public bool HideLog
-		{
-			get { return _hideLog; }
-			set
-			{
-				SetProperty(ref _hideLog, value);
-			}
-		}
-
-		private void CollapseLog(bool hide)
-		{
-			HideLog = hide;
 		}
 
 		private bool _isBusy;

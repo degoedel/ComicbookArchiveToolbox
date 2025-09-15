@@ -32,7 +32,6 @@ namespace ComicbookArchiveToolbox.ViewModels
 			BrowseDirectoryCommand = new DelegateCommand(BrowseDirectory, CanExecute);
 			SaveSettingsCommand = new DelegateCommand(SaveSettings, CanExecute);
 			SelectedFormat = Settings.Instance.OutputFormat.ToString();
-			HideLog = Settings.Instance.HideLog;
 			DefaultImageHeight = Settings.Instance.DefaultImageHeight;
 		}
 
@@ -80,18 +79,6 @@ namespace ComicbookArchiveToolbox.ViewModels
 			}
 		}
 
-		bool _hideLog;
-		public bool HideLog
-		{
-			get { return _hideLog; }
-			set
-			{
-				SetProperty(ref _hideLog, value);
-				Settings.Instance.HideLog = value;
-				_eventAggregator.GetEvent<HideLogEvent>().Publish(value);
-			}
-		}
-
 		bool _alwaysIncludeMetadata;
 		public bool AlwaysIncludeMetadata
 		{
@@ -124,6 +111,17 @@ namespace ComicbookArchiveToolbox.ViewModels
 			{
 				SetProperty(ref _defaultImageHeight, value);
 				Settings.Instance.DefaultImageHeight = _defaultImageHeight;
+			}
+		}
+
+		private bool _flattenStruture;
+		public bool FlattenStruture
+		{
+			get { return _flattenStruture; }
+			set
+			{
+				SetProperty(ref _flattenStruture, value);
+				Settings.Instance.FlattenStructure = _flattenStruture;
 			}
 		}
 

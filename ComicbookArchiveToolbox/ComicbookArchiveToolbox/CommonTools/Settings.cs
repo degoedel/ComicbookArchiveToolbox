@@ -27,7 +27,6 @@ namespace ComicbookArchiveToolbox.CommonTools
 				IncludeMetadata = true;
 				OutputFormat = ArchiveFormat.Cbz;
 				DefaultMetadata = "Series;Number;Web;Summary;Notes;Publisher;Imprint;Genre;PageCount;LanguageISO";
-				HideLog = false;
 				AddFileIndexToCovers = false;
 				DefaultImageHeight = 2048;
 				FlattenStructure = true;
@@ -81,7 +80,6 @@ namespace ComicbookArchiveToolbox.CommonTools
 			IncludeCover = serializedSettings.IncludeCover;
 			IncludeMetadata = serializedSettings.IncludeMetadata;
 			OutputFormat = serializedSettings.OutputFormat;
-			HideLog = serializedSettings.HideLog;
 			AddFileIndexToCovers = serializedSettings.AddFileIndexToCovers;
 			DefaultImageHeight = serializedSettings.DefaultImageHeight;
 			FlattenStructure = serializedSettings.FlattenStructure;
@@ -108,7 +106,6 @@ namespace ComicbookArchiveToolbox.CommonTools
 		public ArchiveFormat OutputFormat { get; set; }
 
 		public string DefaultMetadata { get; set; }
-		public bool HideLog { get; set; }
 
 		public bool AddFileIndexToCovers { get; set; }
 
