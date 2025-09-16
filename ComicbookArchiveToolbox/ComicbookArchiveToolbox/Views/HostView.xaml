@@ -63,20 +63,34 @@
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 
-					<!-- Content Region with ModernCard Style -->
-					<Border Grid.Row="0" Style="{StaticResource ModernCard}" Margin="0,0,0,16">
-						<ContentControl prism:RegionManager.RegionName="PluginRegion"/>
-					</Border>
+					<!-- Content Region with ModernCard Style and Busy Overlay -->
+					<Grid Grid.Row="0">
+						<Border Style="{StaticResource ModernCard}" Margin="0,0,0,16">
+							<ContentControl prism:RegionManager.RegionName="PluginRegion"/>
+						</Border>
 
-					<!-- Log Panel with ModernCard Style -->
+						<!-- Progress Ring Overlay - Only covers the content region, not the log -->
+						<Grid Background="#DD000000"
+							  Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+							<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+								<mah:ProgressRing IsActive="{Binding IsBusy}" 
+												  Width="60" 
+												  Height="60"
+												  Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+								<TextBlock Text="Processing..." 
+										   Foreground="{DynamicResource MahApps.Brushes.Text}"
+										   FontSize="14"
+										   HorizontalAlignment="Center"
+										   Margin="0,16,0,0"/>
+							</StackPanel>
+						</Grid>
+					</Grid>
+
+					<!-- Log Panel with ModernCard Style - Always visible -->
 					<Border Grid.Row="1" 
                             Style="{StaticResource ModernCard}">
 						<StackPanel>
-							<TextBlock Text="Application Log" 
-                                       Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
-                                       Margin="0,0,0,16"/>
-
-							<DockPanel Margin="0,0,0,8">
+							<DockPanel Margin="0,0,0,16">
 								<iconPacks:PackIconModern Kind="Console" 
                                                           Width="16" 
                                                           Height="16" 
@@ -107,22 +121,5 @@
 				</Grid>
 			</StackPanel>
 		</ScrollViewer>
-
-		<!-- Enhanced Dark Theme Busy Indicator -->
-		<Grid Grid.ColumnSpan="2" 
-              Background="#DD000000"
-              Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
-			<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-				<mah:ProgressRing IsActive="{Binding IsBusy}" 
-                                  Width="60" 
-                                  Height="60"
-                                  Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
-				<TextBlock Text="Processing..." 
-                           Foreground="{DynamicResource MahApps.Brushes.Text}"
-                           FontSize="14"
-                           HorizontalAlignment="Center"
-                           Margin="0,16,0,0"/>
-			</StackPanel>
-		</Grid>
 	</Grid>
 </UserControl>
