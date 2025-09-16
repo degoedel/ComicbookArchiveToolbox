@@ -1,4 +1,6 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
+using ComicbookArchiveToolbox.CommonTools.Events;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,14 +8,153 @@ using System.IO;
 
 namespace ComicbookArchiveToolbox.Module.Split.Services
 {
-	public class BaseSplitterPlugin
+	public abstract class BaseSplitterPlugin
 	{
 		protected Logger _logger;
-		public BaseSplitterPlugin(Logger logger)
+		protected IEventAggregator _eventAggregator;
+
+		public BaseSplitterPlugin(Logger logger, IEventAggregator eventAggregator)
 		{
 			_logger = logger;
+			_eventAggregator = eventAggregator;
 		}
 
+		// Template method pattern - defines the overall algorithm
+		public void Split(string filePath, ArchiveTemplate archiveTemplate)
+		{
+			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
+
+			try
+			{
+				// Validate input parameters - delegated to derived classes
+				if (!ValidateInput(archiveTemplate))
+				{
+					_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
+					return;
+				}
+
+				// Common initialization
+				var splitContext = InitializeSplitting(filePath, archiveTemplate);
+				if (splitContext == null)
+				{
+					_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
+					return;
+				}
+
+				// Execute the specific splitting algorithm - delegated to derived classes
+				bool success = ExecuteSplitting(splitContext);
+				if (!success)
+				{
+					_logger.Log("ERROR: Splitting operation failed");
+				}
+
+				// Common cleanup
+				CleanupSplitting(splitContext);
+			}
+			finally
+			{
+				_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
+			}
+		}
+
+		// Abstract methods to be implemented by derived classes
+		protected abstract bool ValidateInput(ArchiveTemplate archiveTemplate);
+		protected abstract bool ExecuteSplitting(SplitContext context);
+		protected virtual int ComputeNumberOfSplittedFiles(SplitContext context) => (int)context.ArchiveTemplate.NumberOfSplittedFiles;
+
+		// Common initialization logic
+		private SplitContext InitializeSplitting(string filePath, ArchiveTemplate archiveTemplate)
+		{
+			var context = new SplitContext
+			{
+				FilePath = filePath,
+				ArchiveTemplate = archiveTemplate,
+				MetadataFiles = new List<FileInfo>(),
+				Pages = new List<FileInfo>()
+			};
+
+			// Extract file in buffer
+			context.ArchiveTemplate.PathToBuffer = ExtractArchive(filePath, archiveTemplate);
+
+			// Count files in directory except metadata
+			List<FileInfo> metadataFiles = new List<FileInfo>();
+			List<FileInfo> pages = new List<FileInfo>();
+			SystemTools.ParseArchiveFiles(context.ArchiveTemplate.PathToBuffer, ref metadataFiles, ref pages);
+			context.MetadataFiles = metadataFiles;
+			context.Pages = pages;
+			context.ArchiveTemplate.Pages = pages;
+			context.ArchiveTemplate.MetadataFiles = metadataFiles;
+
+			context.TotalPagesCount = context.Pages.Count - context.MetadataFiles.Count;
+			_logger.Log($"Total number of pages is {context.TotalPagesCount}");
+
+			// Compute number of files and setup indexing
+			context.NumberOfSplittedFiles = ComputeNumberOfSplittedFiles(context);
+			_logger.Log($"Creating {context.NumberOfSplittedFiles} splitted files");
+
+			context.ArchiveTemplate.IndexSize = Math.Max(context.NumberOfSplittedFiles.ToString().Length, 2);
+
+			// Setup cover if needed
+			context.ArchiveTemplate.CoverPath = "";
+			if (Settings.Instance.IncludeCover)
+			{
+				context.ArchiveTemplate.CoverPath = SaveCoverInBuffer(
+					context.ArchiveTemplate.PathToBuffer,
+					context.ArchiveTemplate.ComicName,
+					context.ArchiveTemplate.IndexSize,
+					context.Pages);
+			}
+
+			return context;
+		}
+
+		// Common cleanup logic
+		private void CleanupSplitting(SplitContext context)
+		{
+			if (context?.ArchiveTemplate?.PathToBuffer != null)
+			{
+				_logger.Log($"Clean Buffer {context.ArchiveTemplate.PathToBuffer}");
+				SystemTools.CleanDirectory(context.ArchiveTemplate.PathToBuffer, _logger);
+			}
+			_logger.Log("Done.");
+		}
+
+		// Helper method for processing a batch of files
+		protected bool ProcessFileBatch(SplitContext context, int fileIndex, List<FileInfo> pagesToAdd)
+		{
+			string subBufferPath = GetSubBufferPath(context.ArchiveTemplate, fileIndex);
+			Directory.CreateDirectory(subBufferPath);
+
+			// Add metadata if needed
+			if (Settings.Instance.IncludeMetadata)
+			{
+				CopyMetaDataToSubBuffer(context.ArchiveTemplate.MetadataFiles, subBufferPath);
+			}
+
+			// Add cover if needed (not for first file)
+			if (fileIndex != 0 && Settings.Instance.IncludeCover && !string.IsNullOrWhiteSpace(context.ArchiveTemplate.CoverPath))
+			{
+				CopyCoverToSubBuffer(context.ArchiveTemplate.CoverPath, subBufferPath, fileIndex + 1, context.NumberOfSplittedFiles);
+			}
+
+			// Move pictures to sub buffer
+			bool success = MovePicturesToSubBuffer(subBufferPath, pagesToAdd, context.ArchiveTemplate.ComicName, fileIndex == 0, context.ArchiveTemplate.ImageCompression);
+			if (!success)
+			{
+				SystemTools.CleanDirectory(subBufferPath, _logger);
+				return false;
+			}
+
+			// Compress and cleanup
+			_logger.Log($"Compress {subBufferPath}");
+			CompressArchiveContent(subBufferPath, context.ArchiveTemplate);
+			_logger.Log($"Clean Buffer {subBufferPath}");
+			SystemTools.CleanDirectory(subBufferPath, _logger);
+
+			return true;
+		}
+
+		// Existing protected methods remain unchanged
 		protected string ExtractArchive(string filePath, ArchiveTemplate archiveTemplate)
 		{
 			string pathToBuffer = Settings.Instance.GetBufferDirectory(filePath, archiveTemplate.ComicName);
@@ -79,7 +220,6 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 							{
 								graphics.FillRectangle(whiteBrush, 5f, 5f, size.Width + 10f, size.Height + 10f);
 							}
-
 
 							graphics.DrawString(issueText, arialFont, Brushes.Black, 10f, 10f);
 						}
@@ -159,13 +299,16 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 			ch.CompressDirectoryContent(directory, outputFile);
 			_logger.Log($"Compression done.");
 		}
+	}
 
-
-
-
-
-
-
-
+	// Context class to hold splitting state
+	public class SplitContext
+	{
+		public string FilePath { get; set; }
+		public ArchiveTemplate ArchiveTemplate { get; set; }
+		public List<FileInfo> MetadataFiles { get; set; }
+		public List<FileInfo> Pages { get; set; }
+		public int TotalPagesCount { get; set; }
+		public int NumberOfSplittedFiles { get; set; }
 	}
 }
