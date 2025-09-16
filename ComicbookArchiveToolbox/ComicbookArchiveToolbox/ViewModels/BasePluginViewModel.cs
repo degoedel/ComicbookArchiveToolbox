@@ -15,7 +15,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 		protected readonly IUnityContainer _container;
 		protected readonly IEventAggregator _eventAggregator;
 		protected readonly IFileDialogService _fileDialogService;
-		protected readonly IFileConflictService _fileConflictService;
+		protected readonly IPathConflictService _fileConflictService;
 
 		private long _imageQuality = 80;
 		public long ImageQuality
@@ -31,49 +31,75 @@ namespace ComicbookArchiveToolbox.ViewModels
 		public DelegateCommand BrowseFileCommand { get; protected set; }
 		public DelegateCommand BrowseOutputFileCommand { get; protected set; }
 
+		private bool _isBatchMode = false;
+		public bool IsBatchMode
+		{
+			get => _isBatchMode;
+			set => SetProperty(ref _isBatchMode, value);
+		}
+
 		protected BasePluginViewModel(IUnityContainer container, IEventAggregator eventAggregator)
 		{
 			_container = container;
 			_eventAggregator = eventAggregator;
 			_logger = container.Resolve<Logger>();
 			_fileDialogService = container.Resolve<IFileDialogService>();
-			_fileConflictService = container.Resolve<IFileConflictService>();
+			_fileConflictService = container.Resolve<IPathConflictService>();
 
-			BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);
-			BrowseOutputFileCommand = new DelegateCommand(BrowseOutputFile, CanExecute);
+			BrowseFileCommand = new DelegateCommand(BrowseInput, CanExecute);
+			BrowseOutputFileCommand = new DelegateCommand(BrowseOutput, CanExecute);
 		}
 
-		protected virtual void BrowseFile()
+		protected virtual void BrowseInput()
 		{
-			_logger.Log("Browse for input file");
-			var result = _fileDialogService.BrowseForInputFile(GetCurrentInputFile());
+			var inputType = IsBatchMode ? "folder" : "file";
+			_logger.Log($"Browse for input {inputType}");
+			string? result;
+			if (IsBatchMode)
+			{
+				result = _fileDialogService.BrowseForDirectory(GetCurrentInputPath());
+			}
+			else
+			{
+				result = _fileDialogService.BrowseForInputFile(GetCurrentInputPath());
+			}
 			if (result != null)
 			{
-				SetInputFile(result);
+				SetInputPath(result);
 			}
 		}
 
-		protected virtual void BrowseOutputFile()
+		protected virtual void BrowseOutput()
 		{
-			var result = _fileDialogService.BrowseForOutputFile(GetCurrentOutputFile(), GetCurrentInputFile());
+			var outputType = IsBatchMode ? "folder" : "file";
+			_logger.Log($"Browse for output {outputType}");
+			string? result;
+			if (IsBatchMode)
+			{
+				result = _fileDialogService.BrowseForDirectory( GetCurrentInputPath());
+			}
+			else
+			{
+				result = _fileDialogService.BrowseForOutputFile(GetCurrentOutputPath(), GetCurrentInputPath());
+			}
 			if (result != null)
 			{
-				var resolvedFile = _fileConflictService.ResolveOutputFileConflict(result, GetCurrentInputFile(), GetOutputSuffix());
+				var resolvedFile = _fileConflictService.ResolveOutputPathConflict(result, GetCurrentInputPath(), GetOutputSuffix());
 				if (resolvedFile != result)
 				{
 					_logger.Log($"Output file conflict resolved. Changed to: {Path.GetFileName(resolvedFile)}");
 				}
-				SetOutputFile(resolvedFile);
+				SetOutputPath(resolvedFile);
 			}
 		}
 
 		protected virtual bool CanExecute() => true;
 
 		// Abstract methods to be implemented by derived classes
-		protected abstract string GetCurrentInputFile();
-		protected abstract string GetCurrentOutputFile();
-		protected abstract void SetInputFile(string file);
-		protected abstract void SetOutputFile(string file);
+		protected abstract string GetCurrentInputPath();
+		protected abstract string GetCurrentOutputPath();
+		protected abstract void SetInputPath(string file);
+		protected abstract void SetOutputPath(string file);
 		protected abstract string GetOutputSuffix();
 	}
 }

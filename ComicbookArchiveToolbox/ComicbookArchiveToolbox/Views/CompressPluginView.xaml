@@ -8,6 +8,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True">
 	<UserControl.Resources>
 		<converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+		<converters:BooleanToTextConverter x:Key="BooleanToTextConverter"/>
 	</UserControl.Resources>
 
 	<ScrollViewer>
@@ -33,14 +34,23 @@
                                Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
                                Margin="0,0,0,16"/>
 
-					<mah:MetroHeader Header="Input File">
+					<StackPanel Orientation="Horizontal">
+						<mah:ToggleSwitch Header="Processing Mode"
+						                  IsOn="{Binding IsBatchMode}"
+						                  OnContent="Batch"
+						                  OffContent="Single file"
+						                  Style="{StaticResource MahApps.Styles.ToggleSwitch}"
+						                  Width="200"/>
+					</StackPanel>
+
+					<mah:MetroHeader Header="{Binding IsBatchMode, Converter={StaticResource BooleanToTextConverter}, ConverterParameter='Input Directory|Input File'}">
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
 							<TextBox Grid.Column="0" 
-                                     Text="{Binding FileToCompress}"
+                                     Text="{Binding InputPathToCompress}"
                                      Style="{StaticResource MahApps.Styles.TextBox}"
                                      Margin="0,0,8,0"/>
 							<Button Grid.Column="1" 
@@ -50,14 +60,14 @@
 						</Grid>
 					</mah:MetroHeader>
 
-					<mah:MetroHeader Header="Output File" Margin="0,16,0,0">
+					<mah:MetroHeader Header="{Binding IsBatchMode, Converter={StaticResource BooleanToTextConverter}, ConverterParameter='Output Directory|Output File'}" Margin="0,16,0,0">
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
 							<TextBox Grid.Column="0" 
-                                     Text="{Binding OutputFile}"
+                                     Text="{Binding OutputPath}"
                                      Style="{StaticResource MahApps.Styles.TextBox}"
                                      Margin="0,0,8,0"/>
 							<Button Grid.Column="1" 

@@ -15,7 +15,7 @@ namespace ComicbookArchiveToolbox
 		protected override void RegisterTypes(IContainerRegistry containerRegistry)
 		{
 			containerRegistry.RegisterSingleton<IFileDialogService, FileDialogService>();
-			containerRegistry.RegisterSingleton<IFileConflictService, FileConflictService>();
+			containerRegistry.RegisterSingleton<IPathConflictService, PathConflictService>();
 		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]

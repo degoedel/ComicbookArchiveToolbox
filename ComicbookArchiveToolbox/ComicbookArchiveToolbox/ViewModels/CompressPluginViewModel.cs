@@ -1,34 +1,39 @@
-﻿using ComicbookArchiveToolbox.Services;
-using ComicbookArchiveToolbox.CommonTools;
+﻿using ComicbookArchiveToolbox.CommonTools;
+using ComicbookArchiveToolbox.Services;
 using Prism.Commands;
 using Prism.Events;
-using System.Threading.Tasks;
-using Unity;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Documents;
+using Unity;
 
 namespace ComicbookArchiveToolbox.ViewModels
 {
 	public class CompressPluginViewModel : BasePluginViewModel
 	{
-		private string _fileToCompress = "";
-		public string FileToCompress
+		private static readonly string[] ComicExtensions = { ".cb7", ".cba", ".cbr", ".cbt", ".cbz" };
+
+		private string _inputPathToCompress = "";
+		public string InputPathToCompress
 		{
-			get => _fileToCompress;
+			get => _inputPathToCompress;
 			set
 			{
-				SetProperty(ref _fileToCompress, value);
+				SetProperty(ref _inputPathToCompress, value);
 				CompressCommand.RaiseCanExecuteChanged();
 				EnsureOutputFileNameIsDifferent();
 			}
 		}
 
-		private string _outputFile = "";
-		public string OutputFile
+		private string _outputPath = "";
+		public string OutputPath
 		{
-			get => _outputFile;
+			get => _outputPath;
 			set
 			{
-				SetProperty(ref _outputFile, value);
+				SetProperty(ref _outputPath, value);
 				CompressCommand.RaiseCanExecuteChanged();
 			}
 		}
@@ -65,13 +70,13 @@ namespace ComicbookArchiveToolbox.ViewModels
 
 		private void EnsureOutputFileNameIsDifferent()
 		{
-			if (!string.IsNullOrWhiteSpace(FileToCompress) && !string.IsNullOrWhiteSpace(OutputFile))
+			if (!string.IsNullOrWhiteSpace(InputPathToCompress) && !string.IsNullOrWhiteSpace(OutputPath))
 			{
-				var resolvedFile = _fileConflictService.ResolveOutputFileConflict(OutputFile, FileToCompress, "_compressed");
-				if (resolvedFile != OutputFile)
+				var resolvedFile = _fileConflictService.ResolveOutputPathConflict(OutputPath, InputPathToCompress, "_compressed");
+				if (resolvedFile != OutputPath)
 				{
 					_logger.Log($"Input file conflicts with output file. Changed output to: {Path.GetFileName(resolvedFile)}");
-					OutputFile = resolvedFile;
+					OutputPath = resolvedFile;
 				}
 			}
 		}
@@ -79,17 +84,40 @@ namespace ComicbookArchiveToolbox.ViewModels
 		private async void DoCompress()
 		{
 			var compresser = new CompressorPlugin(_logger, _eventAggregator);
-			Task.Run(() => compresser.Compress(FileToCompress, OutputFile, ImageQuality, StrictRatio, ImageHeight, ImageRatio));
+			if (IsBatchMode)
+			{
+				DirectoryInfo batchSource = new DirectoryInfo(InputPathToCompress);
+
+				// Get all files with comic book archive extensions
+				List<FileInfo> batch = batchSource.GetFiles()
+					.Where(file => ComicExtensions.Contains(file.Extension.ToLowerInvariant()))
+					.ToList();
+
+				_logger.Log($"Found {batch.Count} comic archive files in directory: {InputPathToCompress}");
+
+				// Process each file in the batch
+				foreach (var file in batch)
+				{
+					string outputFile = Path.Combine(OutputPath, Path.GetFileNameWithoutExtension(file.Name) + "_compressed" + file.Extension);
+					_logger.Log($"Processing: {file.Name} -> {Path.GetFileName(outputFile)}");
+
+					await Task.Run(() => compresser.Compress(file.FullName, outputFile, ImageQuality, StrictRatio, ImageHeight, ImageRatio));
+				}
+			}
+			else
+			{
+				await Task.Run(() => compresser.Compress(InputPathToCompress, OutputPath, ImageQuality, StrictRatio, ImageHeight, ImageRatio));
+			}
 		}
 
 		private bool CanCompress() =>
-			!string.IsNullOrWhiteSpace(FileToCompress) && !string.IsNullOrWhiteSpace(OutputFile);
+			!string.IsNullOrWhiteSpace(InputPathToCompress) && !string.IsNullOrWhiteSpace(OutputPath);
 
 		// Base class implementations
-		protected override string GetCurrentInputFile() => FileToCompress;
-		protected override string GetCurrentOutputFile() => OutputFile;
-		protected override void SetInputFile(string file) => FileToCompress = file;
-		protected override void SetOutputFile(string file) => OutputFile = file;
+		protected override string GetCurrentInputPath() => InputPathToCompress;
+		protected override string GetCurrentOutputPath() => OutputPath;
+		protected override void SetInputPath(string file) => InputPathToCompress = file;
+		protected override void SetOutputPath(string file) => OutputPath = file;
 		protected override string GetOutputSuffix() => "_compressed";
 	}
 }
