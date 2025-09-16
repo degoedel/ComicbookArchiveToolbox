@@ -7,11 +7,11 @@ using System.IO;
 
 namespace ComicbookArchiveToolbox.Services
 {
-	public class JpgCompresser
+	public class CompressorPlugin
 	{
 		private Logger _logger;
 		private IEventAggregator _eventAggregator;
-		public JpgCompresser(Logger logger, IEventAggregator eventAggregator)
+		public CompressorPlugin(Logger logger, IEventAggregator eventAggregator)
 		{
 			_logger = logger;
 			_eventAggregator = eventAggregator;
@@ -52,11 +52,11 @@ namespace ComicbookArchiveToolbox.Services
 
 			if (Settings.Instance.IncludeMetadata)
 			{
-				if (metadataFiles.Count > 0)
+				foreach (FileInfo file in metadataFiles)
 				{
-					string destFile = Path.Combine(outputBuffer, metadataFiles[0].Name);
-					_logger.Log($"copy metadata {metadataFiles[0].FullName}  in {destFile}");
-					File.Copy(metadataFiles[0].FullName, destFile, true);
+					string destFile = SystemTools.GetOutputFilePath(outputBuffer, file);
+					_logger.Log($"copy metadata {file.FullName}  in {destFile}");
+					File.Copy(file.FullName, destFile, true);
 				}
 			}
 
@@ -67,7 +67,9 @@ namespace ComicbookArchiveToolbox.Services
 			{
 				if (SystemTools.IsImageFile(pages[i]))
 				{
-					string destFile = Path.Combine(outputBuffer, $"{nameTemplate}_{pageAdded.ToString().PadLeft(pagePadSize, '0')}{pages[i].Extension}".Replace(' ', '_'));
+					string destFile = SystemTools.GetOutputFilePath(outputBuffer, pages[i]);
+					var destFi = new FileInfo(destFile);
+					destFile = Path.Combine(destFi.Directory.FullName, $"{nameTemplate}_{pageAdded.ToString().PadLeft(pagePadSize, '0')}{pages[i].Extension}".Replace(' ', '_'));
 					if (!resizeByPx && ratio == 100)
 					{
 						// On a pas besoin de faire de resize

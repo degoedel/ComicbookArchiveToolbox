@@ -78,7 +78,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 
 		private async void DoCompress()
 		{
-			var compresser = new JpgCompresser(_logger, _eventAggregator);
+			var compresser = new CompressorPlugin(_logger, _eventAggregator);
 			Task.Run(() => compresser.Compress(FileToCompress, OutputFile, ImageQuality, StrictRatio, ImageHeight, ImageRatio));
 		}
 

@@ -7,10 +7,10 @@ using System.IO;
 
 namespace ComicbookArchiveToolbox.Module.Split.Services
 {
-	public class ByMaxPageSplitter : BaseSplitter, ISplitter
+	public class ByMaxPageSplitterPlugin : BaseSplitterPlugin, ISplitter
 	{
 		private IEventAggregator _eventAggregator;
-		public ByMaxPageSplitter(Logger logger, IEventAggregator eventAggregator)
+		public ByMaxPageSplitterPlugin(Logger logger, IEventAggregator eventAggregator)
 			: base(logger)
 		{
 			_eventAggregator = eventAggregator;

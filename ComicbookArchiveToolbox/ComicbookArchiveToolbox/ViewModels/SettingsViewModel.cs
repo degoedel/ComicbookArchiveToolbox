@@ -18,6 +18,25 @@ namespace ComicbookArchiveToolbox.ViewModels
 		public DelegateCommand BrowseDirectoryCommand { get; private set; }
 		public DelegateCommand SaveSettingsCommand { get; private set; }
 
+		#region Tooltip Properties
+		public string AlwaysIncludeCoverTooltip => "When enabled, cover images will always be included\nin the generated comic book archive files,\neven if they weren't originally present.";
+
+		public string AlwaysIncludeMetadataTooltip => "When enabled, metadata files (like ComicInfo.xml\nor Calibre metadata html files) will be preserved\nand included in the output archive if they exist\nin the source file.\n\nWarning: it is recommended to deactivate this option\nif you intend to flatten the content of the archive.";
+
+		public string AddFileIndexToCoversTooltip => "When enabled, adds a numerical index to cover\nfile names to maintain proper sorting order\nin the archive.";
+
+		public string UseFileDirAsBufferTooltip => "When enabled, uses the same directory as the input\nfile for temporary processing.\n\nWhen disabled, uses the specified buffer directory below.";
+
+		public string BufferPathTooltip => "Specifies the directory used for temporary file\nprocessing during compression operations.\n\nOnly used when 'Use input file folder as buffer'\nis disabled.";
+
+		public string FlattenStructureTooltip => "When enabled, removes subdirectory structure\nfrom the archive, placing all files in the root\nlevel of the output archive.\n\nWarning: it is recommended to deactivate this option\nif you intend to keep metadata files\n(especially Calibre metadata).";
+
+		public string SelectedFormatTooltip => "Choose the preferred output format for compressed\ncomic book archives.\n\nCommon formats include CBZ (ZIP) and CBR (RAR).";
+
+		public string DefaultImageHeightTooltip => "Sets the default height in pixels for image\nresizing operations.\n\nImages will be scaled proportionally to match\nthis height while maintaining aspect ratio.";
+
+		public string SaveSettingsTooltip => "Saves all current settings to disk so they will\nbe remembered when the application is restarted.";
+		#endregion
 
 		public SettingsViewModel(IUnityContainer container, IEventAggregator eventAggregator)
 		{

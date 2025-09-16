@@ -29,7 +29,8 @@ namespace ComicbookArchiveToolbox.CommonTools
 				DefaultMetadata = "Series;Number;Web;Summary;Notes;Publisher;Imprint;Genre;PageCount;LanguageISO";
 				AddFileIndexToCovers = false;
 				DefaultImageHeight = 2048;
-				FlattenStructure = true;
+				FlattenStructure = false;
+				SerializeSettings();
 
 			}
 		}

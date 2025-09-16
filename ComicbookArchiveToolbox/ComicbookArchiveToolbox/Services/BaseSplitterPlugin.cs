@@ -6,10 +6,10 @@ using System.IO;
 
 namespace ComicbookArchiveToolbox.Module.Split.Services
 {
-	public class BaseSplitter
+	public class BaseSplitterPlugin
 	{
 		protected Logger _logger;
-		public BaseSplitter(Logger logger)
+		public BaseSplitterPlugin(Logger logger)
 		{
 			_logger = logger;
 		}

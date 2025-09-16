@@ -6,11 +6,11 @@ using System.IO;
 
 namespace ComicbookArchiveToolbox.Module.Merge.Service
 {
-	public class Merger
+	public class MergerPlugin
 	{
 		private Logger _logger;
 		private IEventAggregator _eventAggregator;
-		public Merger(Logger logger, IEventAggregator eventAggregator)
+		public MergerPlugin(Logger logger, IEventAggregator eventAggregator)
 		{
 			_logger = logger;
 			_eventAggregator = eventAggregator;

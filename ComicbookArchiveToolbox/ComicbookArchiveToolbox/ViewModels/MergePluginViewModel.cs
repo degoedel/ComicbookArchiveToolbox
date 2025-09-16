@@ -149,7 +149,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.ViewModels
 
 		private void DoMerge()
 		{
-			Merger merger = new Merger(_logger, _eventAggregator);
+			MergerPlugin merger = new MergerPlugin(_logger, _eventAggregator);
 			Task.Run(() => merger.Merge(OutputFile, SelectedFiles, ImageQuality));
 		}
 

@@ -7,10 +7,10 @@ using System.IO;
 
 namespace ComicbookArchiveToolbox.Module.Split.Services
 {
-	public class ByFileSplitter : BaseSplitter, ISplitter
+	public class ByFileSplitterPlugin : BaseSplitterPlugin, ISplitter
 	{
 		private IEventAggregator _eventAggregator;
-		public ByFileSplitter(Logger logger, IEventAggregator eventAggregator)
+		public ByFileSplitterPlugin(Logger logger, IEventAggregator eventAggregator)
 				: base(logger)
 		{
 			_eventAggregator = eventAggregator;
