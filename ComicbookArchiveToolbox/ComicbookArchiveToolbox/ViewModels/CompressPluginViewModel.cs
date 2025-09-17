@@ -101,12 +101,12 @@ namespace ComicbookArchiveToolbox.ViewModels
 					string outputFile = Path.Combine(OutputPath, file.Name);
 					_logger.Log($"Processing: {file.Name} -> {Path.GetFileName(outputFile)}");
 
-					await Task.Run(() => compresser.Compress(file.FullName, outputFile, ImageQuality, StrictRatio, ImageHeight, ImageRatio));
+					await compresser.CompressAsync(file.FullName, outputFile, ImageQuality, StrictRatio, ImageHeight, ImageRatio);
 				}
 			}
 			else
 			{
-				await Task.Run(() => compresser.Compress(InputPathToCompress, OutputPath, ImageQuality, StrictRatio, ImageHeight, ImageRatio));
+				await compresser.CompressAsync(InputPathToCompress, OutputPath, ImageQuality, StrictRatio, ImageHeight, ImageRatio);
 			}
 		}
 
