@@ -38,7 +38,7 @@ namespace ComicbookArchiveToolbox.Services
 				}
 			}
 			_logger.Log($"Start compressing input file in {outputFile}");
-			string nameTemplate = fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length);
+			string nameTemplate = "page";
 			string bufferPath = Settings.Instance.GetBufferDirectory(inputFile, nameTemplate);
 			string outputBuffer = Path.Combine(bufferPath, "outputBuffer");
 			Directory.CreateDirectory(outputBuffer);

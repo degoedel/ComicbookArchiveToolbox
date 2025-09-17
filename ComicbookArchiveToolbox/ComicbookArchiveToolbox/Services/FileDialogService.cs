@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.IO;
+using System.Windows;
 
 namespace ComicbookArchiveToolbox.Services
 {
@@ -40,7 +41,16 @@ namespace ComicbookArchiveToolbox.Services
 
 		public string? BrowseForDirectory(string currentDirectory = "")
 		{
-			// Implementation for directory selection
+			var folderDialog = new OpenFolderDialog
+			{
+				Title = "Select Folder",
+				InitialDirectory = currentDirectory
+			};
+
+			if (folderDialog.ShowDialog() == true)
+			{
+				currentDirectory = folderDialog.FolderName;
+			}
 			return currentDirectory;
 		}
 

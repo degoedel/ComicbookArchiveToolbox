@@ -173,11 +173,12 @@ namespace ComicbookArchiveToolbox.CommonTools
 			{
 				return Path.Combine(pathToBuffer, fileInfo.Name);
 			}
-
+			var bufferDI = new DirectoryInfo(pathToBuffer);
+			var pathToUncompressedFiles = bufferDI.Parent.FullName;
 			// Use Path.GetRelativePath for better performance
 			try
 			{
-				string relativePath = Path.GetRelativePath(pathToBuffer, fileInfo.FullName);
+				string relativePath = Path.GetRelativePath(pathToUncompressedFiles, fileInfo.FullName);
 
 				// If the relative path goes up (..) or equals the filename, file is not within buffer path
 				if (relativePath == "." || relativePath.StartsWith("..") || relativePath == fileInfo.Name)

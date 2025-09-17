@@ -98,7 +98,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 				// Process each file in the batch
 				foreach (var file in batch)
 				{
-					string outputFile = Path.Combine(OutputPath, Path.GetFileNameWithoutExtension(file.Name) + "_compressed" + file.Extension);
+					string outputFile = Path.Combine(OutputPath, file.Name);
 					_logger.Log($"Processing: {file.Name} -> {Path.GetFileName(outputFile)}");
 
 					await Task.Run(() => compresser.Compress(file.FullName, outputFile, ImageQuality, StrictRatio, ImageHeight, ImageRatio));
