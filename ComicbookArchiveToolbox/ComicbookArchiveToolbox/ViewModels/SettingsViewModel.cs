@@ -13,8 +13,8 @@ namespace ComicbookArchiveToolbox.ViewModels
 {
 	public class SettingsViewModel : BindableBase
 	{
-		private Logger _logger;
-		private IEventAggregator _eventAggregator;
+		private readonly Logger _logger;
+		private readonly IEventAggregator _eventAggregator;
 		public DelegateCommand BrowseDirectoryCommand { get; private set; }
 		public DelegateCommand SaveSettingsCommand { get; private set; }
 

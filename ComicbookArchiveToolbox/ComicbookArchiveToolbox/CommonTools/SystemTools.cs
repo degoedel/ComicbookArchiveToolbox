@@ -13,9 +13,9 @@ namespace ComicbookArchiveToolbox.CommonTools
 		{
 			try
 			{
-				DirectoryInfo di = new DirectoryInfo(dirPath);
+				DirectoryInfo di = new(dirPath);
 				var subDirs = di.GetDirectories();
-				for (int i = 0; i < subDirs.Count(); ++i)
+				for (int i = 0; i < subDirs.Length; ++i)
 				{
 					if (subDirs[i].Exists)
 					{
@@ -23,7 +23,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 					}
 				}
 				var files = di.GetFiles();
-				for (int i = 0; i < files.Count(); ++i)
+				for (int i = 0; i < files.Length; ++i)
 				{
 					if (files[i].Exists)
 					{
@@ -34,10 +34,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 			}
 			catch (Exception e)
 			{
-				if (logger != null)
-				{
-					logger.Log($"WARNING: unable to clean buffer directory {dirPath}: {e.Message}");
-				}
+				logger?.Log($"WARNING: unable to clean buffer directory {dirPath}: {e.Message}");
 			}
 		}
 
@@ -123,7 +120,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 
 		public static void ParseArchiveFiles(string pathToBuffer, ref List<FileInfo> metadataFiles, ref List<FileInfo> pages)
 		{
-			DirectoryInfo di = new DirectoryInfo(pathToBuffer);
+			DirectoryInfo di = new(pathToBuffer);
 			ParseArchiveFiles(di, ref metadataFiles, ref pages);
 		}
 
@@ -136,7 +133,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 			metadataFiles.AddRange(di.GetFiles().Where(x => !SystemTools.IsImageFile(x)).OrderBy(f => f, comparer));
 
 			var subdirs = di.GetDirectories();
-			if (subdirs.Count() > 0)
+			if (subdirs.Length > 0)
 			{
 				foreach (DirectoryInfo subdir in subdirs)
 				{
@@ -155,7 +152,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 				// If the relative path goes up (..) or is empty/current directory, return empty list
 				if (relativePath == "." || relativePath.StartsWith(".."))
 				{
-					return new List<string>();
+					return [];
 				}
 
 				// Split the relative path into directory components
@@ -163,7 +160,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 			}
 			catch (Exception)
 			{
-				return new List<string>();
+				return [];
 			}
 		}
 

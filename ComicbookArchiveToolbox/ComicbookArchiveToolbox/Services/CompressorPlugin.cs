@@ -12,16 +12,10 @@ using System.Threading.Tasks;
 
 namespace ComicbookArchiveToolbox.Services
 {
-	public class CompressorPlugin
+	public class CompressorPlugin(Logger logger, IEventAggregator eventAggregator)
 	{
-		private Logger _logger;
-		private IEventAggregator _eventAggregator;
-
-		public CompressorPlugin(Logger logger, IEventAggregator eventAggregator)
-		{
-			_logger = logger;
-			_eventAggregator = eventAggregator;
-		}
+		private readonly Logger _logger = logger;
+		private readonly IEventAggregator _eventAggregator = eventAggregator;
 
 		public async Task CompressAsync(string inputFile, string outputFile, long imageQuality, bool resizeByPx, long size, long ratio, CancellationToken cancellationToken = default)
 		{

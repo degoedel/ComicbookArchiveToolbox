@@ -15,10 +15,10 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 {
 	public class SplitPluginViewModel : BindableBase
 	{
-		private Logger _logger;
-		private IRegionManager _regionManager;
-		private IUnityContainer _container;
-		private IEventAggregator _eventAggregator;
+		private readonly Logger _logger;
+		private readonly IRegionManager _regionManager;
+		private readonly IUnityContainer _container;
+		private readonly IEventAggregator _eventAggregator;
 
 		public List<string> SplitStyles { get; set; }
 
@@ -36,7 +36,7 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void SetSplitterView(string selectedView)
 		{
-			string viewToActivate = "";
+			string viewToActivate;
 			switch (selectedView)
 			{
 				case "By File Nb":
@@ -127,7 +127,7 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			}
 		}
 
-		private List<uint> _pagesToSplitIndex = new List<uint>();
+		private List<uint> _pagesToSplitIndex = [];
 		public string PagesToSplitIndex
 		{
 			get { return String.Join(";", _pagesToSplitIndex); }
@@ -179,7 +179,7 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			fileTemplate = "";
 			if (File.Exists(fileName))
 			{
-				FileInfo fi = new FileInfo(fileName);
+				FileInfo fi = new(fileName);
 				fileTemplate = fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length);
 				result = true;
 			}
@@ -204,7 +204,7 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 		{
 			if (File.Exists(FileToSplit))
 			{
-				FileInfo fi = new FileInfo(FileToSplit);
+				FileInfo fi = new(FileToSplit);
 				OutputDir = fi.DirectoryName;
 			}
 		}
@@ -217,12 +217,12 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 		{
 			_container = container;
 			_eventAggregator = eventAggregator;
-			SplitStyles = new List<string>()
-			{
+			SplitStyles =
+			[
 				"By File Nb",
 				"By Max Pages Nb",
 				"By Size (Mb)"
-			};
+			];
 			_regionManager = regionManager;
 			BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);
 			SplitCommand = new DelegateCommand(DoSplit, CanSplit);
@@ -234,14 +234,16 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 		{
 			_logger.Log("Browse for file to split");
 
-			var dialog = new Microsoft.Win32.OpenFileDialog();
-			dialog.Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz";
+			var dialog = new Microsoft.Win32.OpenFileDialog
+			{
+				Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz"
+			};
 			string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			if (!string.IsNullOrEmpty(_fileToSplit))
 			{
 				try
 				{
-					FileInfo fi = new FileInfo(_fileToSplit);
+					FileInfo fi = new(_fileToSplit);
 					string selectedDir = fi.DirectoryName;
 					if (Directory.Exists(selectedDir))
 					{
@@ -268,7 +270,7 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 
 		private void DoSplit()
 		{
-			ArchiveTemplate arctemp = new ArchiveTemplate()
+			ArchiveTemplate arctemp = new()
 			{
 				ComicName = NameTemplate,
 				OutputDir = OutputDir,
@@ -289,7 +291,7 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 
 		private bool CanSplit()
 		{
-			bool selectedMethodArgument = false;
+			bool selectedMethodArgument;
 			switch (SelectedStyle)
 			{
 				case "By File Nb":

@@ -15,9 +15,9 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 {
 	public class EditPluginViewModel : BindableBase
 	{
-		private Logger _logger;
-		private IUnityContainer _container;
-		private IEventAggregator _eventAggregator;
+		private readonly Logger _logger;
+		private readonly IUnityContainer _container;
+		private readonly IEventAggregator _eventAggregator;
 
 		private string _fileToEdit = "";
 		public string FileToEdit
@@ -64,14 +64,16 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 		{
 			_logger.Log("Browse for file to split");
 
-			var dialog = new Microsoft.Win32.OpenFileDialog();
-			dialog.Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz";
+			var dialog = new Microsoft.Win32.OpenFileDialog
+			{
+				Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz"
+			};
 			string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			if (!string.IsNullOrEmpty(_fileToEdit))
 			{
 				try
 				{
-					FileInfo fi = new FileInfo(_fileToEdit);
+					FileInfo fi = new(_fileToEdit);
 					string selectedDir = fi.DirectoryName;
 					if (Directory.Exists(selectedDir))
 					{
@@ -109,8 +111,8 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 		private void DoSave()
 		{
 			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
-			bool canUpdate = false;
-			FileInfo fi = new FileInfo(_fileToEdit);
+			FileInfo fi = new(_fileToEdit);
+			bool canUpdate;
 			switch (fi.Extension)
 			{
 				case ".cbz":
@@ -129,7 +131,7 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 				_metadataFile = Path.Combine(bufferPath, "ComicInfo.xml");
 			}
 			_logger.Log($"Save metadata as ComicRack xml in {_metadataFile}");
-			XmlDocument xmlDoc = new XmlDocument();
+			XmlDocument xmlDoc = new();
 			string baseXml = "<?xml version=\"1.0\"?><ComicInfo xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"></ComicInfo> ";
 			xmlDoc.LoadXml(baseXml);
 			XmlElement rootElem = xmlDoc.DocumentElement;
@@ -143,7 +145,7 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 			{
 				xmlDoc.WriteTo(writer);
 			}
-			CompressionHelper ch = new CompressionHelper(_logger);
+			CompressionHelper ch = new(_logger);
 
 			if (canUpdate)
 			{
@@ -153,8 +155,10 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 			{
 				_logger.Log("Archive format does not support update with 7zip. Decompression and recompression is required");
 				ch.DecompressToDirectory(FileToEdit, bufferPath);
-				XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
-				xmlWriterSettings.Indent = true;
+				XmlWriterSettings xmlWriterSettings = new()
+				{
+					Indent = true
+				};
 				using (XmlWriter writer = XmlWriter.Create(_metadataFile, xmlWriterSettings))
 				{
 					xmlDoc.WriteTo(writer);
@@ -183,12 +187,12 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 		private void LoadMetadata()
 		{
 			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
-			CompressionHelper ch = new CompressionHelper(_logger);
-			FileInfo fi = new FileInfo(_fileToEdit);
+			CompressionHelper ch = new(_logger);
+			FileInfo fi = new(_fileToEdit);
 			string nameTemplate = fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length);
 			string bufferPath = Settings.Instance.GetBufferDirectory(_fileToEdit, nameTemplate);
 			ch.ExtractFileType(_fileToEdit, bufferPath, "*.xml");
-			DirectoryInfo di = new DirectoryInfo(bufferPath);
+			DirectoryInfo di = new(bufferPath);
 			var files = di.GetFiles("*.xml");
 			if (files.Count() > 0)
 			{
@@ -199,10 +203,10 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 			{
 				_metadataFile = "";
 			}
-			ObservableCollection<ComicMetadata> metadataCollection = new ObservableCollection<ComicMetadata>();
+			ObservableCollection<ComicMetadata> metadataCollection = [];
 			if (!string.IsNullOrEmpty(_metadataFile))
 			{
-				XmlDocument xmlDoc = new XmlDocument();
+				XmlDocument xmlDoc = new();
 				xmlDoc.Load(_metadataFile);
 				var rootElem = xmlDoc.DocumentElement;
 				XmlNodeList datas = rootElem.ChildNodes;
@@ -228,7 +232,7 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 
 		private void InitializeDefaultMetada()
 		{
-			ObservableCollection<ComicMetadata> metadataCollection = new ObservableCollection<ComicMetadata>();
+			ObservableCollection<ComicMetadata> metadataCollection = [];
 			var keys = Settings.Instance.DefaultMetadata.Split(';');
 			foreach (string s in keys)
 			{

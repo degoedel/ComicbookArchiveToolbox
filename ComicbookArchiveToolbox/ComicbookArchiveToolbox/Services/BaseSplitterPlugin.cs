@@ -69,16 +69,16 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 			{
 				FilePath = filePath,
 				ArchiveTemplate = archiveTemplate,
-				MetadataFiles = new List<FileInfo>(),
-				Pages = new List<FileInfo>()
+				MetadataFiles = [],
+				Pages = []
 			};
 
 			// Extract file in buffer
 			context.ArchiveTemplate.PathToBuffer = ExtractArchive(filePath, archiveTemplate);
 
 			// Count files in directory except metadata
-			List<FileInfo> metadataFiles = new List<FileInfo>();
-			List<FileInfo> pages = new List<FileInfo>();
+			List<FileInfo> metadataFiles = [];
+			List<FileInfo> pages = [];
 			SystemTools.ParseArchiveFiles(context.ArchiveTemplate.PathToBuffer, ref metadataFiles, ref pages);
 			context.MetadataFiles = metadataFiles;
 			context.Pages = pages;
@@ -158,7 +158,7 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 		protected string ExtractArchive(string filePath, ArchiveTemplate archiveTemplate)
 		{
 			string pathToBuffer = Settings.Instance.GetBufferDirectory(filePath, archiveTemplate.ComicName);
-			CompressionHelper ch = new CompressionHelper(_logger);
+			CompressionHelper ch = new(_logger);
 			_logger.Log($"Start extraction of {filePath} into {pathToBuffer} ...");
 			ch.DecompressToDirectory(filePath, pathToBuffer);
 			_logger.Log($"Extraction done.");
@@ -202,7 +202,7 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 			{
 				return coverSize;
 			}
-			FileInfo coverInfo = new FileInfo(coverFile);
+			FileInfo coverInfo = new(coverFile);
 			string destFile = Path.Combine(subBuffer, coverInfo.Name);
 
 			using (Bitmap bitmap = (Bitmap)Image.FromFile(coverFile))
@@ -213,10 +213,10 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 
 					using (Graphics graphics = Graphics.FromImage(bitmap))
 					{
-						using (Font arialFont = new Font("Arial", 220f, FontStyle.Regular, GraphicsUnit.Point))
+						using (Font arialFont = new("Arial", 220f, FontStyle.Regular, GraphicsUnit.Point))
 						{
 							SizeF size = graphics.MeasureString(issueText, arialFont);
-							using (SolidBrush whiteBrush = new SolidBrush(Color.FromArgb(200, 255, 255, 255)))
+							using (SolidBrush whiteBrush = new(Color.FromArgb(200, 255, 255, 255)))
 							{
 								graphics.FillRectangle(whiteBrush, 5f, 5f, size.Width + 10f, size.Height + 10f);
 							}
@@ -226,7 +226,7 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 					}
 				}
 
-				JpgConverter jpgConverter = new JpgConverter(_logger, 80);
+				JpgConverter jpgConverter = new(_logger, 80);
 				jpgConverter.SaveJpeg(bitmap, destFile);
 			}
 
@@ -264,7 +264,7 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 			{
 				Directory.CreateDirectory(destFolder);
 				int padSize = Math.Max(2, files.Count.ToString().Length);
-				JpgConverter jpgConverter = new JpgConverter(_logger, imageCompression);
+				JpgConverter jpgConverter = new(_logger, imageCompression);
 				for (int i = 0; i < files.Count; ++i)
 				{
 					string destFile = Path.Combine(destFolder, $"{archiveName}_{(i + increaseIndex).ToString().PadLeft(padSize, '0')}{files[i].Extension}".Replace(' ', '_'));
@@ -292,9 +292,9 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 		{
 			string archiveExtension = $".{Settings.Instance.OutputFormat.ToString().ToLower()}";
 
-			DirectoryInfo di = new DirectoryInfo(directory);
+			DirectoryInfo di = new(directory);
 			string outputFile = Path.Combine(archiveTemplate.OutputDir, $"{di.Name}{archiveExtension}");
-			CompressionHelper ch = new CompressionHelper(_logger);
+			CompressionHelper ch = new(_logger);
 			_logger.Log($"Start compression of {directory} into {outputFile} ...");
 			ch.CompressDirectoryContent(directory, outputFile);
 			_logger.Log($"Compression done.");

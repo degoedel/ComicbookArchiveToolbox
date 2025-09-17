@@ -39,7 +39,7 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 			int sourcePageIndex = 0;
 			for (int fileIndex = 0; fileIndex < context.ArchiveTemplate.NumberOfSplittedFiles; ++fileIndex)
 			{
-				List<FileInfo> pagesToAdd = new List<FileInfo>();
+				List<FileInfo> pagesToAdd = [];
 				int pagesAdded = 0;
 
 				// Collect pages for this file

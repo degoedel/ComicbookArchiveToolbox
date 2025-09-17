@@ -54,7 +54,7 @@ namespace ComicbookArchiveToolbox.Services
 			return currentDirectory;
 		}
 
-		private string GetInitialDirectory(string currentFile)
+		private static string GetInitialDirectory(string currentFile)
 		{
 			if (!string.IsNullOrEmpty(currentFile))
 			{
@@ -72,7 +72,7 @@ namespace ComicbookArchiveToolbox.Services
 			return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 		}
 
-		private string GetOutputInitialDirectory(string currentOutput, string inputFile)
+		private static string GetOutputInitialDirectory(string currentOutput, string inputFile)
 		{
 			if (!string.IsNullOrWhiteSpace(currentOutput))
 				return new FileInfo(currentOutput).Directory?.FullName ?? "";

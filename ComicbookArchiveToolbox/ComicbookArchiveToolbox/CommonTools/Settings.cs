@@ -6,10 +6,10 @@ namespace ComicbookArchiveToolbox.CommonTools
 {
 	public sealed class Settings : SerializationSettings
 	{
-		private string _settingsPath = @"C:\ProgramData\ComicbookArchiveToolbox\Settings\Settings.json";
+		private readonly string _settingsPath = @"C:\ProgramData\ComicbookArchiveToolbox\Settings\Settings.json";
 
 		private static readonly Lazy<Settings> lazy =
-		new Lazy<Settings>(() => new Settings());
+		new(() => new Settings());
 
 		public static Settings Instance { get { return lazy.Value; } }
 
@@ -45,8 +45,8 @@ namespace ComicbookArchiveToolbox.CommonTools
 
 		public string GetBufferDirectory(string filePath, string outputNameTemplate)
 		{
-			FileInfo fi = new FileInfo(filePath);
-			string result = "";
+			FileInfo fi = new(filePath);
+			string result;
 			if (UseFileDirAsBuffer)
 			{
 				result = Path.Combine(fi.DirectoryName, outputNameTemplate);
@@ -62,11 +62,13 @@ namespace ComicbookArchiveToolbox.CommonTools
 
 		public void SerializeSettings()
 		{
-			FileInfo fi = new FileInfo(_settingsPath);
+			FileInfo fi = new(_settingsPath);
 			Directory.CreateDirectory(fi.DirectoryName);
-			JsonSerializer serializer = new JsonSerializer();
-			serializer.NullValueHandling = NullValueHandling.Ignore;
-			using (StreamWriter sw = new StreamWriter(_settingsPath))
+			JsonSerializer serializer = new()
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+			using (StreamWriter sw = new(_settingsPath))
 			using (JsonWriter writer = new JsonTextWriter(sw))
 			{
 				serializer.Serialize(writer, this);

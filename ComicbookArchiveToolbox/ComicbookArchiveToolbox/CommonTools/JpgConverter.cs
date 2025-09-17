@@ -8,16 +8,16 @@ namespace ComicbookArchiveToolbox.CommonTools
 {
 	public class JpgConverter
 	{
-		private Logger _logger;
-		EncoderParameters _encoderParameters;
-		ImageCodecInfo _codecInfo;
+		private readonly Logger _logger;
+		readonly EncoderParameters _encoderParameters;
+		readonly ImageCodecInfo _codecInfo;
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		public JpgConverter(Logger logger, long quality)
 		{
 			_logger = logger;
 			_encoderParameters = new EncoderParameters(1);
-			EncoderParameter encoderParameter = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
+			EncoderParameter encoderParameter = new(System.Drawing.Imaging.Encoder.Quality, quality);
 			_encoderParameters.Param[0] = encoderParameter;
 			_codecInfo = ImageCodecInfo.GetImageDecoders().First(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
 		}
@@ -27,7 +27,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 		{
 			try
 			{
-				using (Bitmap image = new Bitmap(inputPath))
+				using (Bitmap image = new(inputPath))
 				{
 					image.Save(outputPath, _codecInfo, _encoderParameters);
 				}
@@ -63,7 +63,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 		public Bitmap ResizeImageByPx(string inputPath, long height)
 		{
 			Bitmap destImage = null;
-			using (Bitmap image = new Bitmap(inputPath))
+			using (Bitmap image = new(inputPath))
 			{
 				int width = image.Width;
 				if (height != image.Height)
@@ -90,7 +90,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 		public Bitmap ResizeImageByRatio(string inputPath, long ratio)
 		{
 			Bitmap destImage = null;
-			using (Bitmap image = new Bitmap(inputPath))
+			using (Bitmap image = new(inputPath))
 			{
 				int width = (int) Math.Floor((double)(image.Width * ratio / 100));
 				int height = (int)Math.Floor((double)(image.Height * ratio / 100));

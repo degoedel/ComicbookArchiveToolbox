@@ -42,13 +42,13 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 			long maxSizeAsBytes = context.ArchiveTemplate.MaxSizePerSplittedFile * 1048576;
 			long sizeAdded = 0;
 			int fileIndex = 0;
-			List<FileInfo> pagesToAdd = new List<FileInfo>();
+			List<FileInfo> pagesToAdd = [];
 
 			for (int i = 0; i < context.TotalPagesCount; ++i)
 			{
 				if (sizeAdded == 0)
 				{
-					pagesToAdd = new List<FileInfo>();
+					pagesToAdd = [];
 				}
 
 				// Collect pages until size limit is reached

@@ -14,7 +14,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.Views
   {
     #region Data
 
-    private Rectangle child = null;
+    private readonly Rectangle child = null;
     private double offsetLeft = 0;
     private double offsetTop = 0;
 
@@ -31,12 +31,14 @@ namespace ComicbookArchiveToolbox.Module.Merge.Views
     public DragAdorner(UIElement adornedElement, Size size, Brush brush)
       : base(adornedElement)
     {
-      Rectangle rect = new Rectangle();
-      rect.Fill = brush;
-      rect.Width = size.Width;
-      rect.Height = size.Height;
-      rect.IsHitTestVisible = false;
-      this.child = rect;
+			Rectangle rect = new()
+			{
+				Fill = brush,
+				Width = size.Width,
+				Height = size.Height,
+				IsHitTestVisible = false
+			};
+			this.child = rect;
     }
 
     #endregion // Constructor
@@ -52,7 +54,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.Views
     /// <returns></returns>
     public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
     {
-      GeneralTransformGroup result = new GeneralTransformGroup();
+      GeneralTransformGroup result = new();
       result.Children.Add(base.GetDesiredTransform(transform));
       result.Children.Add(new TranslateTransform(this.offsetLeft, this.offsetTop));
       return result;

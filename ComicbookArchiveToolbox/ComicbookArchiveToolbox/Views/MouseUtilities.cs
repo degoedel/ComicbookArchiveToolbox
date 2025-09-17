@@ -35,7 +35,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.Views
     /// <param name="relativeTo">The Visual to which the mouse coordinates will be relative.</param>
     public static Point GetMousePosition(Visual relativeTo)
     {
-      Win32Point mouse = new Win32Point();
+      Win32Point mouse = new();
       GetCursorPos(ref mouse);
 
       // Using PointFromScreen instead of Dan Crevier's code (commented out below)

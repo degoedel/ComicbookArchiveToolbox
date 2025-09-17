@@ -7,16 +7,16 @@ namespace ComicbookArchiveToolbox.CommonTools
 {
 	public class CompressionHelper
 	{
-		private string _pathTo7z = "";
-		private Logger _logger;
+		private readonly string _pathTo7z = "";
+		private readonly Logger _logger;
 		public CompressionHelper(Logger logger)
 		{
 			_logger = logger;
 
 			string codeBase = Assembly.GetExecutingAssembly().Location;
-			UriBuilder uri = new UriBuilder(codeBase);
+			UriBuilder uri = new(codeBase);
 			string path = Uri.UnescapeDataString(uri.Path);
-			DirectoryInfo installDir = new DirectoryInfo(System.IO.Path.GetDirectoryName(path));
+			DirectoryInfo installDir = new(System.IO.Path.GetDirectoryName(path));
 
 			_pathTo7z = Path.Combine(installDir.FullName, "7z.exe");
 		}
@@ -28,10 +28,12 @@ namespace ComicbookArchiveToolbox.CommonTools
 
 			try
 			{
-				ProcessStartInfo pro = new ProcessStartInfo();
-				pro.WindowStyle = ProcessWindowStyle.Hidden;
-				pro.FileName = _pathTo7z;
-				pro.Arguments = $"x -aoa -o\"{decompressionFolder}\" \"{archivePath}\"";
+				ProcessStartInfo pro = new()
+				{
+					WindowStyle = ProcessWindowStyle.Hidden,
+					FileName = _pathTo7z,
+					Arguments = $"x -aoa -o\"{decompressionFolder}\" \"{archivePath}\""
+				};
 				_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
 				Process x = Process.Start(pro);
 				x.WaitForExit();
@@ -47,10 +49,12 @@ namespace ComicbookArchiveToolbox.CommonTools
 			string compressionArg = GetCompressionMethod();
 			try
 			{
-				ProcessStartInfo pro = new ProcessStartInfo();
-				pro.WindowStyle = ProcessWindowStyle.Hidden;
-				pro.FileName = _pathTo7z;
-				pro.Arguments = $"a -aoa -t{compressionArg} \"{outputFile}\" \"{inputDir}\\*\" ";
+				ProcessStartInfo pro = new()
+				{
+					WindowStyle = ProcessWindowStyle.Hidden,
+					FileName = _pathTo7z,
+					Arguments = $"a -aoa -t{compressionArg} \"{outputFile}\" \"{inputDir}\\*\" "
+				};
 				_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
 				Process x = Process.Start(pro);
 				x.WaitForExit();
@@ -61,24 +65,15 @@ namespace ComicbookArchiveToolbox.CommonTools
 			}
 		}
 
-		private string GetCompressionMethod()
+		private static string GetCompressionMethod()
 		{
-			string compressionArg = "";
-			switch (Settings.Instance.OutputFormat)
+			string compressionArg = Settings.Instance.OutputFormat switch
 			{
-				case SerializationSettings.ArchiveFormat.Cb7:
-					compressionArg = "7z";
-					break;
-				case SerializationSettings.ArchiveFormat.Cbt:
-					compressionArg = "tar";
-					break;
-				case SerializationSettings.ArchiveFormat.Cbz:
-					compressionArg = "zip";
-					break;
-				default:
-					compressionArg = "zip";
-					break;
-			}
+				SerializationSettings.ArchiveFormat.Cb7 => "7z",
+				SerializationSettings.ArchiveFormat.Cbt => "tar",
+				SerializationSettings.ArchiveFormat.Cbz => "zip",
+				_ => "zip",
+			};
 			return compressionArg;
 		}
 
@@ -89,10 +84,12 @@ namespace ComicbookArchiveToolbox.CommonTools
 
 			try
 			{
-				ProcessStartInfo pro = new ProcessStartInfo();
-				pro.WindowStyle = ProcessWindowStyle.Hidden;
-				pro.FileName = _pathTo7z;
-				pro.Arguments = $"e  \"{archivePath}\" -o\"{decompressionFolder}\" -aoa -r {fileExtension}";
+				ProcessStartInfo pro = new()
+				{
+					WindowStyle = ProcessWindowStyle.Hidden,
+					FileName = _pathTo7z,
+					Arguments = $"e  \"{archivePath}\" -o\"{decompressionFolder}\" -aoa -r {fileExtension}"
+				};
 				_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
 				Process x = Process.Start(pro);
 				x.WaitForExit();
@@ -109,10 +106,12 @@ namespace ComicbookArchiveToolbox.CommonTools
 			string compressionArg = GetCompressionMethod();
 			try
 			{
-				ProcessStartInfo pro = new ProcessStartInfo();
-				pro.WindowStyle = ProcessWindowStyle.Hidden;
-				pro.FileName = _pathTo7z;
-				pro.Arguments = $"u \"{inputArchive}\" \"{file}\"";
+				ProcessStartInfo pro = new()
+				{
+					WindowStyle = ProcessWindowStyle.Hidden,
+					FileName = _pathTo7z,
+					Arguments = $"u \"{inputArchive}\" \"{file}\""
+				};
 				_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
 				Process x = Process.Start(pro);
 				x.WaitForExit();

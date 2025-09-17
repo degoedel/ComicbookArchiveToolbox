@@ -8,8 +8,8 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 {
 	public class MergerPlugin
 	{
-		private Logger _logger;
-		private IEventAggregator _eventAggregator;
+		private readonly Logger _logger;
+		private readonly IEventAggregator _eventAggregator;
 		public MergerPlugin(Logger logger, IEventAggregator eventAggregator)
 		{
 			_logger = logger;
@@ -20,7 +20,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 		{
 			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
 			_logger.Log($"Check input validity vs settings");
-			FileInfo fi = new FileInfo(outputFile);
+			FileInfo fi = new(outputFile);
 			string fileName = fi.Name;
 			string settingsExtension = $".{Settings.Instance.OutputFormat.ToString().ToLower()}";
 			if (string.IsNullOrEmpty(fi.Extension))
@@ -41,12 +41,12 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 			string bufferPath = Settings.Instance.GetBufferDirectory(files[0], nameTemplate);
 			string outputBuffer = Path.Combine(bufferPath, "outputBuffer");
 			Directory.CreateDirectory(outputBuffer);
-			List<FileInfo> metadataFiles = new List<FileInfo>();
-			List<FileInfo> pages = new List<FileInfo>();
+			List<FileInfo> metadataFiles = [];
+			List<FileInfo> pages = [];
 			int bufferPadSize = files.Count.ToString().Length;
 			for (int i = 0; i < files.Count; ++i)
 			{
-				CompressionHelper ch1 = new CompressionHelper(_logger);
+				CompressionHelper ch1 = new(_logger);
 				string decompressionBuffer = Path.Combine(bufferPath, $"archive_{i.ToString().PadLeft(bufferPadSize, '0')}");
 				_logger.Log($"Uncompress {files[i]} in {decompressionBuffer}");
 				ch1.DecompressToDirectory(files[i], decompressionBuffer);
@@ -64,7 +64,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 			}
 			int pagePadSize = pages.Count.ToString().Length;
 			int pageAdded = 1;
-			JpgConverter jpgConverter = new JpgConverter(_logger, imageQuality);
+			JpgConverter jpgConverter = new(_logger, imageQuality);
 			for (int i = 0; i < pages.Count; ++i)
 			{
 				if (SystemTools.IsImageFile(pages[i]))
@@ -83,7 +83,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 					++pageAdded;
 				}
 			}
-			CompressionHelper ch2 = new CompressionHelper(_logger);
+			CompressionHelper ch2 = new(_logger);
 			_logger.Log($"Start compression of {outputBuffer} into {outputFile} ...");
 			ch2.CompressDirectoryContent(outputBuffer, outputFile);
 			_logger.Log($"Compression done.");

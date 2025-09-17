@@ -13,8 +13,8 @@ namespace ComicbookArchiveToolbox.Views
 	/// </summary>
 	public partial class HostView : UserControl
 	{
-		IContainerExtension _container;
-		IRegionManager _regionManager;
+		readonly IContainerExtension _container;
+		readonly IRegionManager _regionManager;
 
 
 		public HostView(IContainerExtension container, IRegionManager regionManager)

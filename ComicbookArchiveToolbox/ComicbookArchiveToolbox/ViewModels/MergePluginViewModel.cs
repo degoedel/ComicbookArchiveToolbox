@@ -15,9 +15,9 @@ namespace ComicbookArchiveToolbox.Module.Merge.ViewModels
 {
 	public class MergePluginViewModel : BindableBase
 	{
-		private IUnityContainer _container;
-		private IEventAggregator _eventAggregator;
-		private Logger _logger;
+		private readonly IUnityContainer _container;
+		private readonly IEventAggregator _eventAggregator;
+		private readonly Logger _logger;
 		public DelegateCommand BrowseFilesCommand { get; private set; }
 		public DelegateCommand ClearFilesCommand { get; private set; }
 		public DelegateCommand BrowseOutputFileCommand { get; private set; }
@@ -34,7 +34,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.ViewModels
 			}
 		}
 
-		private ObservableCollection<string> _selectedFiles = new ObservableCollection<string>();
+		private ObservableCollection<string> _selectedFiles = [];
 		public ObservableCollection<string> SelectedFiles
 		{
 			get { return _selectedFiles; }
@@ -77,14 +77,16 @@ namespace ComicbookArchiveToolbox.Module.Merge.ViewModels
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void BrowseFiles()
 		{
-			var dialog = new Microsoft.Win32.OpenFileDialog();
-			dialog.Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz";
+			var dialog = new Microsoft.Win32.OpenFileDialog
+			{
+				Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz"
+			};
 			string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			if (SelectedFiles != null && SelectedFiles.Count > 0)
 			{
 				try
 				{
-					FileInfo fi = new FileInfo(SelectedFiles[0]);
+					FileInfo fi = new(SelectedFiles[0]);
 					string selectedDir = fi.DirectoryName;
 					if (Directory.Exists(selectedDir))
 					{
@@ -149,7 +151,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.ViewModels
 
 		private void DoMerge()
 		{
-			MergerPlugin merger = new MergerPlugin(_logger, _eventAggregator);
+			MergerPlugin merger = new(_logger, _eventAggregator);
 			Task.Run(() => merger.Merge(OutputFile, SelectedFiles, ImageQuality));
 		}
 

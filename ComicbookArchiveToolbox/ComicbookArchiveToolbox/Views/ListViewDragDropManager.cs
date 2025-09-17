@@ -365,7 +365,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.Views
       if (this.ProcessDrop != null)
       {
         // Let the client code process the drop.
-        ProcessDropEventArgs<ItemType> args = new ProcessDropEventArgs<ItemType>(itemsSource, data, oldIndex, newIndex, e.AllowedEffects);
+        ProcessDropEventArgs<ItemType> args = new(itemsSource, data, oldIndex, newIndex, e.AllowedEffects);
         this.ProcessDrop(this, args);
         e.Effects = args.Effects;
       }
@@ -478,9 +478,9 @@ namespace ComicbookArchiveToolbox.Module.Merge.Views
 
         double width = SystemParameters.MinimumHorizontalDragDistance * 2;
         double height = Math.Min(SystemParameters.MinimumVerticalDragDistance, vertOffset) * 2;
-        Size szThreshold = new Size(width, height);
+        Size szThreshold = new(width, height);
 
-        Rect rect = new Rect(this.ptMouseDown, szThreshold);
+        Rect rect = new(this.ptMouseDown, szThreshold);
         rect.Offset(szThreshold.Width / -2, szThreshold.Height / -2);
         Point ptInListView = MouseUtilities.GetMousePosition(this.listView);
         return !rect.Contains(ptInListView);
@@ -521,15 +521,16 @@ namespace ComicbookArchiveToolbox.Module.Merge.Views
     {
       // Create a brush which will paint the ListViewItem onto
       // a visual in the adorner layer.
-      VisualBrush brush = new VisualBrush(itemToDrag);
+      VisualBrush brush = new(itemToDrag);
 
-      // Create an element which displays the source item while it is dragged.
-      this.dragAdorner = new DragAdorner(this.listView, itemToDrag.RenderSize, brush);
+			// Create an element which displays the source item while it is dragged.
+			this.dragAdorner = new DragAdorner(this.listView, itemToDrag.RenderSize, brush)
+			{
+				// Set the drag adorner's opacity.		
+				Opacity = this.DragAdornerOpacity
+			};
 
-      // Set the drag adorner's opacity.		
-      this.dragAdorner.Opacity = this.DragAdornerOpacity;
-
-      AdornerLayer layer = AdornerLayer.GetAdornerLayer(this.listView);
+			AdornerLayer layer = AdornerLayer.GetAdornerLayer(this.listView);
       layer.Add(dragAdorner);
 
       // Save the location of the cursor when the left mouse button was pressed.
@@ -773,13 +774,13 @@ namespace ComicbookArchiveToolbox.Module.Merge.Views
   /// <typeparam name="ItemType">The type of data object being dropped.</typeparam>
   public class ProcessDropEventArgs<ItemType> : EventArgs where ItemType : class
   {
-    #region Data
+		#region Data
 
-    ObservableCollection<ItemType> itemsSource;
-    ItemType dataItem;
-    int oldIndex;
-    int newIndex;
-    DragDropEffects allowedEffects = DragDropEffects.None;
+		readonly ObservableCollection<ItemType> itemsSource;
+		readonly ItemType dataItem;
+		readonly int oldIndex;
+		readonly int newIndex;
+		readonly DragDropEffects allowedEffects = DragDropEffects.None;
     DragDropEffects effects = DragDropEffects.None;
 
     #endregion // Data

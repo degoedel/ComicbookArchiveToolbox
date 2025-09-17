@@ -26,8 +26,8 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 
 		protected override int ComputeNumberOfSplittedFiles(SplitContext context)
 		{
-			int numberOfSplittedFiles = 0;
-			int remainder = 0;
+			int numberOfSplittedFiles;
+			int remainder;
 			if (Settings.Instance.IncludeCover)
 			{
 				numberOfSplittedFiles = Math.DivRem(context.TotalPagesCount - 1, (int)context.ArchiveTemplate.MaxPagesPerSplittedFile - 1, out remainder);
@@ -47,13 +47,13 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 		{
 			int pagesAdded = 0;
 			int fileIndex = 0;
-			List<FileInfo> pagesToAdd = new List<FileInfo>();
+			List<FileInfo> pagesToAdd = [];
 
 			for (int i = 0; i < context.TotalPagesCount; ++i)
 			{
 				if (pagesAdded == 0)
 				{
-					pagesToAdd = new List<FileInfo>();
+					pagesToAdd = [];
 				}
 
 				// Collect pages until max pages limit is reached

@@ -5,7 +5,7 @@ namespace ComicbookArchiveToolbox.CommonTools
 {
 	public class Logger
 	{
-		IEventAggregator _eventAggregator;
+		readonly IEventAggregator _eventAggregator;
 		public Logger(IEventAggregator eventAggregator)
 		{
 			_eventAggregator = eventAggregator;

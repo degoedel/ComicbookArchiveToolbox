@@ -13,7 +13,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 {
 	public class CompressPluginViewModel : BasePluginViewModel
 	{
-		private static readonly string[] ComicExtensions = { ".cb7", ".cba", ".cbr", ".cbt", ".cbz" };
+		private static readonly string[] ComicExtensions = [".cb7", ".cba", ".cbr", ".cbt", ".cbz"];
 
 		private string _inputPathToCompress = "";
 		public string InputPathToCompress
@@ -86,7 +86,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 			var compresser = new CompressorPlugin(_logger, _eventAggregator);
 			if (IsBatchMode)
 			{
-				DirectoryInfo batchSource = new DirectoryInfo(InputPathToCompress);
+				DirectoryInfo batchSource = new(InputPathToCompress);
 
 				// Get all files with comic book archive extensions
 				List<FileInfo> batch = batchSource.GetFiles()

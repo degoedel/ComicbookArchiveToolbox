@@ -15,9 +15,9 @@ namespace ComicbookArchiveToolbox.ViewModels
 		#region Attributes
 
 		private string _commonLog = "";
-		private IContainerExtension _container;
-		private IRegionManager _regionManager;
-		private IEventAggregator _eventAggregator;
+		private readonly IContainerExtension _container;
+		private readonly IRegionManager _regionManager;
+		private readonly IEventAggregator _eventAggregator;
 		public DelegateCommand DisplayToolsCommand { get; private set; }
 		public DelegateCommand DisplaySettingsCommand { get; private set; }
 		public DelegateCommand DisplayAboutCommand { get; private set; }
