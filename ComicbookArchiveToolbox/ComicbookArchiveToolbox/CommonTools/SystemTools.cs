@@ -9,6 +9,8 @@ namespace ComicbookArchiveToolbox.CommonTools
 {
 	public class SystemTools
 	{
+
+		public static readonly string[] ComicExtensions = [".cb7", ".cba", ".cbr", ".cbt", ".cbz"];
 		public static void CleanDirectory(string dirPath, Logger logger)
 		{
 			try

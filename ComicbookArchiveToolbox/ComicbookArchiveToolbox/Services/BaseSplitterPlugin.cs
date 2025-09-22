@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ComicbookArchiveToolbox.Module.Split.Services
 {
@@ -239,14 +242,17 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 		{
 			return Path.Combine(template.PathToBuffer, $"{template.ComicName}_{(fileIndex + 1).ToString().PadLeft(template.IndexSize, '0')}");
 		}
-
 		protected long CopyMetaDataToSubBuffer(List<FileInfo> metaDataFiles, string subBuffer)
 		{
 			long metaDataSize = 0;
 			if (metaDataFiles.Count > 0)
 			{
-				metaDataSize = metaDataFiles[0].Length;
-				File.Copy(metaDataFiles[0].FullName, Path.Combine(subBuffer, metaDataFiles[0].Name));
+				foreach (FileInfo file in metaDataFiles)
+				{
+					string destFile = SystemTools.GetOutputFilePath(subBuffer, file);
+					metaDataSize += file.Length;
+					File.Copy(file.FullName, destFile);
+				}
 			}
 			return metaDataSize;
 		}
@@ -266,8 +272,9 @@ namespace ComicbookArchiveToolbox.Module.Split.Services
 				int padSize = Math.Max(2, files.Count.ToString().Length);
 				JpgConverter jpgConverter = new(_logger, imageCompression);
 				for (int i = 0; i < files.Count; ++i)
-				{
-					string destFile = Path.Combine(destFolder, $"{archiveName}_{(i + increaseIndex).ToString().PadLeft(padSize, '0')}{files[i].Extension}".Replace(' ', '_'));
+				{ 
+					string destPath = (new FileInfo(SystemTools.GetOutputFilePath(destFolder, files[i]))).Directory.FullName;
+					string destFile = Path.Combine(destPath, $"{archiveName}_{(i + increaseIndex).ToString().PadLeft(padSize, '0')}{files[i].Extension}".Replace(' ', '_'));
 					if (imageCompression == 100)
 					{
 						// rename the files in the directories

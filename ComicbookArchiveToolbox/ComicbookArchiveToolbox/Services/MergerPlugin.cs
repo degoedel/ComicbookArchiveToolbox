@@ -3,6 +3,7 @@ using ComicbookArchiveToolbox.CommonTools.Events;
 using Prism.Events;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ComicbookArchiveToolbox.Module.Merge.Service
 {
@@ -53,15 +54,16 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 				_logger.Log($"Extraction done.");
 				SystemTools.ParseArchiveFiles(decompressionBuffer, ref metadataFiles, ref pages);
 			}
-			if (Settings.Instance.IncludeMetadata)
-			{
-				if (metadataFiles.Count > 0)
-				{
-					string destFile = Path.Combine(outputBuffer, metadataFiles[0].Name);
-					_logger.Log($"copy metadata {metadataFiles[0].FullName}  in {destFile}");
-					File.Copy(metadataFiles[0].FullName, destFile, true);
-				}
-			}
+			//if (Settings.Instance.IncludeMetadata)
+			//{
+			//	if (metadataFiles.Count > 0)
+			//	{
+			//		foreach (FileInfo file in metadataFiles)
+			//		{
+			//			string destFile = SystemTools.GetOutputFilePath(outputBuffer, file);
+			//			File.Copy(file.FullName, destFile);
+			//		}
+			//}
 			int pagePadSize = pages.Count.ToString().Length;
 			int pageAdded = 1;
 			JpgConverter jpgConverter = new(_logger, imageQuality);

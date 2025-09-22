@@ -14,9 +14,10 @@
 
 	<UserControl.Resources>
 		<converters:InverseBooleanConverter x:Key="InverseConverter"/>
+		<converters:BooleanToTextConverter x:Key="BooleanToTextConverter"/>
 	</UserControl.Resources>
 
-	<ScrollViewer>
+	<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 		<StackPanel Margin="24">
 			<!-- Modern Header -->
 			<StackPanel Orientation="Horizontal" Margin="0,0,0,32">
@@ -39,14 +40,23 @@
                                Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
                                Margin="0,0,0,16"/>
 
-					<mah:MetroHeader Header="File To Split">
+					<StackPanel Orientation="Horizontal">
+						<mah:ToggleSwitch Header="Processing Mode"
+						                  IsOn="{Binding IsBatchMode}"
+						                  OnContent="Batch"
+						                  OffContent="Single file"
+						                  Style="{StaticResource MahApps.Styles.ToggleSwitch}"
+						                  Width="200"/>
+					</StackPanel>
+
+					<mah:MetroHeader Header="{Binding IsBatchMode, Converter={StaticResource BooleanToTextConverter}, ConverterParameter='Input Directory|Input File'}">
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
 							<TextBox Grid.Column="0" 
-                                     Text="{Binding FileToSplit, Mode=TwoWay}"
+                                     Text="{Binding SourceToSplit, Mode=TwoWay}"
                                      Style="{StaticResource MahApps.Styles.TextBox}"
                                      Margin="0,0,8,0"/>
 							<Button Grid.Column="1" 
@@ -58,7 +68,9 @@
 
 					<mah:MetroHeader Header="Output Files Template" Margin="0,16,0,0">
 						<TextBox Text="{Binding NameTemplate, Mode=TwoWay}"
-                                 Style="{StaticResource MahApps.Styles.TextBox}"/>
+                                 Style="{StaticResource MahApps.Styles.TextBox}"
+								 IsEnabled="{Binding IsBatchMode, Converter={StaticResource InverseConverter}}"
+								 ToolTip="For example, if template is 'MyOutput', the resulting files will be names 'MyOutput01', 'MyOutput02'..."/>
 					</mah:MetroHeader>
 				</StackPanel>
 			</Border>
@@ -98,8 +110,7 @@
                                Margin="0,0,0,16"/>
 
 					<!-- Path Options -->
-					<CheckBox Content="Follow source file location" 
-                              IsEnabled="{Binding FileSelected}" 
+					<CheckBox Content="Follow source file location"  
                               IsChecked="{Binding FollowFilePath, Mode=TwoWay}"
                               Style="{StaticResource MahApps.Styles.CheckBox}"
                               FontSize="14"
@@ -138,7 +149,7 @@
 								<Button Grid.Column="1" 
                                         Content="Browse..."
                                         Style="{StaticResource MahApps.Styles.Button.Square}"
-                                        Command="{Binding BrowseOutputDirCommand}"/>
+                                        Command="{Binding BrowseOutputDirectoryCommand}"/>
 							</Grid>
 						</mah:MetroHeader>
 					</Grid>
@@ -155,7 +166,7 @@
 					<Button.ContentTemplate>
 						<DataTemplate>
 							<StackPanel Orientation="Horizontal">
-								<iconPacks:PackIconPhosphorIcons Kind="ArrowsMergeBold" Width="16" Height="16" Margin="0,0,8,0"/>
+								<iconPacks:PackIconPhosphorIcons Kind="ArrowsSplitBold" Width="16" Height="16" Margin="0,0,8,0"/>
 								<TextBlock Text="{Binding}"/>
 							</StackPanel>
 						</DataTemplate>

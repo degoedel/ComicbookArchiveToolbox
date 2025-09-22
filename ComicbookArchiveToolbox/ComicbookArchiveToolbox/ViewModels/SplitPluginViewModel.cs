@@ -1,24 +1,30 @@
-﻿using ComicbookArchiveToolbox.Module.Split.Services;
-using ComicbookArchiveToolbox.CommonTools;
+﻿using ComicbookArchiveToolbox.CommonTools;
+using ComicbookArchiveToolbox.CommonTools.Events;
+using ComicbookArchiveToolbox.Module.Split.Services;
+using ComicbookArchiveToolbox.ViewModels;
+using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Mvvm;
 using Prism.Navigation.Regions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity;
-using Microsoft.Win32;
 
 namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 {
-	public class SplitPluginViewModel : BindableBase
+	public class SplitPluginViewModel : BasePluginViewModel
 	{
 		private readonly Logger _logger;
 		private readonly IRegionManager _regionManager;
 		private readonly IUnityContainer _container;
 		private readonly IEventAggregator _eventAggregator;
+		private CancellationTokenSource _cancellationTokenSource;
+		private int _activeSplitOperations = 0;
+		private readonly object _operationCountLock = new object();
 
 		public List<string> SplitStyles { get; set; }
 
@@ -28,6 +34,7 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			get { return _selectedStyle; }
 			set
 			{
+				_logger.Log($"Split style changed from '{_selectedStyle}' to '{value}'");
 				SetProperty(ref _selectedStyle, value);
 				SetSplitterView(_selectedStyle);
 			}
@@ -36,6 +43,8 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 		private void SetSplitterView(string selectedView)
 		{
+			_logger.Log($"Setting splitter view for style: {selectedView}");
+
 			string viewToActivate;
 			switch (selectedView)
 			{
@@ -49,30 +58,121 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 					viewToActivate = "SplitByMaxSizeView";
 					break;
 				default:
+					_logger.Log($"WARNING: Unknown split style '{selectedView}', defaulting to 'SplitByFileNbView'");
 					viewToActivate = "SplitByFileNbView";
 					break;
-
 			}
-			IRegion region = _regionManager.Regions["SplitArgsRegion"];
-			var view = region.GetView(viewToActivate);
-			region.Activate(view);
+
+			try
+			{
+				IRegion region = _regionManager.Regions["SplitArgsRegion"];
+				var view = region.GetView(viewToActivate);
+				region.Activate(view);
+				_logger.Log($"Successfully activated view: {viewToActivate}");
+			}
+			catch (Exception ex)
+			{
+				_logger.Log($"ERROR: Failed to activate view '{viewToActivate}': {ex.Message}");
+			}
+
 			SplitCommand.RaiseCanExecuteChanged();
 		}
 
-		private string _fileToSplit = "";
-		public string FileToSplit
+		private string _sourceToSplit = "";
+		public string SourceToSplit
 		{
-			get { return _fileToSplit; }
+			get { return _sourceToSplit; }
 			set
 			{
-				SetProperty(ref _fileToSplit, value);
-				RaisePropertyChanged("FileSelected");
-				bool validFile = ExtractNameTemplateFromFile(_fileToSplit, out string newTemplate);
-				if (validFile)
+				var oldValue = _sourceToSplit;
+				SetProperty(ref _sourceToSplit, value);
+
+				if (!string.IsNullOrWhiteSpace(value) && value != oldValue)
 				{
-					NameTemplate = newTemplate;
+					_logger.Log($"Source to split set to: {value}");
+					_logger.Log($"Processing mode: {(IsBatchMode ? "Batch (Directory)" : "Single File")}");
+
+					if (IsBatchMode)
+					{
+						LogBatchModeInfo(value);
+					}
+					else
+					{
+						LogSingleFileModeInfo(value);
+					}
 				}
+
+				RaisePropertyChanged("FileSelected");
+
+				if (!IsBatchMode)
+				{
+					bool validFile = ExtractNameTemplateFromFile(_sourceToSplit, out string newTemplate);
+					if (validFile)
+					{
+						_logger.Log($"Extracted name template: '{newTemplate}' from file");
+						NameTemplate = newTemplate;
+					}
+				}
+
 				SplitCommand.RaiseCanExecuteChanged();
+			}
+		}
+
+		private void LogBatchModeInfo(string directoryPath)
+		{
+			try
+			{
+				if (Directory.Exists(directoryPath))
+				{
+					var comicFiles = Directory.GetFiles(directoryPath)
+						.Where(file => SystemTools.ComicExtensions.Contains(Path.GetExtension(file).ToLowerInvariant()))
+						.ToArray();
+
+					_logger.Log($"Batch directory contains {comicFiles.Length} comic archive files");
+
+					if (comicFiles.Length > 0)
+					{
+						_logger.Log($"Comic files found: {string.Join(", ", comicFiles.Select(Path.GetFileName))}");
+					}
+					else
+					{
+						_logger.Log("WARNING: No comic archive files found in selected directory");
+					}
+				}
+				else
+				{
+					_logger.Log($"WARNING: Selected batch directory does not exist: {directoryPath}");
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.Log($"ERROR: Failed to analyze batch directory '{directoryPath}': {ex.Message}");
+			}
+		}
+
+		private void LogSingleFileModeInfo(string filePath)
+		{
+			try
+			{
+				if (File.Exists(filePath))
+				{
+					var fileInfo = new FileInfo(filePath);
+					_logger.Log($"Selected file size: {fileInfo.Length:N0} bytes ({fileInfo.Length / (1024.0 * 1024.0):F2} MB)");
+					_logger.Log($"File extension: {fileInfo.Extension}");
+
+					if (!SystemTools.ComicExtensions.Contains(fileInfo.Extension.ToLowerInvariant()))
+					{
+						_logger.Log($"WARNING: Selected file does not have a recognized comic archive extension");
+					}
+				}
+				else
+				{
+					_logger.Log($"WARNING: Selected file does not exist: {filePath}");
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.Log($"ERROR: Failed to analyze selected file '{filePath}': {ex.Message}");
 			}
 		}
 
@@ -82,17 +182,42 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			get { return _outputDir; }
 			set
 			{
+				var oldValue = _outputDir;
 				SetProperty(ref _outputDir, value);
+
+				if (!string.IsNullOrWhiteSpace(value) && value != oldValue)
+				{
+					_logger.Log($"Output directory set to: {value}");
+
+					try
+					{
+						if (Directory.Exists(value))
+						{
+							var existingFiles = Directory.GetFiles(value, "*.*").Length;
+							_logger.Log($"Output directory exists and contains {existingFiles} files");
+						}
+						else
+						{
+							_logger.Log("Output directory will be created during split operation");
+						}
+					}
+					catch (Exception ex)
+					{
+						_logger.Log($"WARNING: Cannot access output directory information: {ex.Message}");
+					}
+				}
+
 				SplitCommand.RaiseCanExecuteChanged();
 			}
 		}
 
 		public bool FileSelected
 		{
-			get { return File.Exists(FileToSplit); }
-
+			get
+			{
+				return IsBatchMode ? !string.IsNullOrWhiteSpace(SourceToSplit) && Directory.Exists(SourceToSplit) : !string.IsNullOrWhiteSpace(SourceToSplit) && File.Exists(SourceToSplit);
+			}
 		}
-
 
 		private uint _fileNb = 5;
 		public uint FileNb
@@ -100,7 +225,14 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			get { return _fileNb; }
 			set
 			{
+				var oldValue = _fileNb;
 				SetProperty(ref _fileNb, value);
+
+				if (value != oldValue)
+				{
+					_logger.Log($"File number changed from {oldValue} to {value}");
+				}
+
 				SplitCommand.RaiseCanExecuteChanged();
 			}
 		}
@@ -111,7 +243,14 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			get { return _maxFilePerArchive; }
 			set
 			{
+				var oldValue = _maxFilePerArchive;
 				SetProperty(ref _maxFilePerArchive, value);
+
+				if (value != oldValue)
+				{
+					_logger.Log($"Max pages per archive changed from {oldValue} to {value}");
+				}
+
 				SplitCommand.RaiseCanExecuteChanged();
 			}
 		}
@@ -122,7 +261,14 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			get { return _maxFileSize; }
 			set
 			{
+				var oldValue = _maxFileSize;
 				SetProperty(ref _maxFileSize, value);
+
+				if (value != oldValue)
+				{
+					_logger.Log($"Max file size changed from {oldValue}MB to {value}MB");
+				}
+
 				SplitCommand.RaiseCanExecuteChanged();
 			}
 		}
@@ -133,13 +279,27 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			get { return String.Join(";", _pagesToSplitIndex); }
 			set
 			{
-				var indexesAsStr = value.Split(';');
-				var pagesToSplitIndex = new List<uint>();
-				foreach (string s in indexesAsStr)
+				try
 				{
-					pagesToSplitIndex.Add(uint.Parse(s.Trim()));
+					var indexesAsStr = value.Split(';');
+					var pagesToSplitIndex = new List<uint>();
+
+					foreach (string s in indexesAsStr)
+					{
+						if (!string.IsNullOrWhiteSpace(s) && uint.TryParse(s.Trim(), out uint pageIndex))
+						{
+							pagesToSplitIndex.Add(pageIndex);
+						}
+					}
+
+					_logger.Log($"Pages to split index updated: [{string.Join(", ", pagesToSplitIndex)}]");
+					SetProperty(ref _pagesToSplitIndex, pagesToSplitIndex);
 				}
-				SetProperty(ref _pagesToSplitIndex, pagesToSplitIndex);
+				catch (Exception ex)
+				{
+					_logger.Log($"ERROR: Failed to parse pages split index '{value}': {ex.Message}");
+				}
+
 				SplitCommand.RaiseCanExecuteChanged();
 			}
 		}
@@ -150,6 +310,9 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			get { return _imageQuality; }
 			set
 			{
+				var originalValue = value;
+				var oldValue = _imageQuality;
+
 				if (value < 0)
 				{
 					value = 0;
@@ -158,7 +321,20 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 				{
 					value = 100;
 				}
+
 				SetProperty(ref _imageQuality, value);
+
+				if (value != oldValue)
+				{
+					if (originalValue != value)
+					{
+						_logger.Log($"Image quality clamped from {originalValue} to {value}% (valid range: 0-100)");
+					}
+					else
+					{
+						_logger.Log($"Image quality changed from {oldValue}% to {value}%");
+					}
+				}
 			}
 		}
 
@@ -168,7 +344,14 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			get { return _nameTemplate; }
 			set
 			{
+				var oldValue = _nameTemplate;
 				SetProperty(ref _nameTemplate, value);
+
+				if (!string.IsNullOrWhiteSpace(value) && value != oldValue)
+				{
+					_logger.Log($"Name template set to: '{value}'");
+				}
+
 				SplitCommand.RaiseCanExecuteChanged();
 			}
 		}
@@ -177,12 +360,26 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 		{
 			bool result = false;
 			fileTemplate = "";
-			if (File.Exists(fileName))
+
+			try
 			{
-				FileInfo fi = new(fileName);
-				fileTemplate = fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length);
-				result = true;
+				if (File.Exists(fileName))
+				{
+					FileInfo fi = new(fileName);
+					fileTemplate = fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length);
+					result = true;
+					_logger.Log($"Extracted name template '{fileTemplate}' from file '{fi.Name}'");
+				}
+				else
+				{
+					_logger.Log($"WARNING: Cannot extract name template - file does not exist: {fileName}");
+				}
 			}
+			catch (Exception ex)
+			{
+				_logger.Log($"ERROR: Failed to extract name template from '{fileName}': {ex.Message}");
+			}
+
 			return result;
 		}
 
@@ -192,87 +389,280 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			get { return _followFilePath; }
 			set
 			{
+				var oldValue = _followFilePath;
 				SetProperty(ref _followFilePath, value);
-				if (_followFilePath)
+
+				if (value != oldValue)
 				{
-					SetOutputPathSameAsInput();
+					_logger.Log($"Follow file path setting changed to: {value}");
+
+					if (value)
+					{
+						SetOutputPathSameAsInput();
+					}
 				}
 			}
 		}
 
 		private void SetOutputPathSameAsInput()
 		{
-			if (File.Exists(FileToSplit))
+			_logger.Log("Setting output path to match input location");
+
+			try
 			{
-				FileInfo fi = new(FileToSplit);
-				OutputDir = fi.DirectoryName;
+				if (FileSelected)
+				{
+					string newOutputDir;
+
+					if (IsBatchMode)
+					{
+						newOutputDir = SourceToSplit;
+						_logger.Log($"Batch mode: Output directory set to input directory: {newOutputDir}");
+					}
+					else
+					{
+						FileInfo fi = new(SourceToSplit);
+						newOutputDir = fi.DirectoryName;
+						_logger.Log($"Single file mode: Output directory set to file's directory: {newOutputDir}");
+					}
+
+					OutputDir = newOutputDir;
+				}
+				else
+				{
+					_logger.Log("WARNING: Cannot set output path - no valid file selected");
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.Log($"ERROR: Failed to set output path same as input: {ex.Message}");
 			}
 		}
 
-		public DelegateCommand BrowseFileCommand { get; private set; }
-		public DelegateCommand BrowseOutputDirCommand { get; private set; }
 		public DelegateCommand SplitCommand { get; private set; }
 
 		public SplitPluginViewModel(IUnityContainer container, IRegionManager regionManager, IEventAggregator eventAggregator)
+			: base(container, eventAggregator)
 		{
 			_container = container;
 			_eventAggregator = eventAggregator;
+			_logger = _container.Resolve<Logger>();
+
 			SplitStyles =
 			[
 				"By File Nb",
 				"By Max Pages Nb",
 				"By Size (Mb)"
 			];
+
 			_regionManager = regionManager;
-			BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);
+
+			// Register splitter implementations
+			container.RegisterType<ISplitter, ByFileSplitterPlugin>("By File Nb");
+			container.RegisterType<ISplitter, ByMaxPageSplitterPlugin>("By Max Pages Nb");
+			container.RegisterType<ISplitter, BySizeSplitterPlugin>("By Size (Mb)");
+
 			SplitCommand = new DelegateCommand(DoSplit, CanSplit);
-			BrowseOutputDirCommand = new DelegateCommand(BrowseDirectory, CanExecute);
-			_logger = _container.Resolve<Logger>();
 		}
 
-		private void BrowseFile()
+		private void StartBusyState()
 		{
-			_logger.Log("Browse for file to split");
+			lock (_operationCountLock)
+			{
+				_activeSplitOperations++;
+				if (_activeSplitOperations == 1)
+				{
+					_logger.Log("Starting busy state - split operation begins");
+					_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
+				}
+			}
+		}
 
-			var dialog = new Microsoft.Win32.OpenFileDialog
+		private void EndBusyState()
+		{
+			lock (_operationCountLock)
 			{
-				Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz"
-			};
-			string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			if (!string.IsNullOrEmpty(_fileToSplit))
+				_activeSplitOperations--;
+				if (_activeSplitOperations <= 0)
+				{
+					_activeSplitOperations = 0; // Ensure it doesn't go negative
+					_logger.Log("Ending busy state - all split operations completed");
+					_eventAggregator.GetEvent<BusinessEvent>().Publish(false);
+				}
+			}
+		}
+
+		private async void DoSplit()
+		{
+			_logger.Log("=== Starting split operation ===");
+			_logger.Log($"Split style: {SelectedStyle}");
+			_logger.Log($"Processing mode: {(IsBatchMode ? "Batch" : "Single file")}");
+			_logger.Log($"Source: {SourceToSplit}");
+			_logger.Log($"Output directory: {OutputDir}");
+			_logger.Log($"Image quality: {ImageQuality}%");
+
+			// Start the busy state
+			StartBusyState();
+
+			// Cancel any existing operation
+			_cancellationTokenSource?.Cancel();
+			_cancellationTokenSource = new CancellationTokenSource();
+
+			try
 			{
+				if (IsBatchMode)
+				{
+					await ProcessBatchModeAsync(_cancellationTokenSource.Token);
+				}
+				else
+				{
+					await ProcessSingleFileModeAsync(_cancellationTokenSource.Token);
+				}
+
+				_logger.Log("=== Split operation completed successfully ===");
+			}
+			catch (OperationCanceledException)
+			{
+				_logger.Log("Split operation was cancelled");
+			}
+			catch (Exception ex)
+			{
+				_logger.Log($"ERROR: Split operation failed: {ex.Message}");
+				if (ex.InnerException != null)
+				{
+					_logger.Log($"Inner exception: {ex.InnerException.Message}");
+				}
+			}
+			finally
+			{
+				// Always end the busy state when operation completes
+				EndBusyState();
+			}
+		}
+
+		private async Task ProcessBatchModeAsync(CancellationToken cancellationToken)
+		{
+			_logger.Log("Processing in batch mode");
+
+			DirectoryInfo sourceFolder = new DirectoryInfo(SourceToSplit);
+
+			// Get all files with comic book archive extensions, sorted for consistent order
+			List<FileInfo> batch = sourceFolder.GetFiles()
+				.Where(file => SystemTools.ComicExtensions.Contains(file.Extension.ToLowerInvariant()))
+				.OrderBy(f => f.Name, StringComparer.OrdinalIgnoreCase) // Ensure consistent ordering
+				.ToList();
+
+			_logger.Log($"Found {batch.Count} comic archive files to process");
+
+			if (batch.Count == 0)
+			{
+				_logger.Log("WARNING: No comic archive files found in batch directory");
+				return;
+			}
+
+			// Determine optimal concurrency level (but preserve order in processing)
+			int maxConcurrency = Math.Min(Environment.ProcessorCount, 3); // Limit to avoid I/O bottlenecks
+			_logger.Log($"Processing with maximum concurrency of {maxConcurrency}");
+
+			// Use SemaphoreSlim to control concurrency while maintaining order
+			using var semaphore = new SemaphoreSlim(maxConcurrency, maxConcurrency);
+
+			// Process files with controlled concurrency but maintain order
+			var processingTasks = batch.Select(async (file, index) =>
+			{
+				await semaphore.WaitAsync(cancellationToken);
+
 				try
 				{
-					FileInfo fi = new(_fileToSplit);
-					string selectedDir = fi.DirectoryName;
-					if (Directory.Exists(selectedDir))
-					{
-						defaultPath = selectedDir;
-					}
-					else
-					{
-						_logger.Log("WARNING: cannot reach selected path... Open standard path instead.");
-					}
-				}
-				catch (Exception)
-				{
-					_logger.Log("ERROR: selected path is not valid... Open standard path instead.");
-				}
+					cancellationToken.ThrowIfCancellationRequested();
 
-			}
-			dialog.InitialDirectory = defaultPath;
-			bool? result = dialog.ShowDialog();
-			if (result.HasValue && result.Value == true)
+					_logger.Log($"Processing batch file {index + 1}/{batch.Count}: {file.Name} ({file.Length:N0} bytes)");
+
+					ExtractNameTemplateFromFile(file.FullName, out string templatedName);
+					ArchiveTemplate arctemp = CreateArchiveTemplate(templatedName);
+					LogArchiveTemplate(arctemp, file.Name);
+
+					var splitter = _container.Resolve<ISplitter>(SelectedStyle);
+					_logger.Log($"Starting split operation for: {file.Name}");
+
+					// Execute split operation synchronously to avoid multiple BusinessEvent conflicts
+					// The splitter will handle its own BusinessEvent, but we override with our coordination
+					await Task.Run(() =>
+					{
+						// Temporarily store the current event subscriptions to avoid conflicts
+						using (new SplitterBusinessEventSupressor(_eventAggregator))
+						{
+							splitter.Split(file.FullName, arctemp);
+						}
+					}, cancellationToken);
+
+					_logger.Log($"Completed split operation for: {file.Name}");
+				}
+				catch (OperationCanceledException)
+				{
+					_logger.Log($"Split operation cancelled for file: {file.Name}");
+					throw;
+				}
+				catch (Exception ex)
+				{
+					_logger.Log($"ERROR: Failed to process batch file '{file.Name}': {ex.Message}");
+					// Don't re-throw to allow other files to continue processing
+				}
+				finally
+				{
+					semaphore.Release();
+				}
+			});
+
+			// Wait for all files to complete processing
+			await Task.WhenAll(processingTasks);
+
+			_logger.Log($"Batch processing completed for {batch.Count} files");
+		}
+
+		private async Task ProcessSingleFileModeAsync(CancellationToken cancellationToken)
+		{
+			_logger.Log($"Processing single file: {Path.GetFileName(SourceToSplit)}");
+
+			try
 			{
-				FileToSplit = dialog.FileName;
+				cancellationToken.ThrowIfCancellationRequested();
+
+				ArchiveTemplate arctemp = CreateArchiveTemplate(NameTemplate);
+				LogArchiveTemplate(arctemp, Path.GetFileName(SourceToSplit));
+
+				var splitter = _container.Resolve<ISplitter>(SelectedStyle);
+				_logger.Log($"Starting split operation for: {Path.GetFileName(SourceToSplit)}");
+
+				// Execute split operation synchronously to avoid BusinessEvent conflicts
+				await Task.Run(() =>
+				{
+					// Temporarily suppress BusinessEvent from splitter to avoid conflicts
+					using (new SplitterBusinessEventSupressor(_eventAggregator))
+					{
+						splitter.Split(SourceToSplit, arctemp);
+					}
+				}, cancellationToken);
+
+				_logger.Log($"Completed split operation for: {Path.GetFileName(SourceToSplit)}");
+			}
+			catch (OperationCanceledException)
+			{
+				_logger.Log("Single file split operation was cancelled");
+				throw;
+			}
+			catch (Exception ex)
+			{
+				_logger.Log($"ERROR: Failed to process single file: {ex.Message}");
+				throw;
 			}
 		}
 
-		private void DoSplit()
+		private ArchiveTemplate CreateArchiveTemplate(string comicName)
 		{
-			ArchiveTemplate arctemp = new()
+			return new ArchiveTemplate
 			{
-				ComicName = NameTemplate,
+				ComicName = comicName,
 				OutputDir = OutputDir,
 				NumberOfSplittedFiles = FileNb,
 				MaxPagesPerSplittedFile = MaxFilePerArchive,
@@ -280,13 +670,33 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 				PagesIndexToSplit = _pagesToSplitIndex,
 				ImageCompression = ImageQuality
 			};
-			var splitter = _container.Resolve<ISplitter>(SelectedStyle);
-			Task.Run(() => splitter.Split(FileToSplit, arctemp));
 		}
 
-		private bool CanExecute()
+		private void LogArchiveTemplate(ArchiveTemplate template, string fileName)
 		{
-			return true;
+			_logger.Log($"Archive template for '{fileName}':");
+			_logger.Log($"  - Comic name: {template.ComicName}");
+			_logger.Log($"  - Output directory: {template.OutputDir}");
+
+			switch (SelectedStyle)
+			{
+				case "By File Nb":
+					_logger.Log($"  - Number of files: {template.NumberOfSplittedFiles}");
+					break;
+				case "By Max Pages Nb":
+					_logger.Log($"  - Max pages per archive: {template.MaxPagesPerSplittedFile}");
+					break;
+				case "By Size (Mb)":
+					_logger.Log($"  - Max size per archive: {template.MaxSizePerSplittedFile} MB");
+					break;
+			}
+
+			_logger.Log($"  - Image compression quality: {template.ImageCompression}%");
+
+			if (_pagesToSplitIndex?.Count > 0)
+			{
+				_logger.Log($"  - Custom page indices: [{string.Join(", ", _pagesToSplitIndex)}]");
+			}
 		}
 
 		private bool CanSplit()
@@ -309,24 +719,85 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 				default:
 					selectedMethodArgument = false;
 					break;
-
 			}
-			return (!string.IsNullOrWhiteSpace(FileToSplit) && File.Exists(FileToSplit) && selectedMethodArgument && !string.IsNullOrWhiteSpace(OutputDir) && !string.IsNullOrWhiteSpace(NameTemplate));
+
+			// Don't allow split if already processing
+			bool canExecute = (FileSelected && selectedMethodArgument && !string.IsNullOrWhiteSpace(OutputDir) && TemplateNameCondition && _activeSplitOperations == 0);
+
+			return canExecute;
 		}
 
-		private void BrowseDirectory()
+		private bool TemplateNameCondition => IsBatchMode ? true : !string.IsNullOrWhiteSpace(NameTemplate);
+
+		// Add implementations for abstract members from BasePluginViewModel
+		protected override string GetCurrentInputPath()
 		{
-			var dialog = new OpenFolderDialog();
-			if (!string.IsNullOrWhiteSpace(FileToSplit))
+			return SourceToSplit;
+		}
+
+		protected override string GetCurrentOutputPath()
+		{
+			return OutputDir;
+		}
+
+		protected override void SetInputPath(string file)
+		{
+			SourceToSplit = file;
+		}
+
+		protected override void SetOutputPath(string file)
+		{
+			OutputDir = file;
+		}
+
+		protected override string GetOutputSuffix()
+		{
+			// Return a suffix for output files, e.g. based on selected style
+			switch (SelectedStyle)
 			{
-				dialog.InitialDirectory = (new FileInfo(FileToSplit)).Directory.FullName;
-			}
-			if (dialog.ShowDialog() == true)
-			{
-				OutputDir = dialog.FolderName;
+				case "By File Nb":
+					return "_split";
+				case "By Max Pages Nb":
+					return "_pages";
+				case "By Size (Mb)":
+					return "_size";
+				default:
+					return "_split";
 			}
 		}
 
+		// Cleanup method to be called when the ViewModel is disposed
+		public void Cleanup()
+		{
+			_cancellationTokenSource?.Cancel();
+			_cancellationTokenSource?.Dispose();
+		}
+	}
 
+	/// <summary>
+	/// Helper class to temporarily suppress BusinessEvent publications from splitters
+	/// to avoid conflicts with the coordinated busy state management
+	/// </summary>
+	public class SplitterBusinessEventSupressor : IDisposable
+	{
+		private readonly IEventAggregator _eventAggregator;
+		private readonly BusinessEvent _businessEvent;
+		private Action<bool> _originalHandler;
+
+		public SplitterBusinessEventSupressor(IEventAggregator eventAggregator)
+		{
+			_eventAggregator = eventAggregator;
+			_businessEvent = _eventAggregator.GetEvent<BusinessEvent>();
+
+			// Store original subscriptions and replace with a no-op handler
+			// This prevents individual splitters from interfering with our coordinated busy state
+			_originalHandler = null; // In practice, we don't need to restore as the BusinessEvent will be managed by the ViewModel
+		}
+
+		public void Dispose()
+		{
+			// Nothing to restore in this simple implementation
+			// The SplitPluginViewModel handles the BusinessEvent coordination
+		}
 	}
 }

@@ -13,8 +13,6 @@ namespace ComicbookArchiveToolbox.ViewModels
 {
 	public class CompressPluginViewModel : BasePluginViewModel
 	{
-		private static readonly string[] ComicExtensions = [".cb7", ".cba", ".cbr", ".cbt", ".cbz"];
-
 		private string _inputPathToCompress = "";
 		public string InputPathToCompress
 		{
@@ -90,7 +88,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 
 				// Get all files with comic book archive extensions
 				List<FileInfo> batch = batchSource.GetFiles()
-					.Where(file => ComicExtensions.Contains(file.Extension.ToLowerInvariant()))
+					.Where(file => SystemTools.ComicExtensions.Contains(file.Extension.ToLowerInvariant()))
 					.ToList();
 
 				_logger.Log($"Found {batch.Count} comic archive files in directory: {InputPathToCompress}");

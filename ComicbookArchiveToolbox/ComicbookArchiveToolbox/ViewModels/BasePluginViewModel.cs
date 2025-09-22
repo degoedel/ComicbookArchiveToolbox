@@ -31,11 +31,18 @@ namespace ComicbookArchiveToolbox.ViewModels
 		public DelegateCommand BrowseFileCommand { get; protected set; }
 		public DelegateCommand BrowseOutputFileCommand { get; protected set; }
 
+		public DelegateCommand BrowseOutputDirectoryCommand { get; set; }
+
 		private bool _isBatchMode = false;
 		public bool IsBatchMode
 		{
 			get => _isBatchMode;
-			set => SetProperty(ref _isBatchMode, value);
+			set
+			{
+				SetProperty(ref _isBatchMode, value);
+				SetInputPath("");
+				SetOutputPath("");
+			}
 		}
 
 		protected BasePluginViewModel(IUnityContainer container, IEventAggregator eventAggregator)
@@ -48,6 +55,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 
 			BrowseFileCommand = new DelegateCommand(BrowseInput, CanExecute);
 			BrowseOutputFileCommand = new DelegateCommand(BrowseOutput, CanExecute);
+			BrowseOutputDirectoryCommand = new DelegateCommand(BrowseOutputDirectory, CanExecute);
 		}
 
 		protected virtual void BrowseInput()
@@ -71,17 +79,34 @@ namespace ComicbookArchiveToolbox.ViewModels
 
 		protected virtual void BrowseOutput()
 		{
-			var outputType = IsBatchMode ? "folder" : "file";
-			_logger.Log($"Browse for output {outputType}");
-			string? result;
 			if (IsBatchMode)
 			{
-				result = _fileDialogService.BrowseForDirectory( GetCurrentInputPath());
+				BrowseOutputDirectory();
 			}
 			else
 			{
-				result = _fileDialogService.BrowseForOutputFile(GetCurrentOutputPath(), GetCurrentInputPath());
+				BrowseOutputFile();
 			}
+		}
+
+		protected virtual void BrowseOutputFile()
+		{
+			_logger.Log($"Browse for output file");
+			string? result;
+			result = _fileDialogService.BrowseForOutputFile(GetCurrentOutputPath(), GetCurrentInputPath());
+			SetOutput(result);
+		}
+
+		protected virtual void BrowseOutputDirectory()
+		{
+			_logger.Log($"Browse for output folder");
+			string? result;
+			result = _fileDialogService.BrowseForDirectory(GetCurrentInputPath());
+			SetOutput(result);
+		}
+
+		private void SetOutput(string result)
+		{
 			if (result != null)
 			{
 				var resolvedFile = _fileConflictService.ResolveOutputPathConflict(result, GetCurrentInputPath(), GetOutputSuffix());
