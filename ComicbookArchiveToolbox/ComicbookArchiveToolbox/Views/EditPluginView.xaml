@@ -53,14 +53,64 @@
 				</StackPanel>
 			</Border>
 
+			<!-- Calibre Import/Export Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="Calibre Metadata" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,0"/>
+
+					<TextBlock Text="Import or export metadata in Calibre HTML format with Dublin Core standards."
+                               Style="{DynamicResource MahApps.Styles.TextBlock}"
+                               Foreground="{DynamicResource MahApps.Brushes.Gray1}"
+                               Margin="0,0,0,0"/>
+
+					<StackPanel Orientation="Horizontal">
+						<Button Content="Import from Calibre HTML" 
+                                Style="{StaticResource MahApps.Styles.Button.Square}"
+                                Command="{Binding ImportCalibreCommand}"
+                                Width="200"
+                                Height="35"
+								Margin="0,0,0,0"
+                                ToolTip="Import metadata from Calibre HTML file with Dublin Core format">
+							<Button.ContentTemplate>
+								<DataTemplate>
+									<StackPanel Orientation="Horizontal">
+										<iconPacks:PackIconMaterial Kind="ApplicationImport" Width="14" Height="14" Margin="0,0,8,0"/>
+										<TextBlock Text="{Binding}"/>
+									</StackPanel>
+								</DataTemplate>
+							</Button.ContentTemplate>
+						</Button>
+
+						<!--<Button Content="Export to Calibre HTML" 
+                                Style="{StaticResource MahApps.Styles.Button.Square}"
+                                Command="{Binding ExportCalibreCommand}"
+                                Width="200"
+                                Height="35"
+								Margin="8,0,0,0"
+                                ToolTip="Export current metadata to Calibre HTML format with Dublin Core">
+							<Button.ContentTemplate>
+								<DataTemplate>
+									<StackPanel Orientation="Horizontal">
+										<iconPacks:PackIconMaterial Kind="ApplicationExport" Width="14" Height="14" Margin="0,0,8,0"/>
+										<TextBlock Text="{Binding}"/>
+									</StackPanel>
+								</DataTemplate>
+							</Button.ContentTemplate>
+						</Button>-->
+					</StackPanel>
+				</StackPanel>
+			</Border>
+
 			<!-- Metadata Editing Card -->
 			<Border Style="{StaticResource ModernCard}">
 				<StackPanel>
-					<TextBlock Text="Metadata" 
+					<TextBlock Text="Metadata Fields" 
                                Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
                                Margin="0,0,0,16"/>
 
-					<TextBlock Text="Edit the metadata fields below. You can add new rows or delete existing ones."
+					<TextBlock Text="Edit the metadata fields below. You can add new rows or delete existing ones. Changes will be saved in ComicInfo.xml format."
                                Style="{DynamicResource MahApps.Styles.TextBlock}"
                                Foreground="{DynamicResource MahApps.Brushes.Gray1}"
                                Margin="0,0,0,16"/>
@@ -74,8 +124,17 @@
                               ScrollViewer.VerticalScrollBarVisibility="Auto"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto"
                               Style="{DynamicResource MahApps.Styles.DataGrid}"
-                              Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
-                              Foreground="{DynamicResource MahApps.Brushes.Text}"/>
+                              Background="{DynamicResource MahApps.ThemeBackground}"
+                              Foreground="{DynamicResource MahApps.Brushes.Text}">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Field Name" 
+                                                Binding="{Binding Key, Mode=TwoWay}"
+                                                Width="200"/>
+							<DataGridTextColumn Header="Value" 
+                                                Binding="{Binding Value, Mode=TwoWay}"
+                                                Width="*"/>
+						</DataGrid.Columns>
+					</DataGrid>
 				</StackPanel>
 			</Border>
 
