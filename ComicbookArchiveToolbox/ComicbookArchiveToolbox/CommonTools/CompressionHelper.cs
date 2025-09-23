@@ -103,22 +103,83 @@ namespace ComicbookArchiveToolbox.CommonTools
 
 		public void UpdateFile(string inputArchive, string file)
 		{
-			string compressionArg = GetCompressionMethod();
 			try
 			{
 				ProcessStartInfo pro = new()
 				{
 					WindowStyle = ProcessWindowStyle.Hidden,
 					FileName = _pathTo7z,
-					Arguments = $"u \"{inputArchive}\" \"{file}\""
+					Arguments = $"a -aoa \"{inputArchive}\" \"{file}\""
 				};
 				_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
 				Process x = Process.Start(pro);
 				x.WaitForExit();
+
+				if (x.ExitCode != 0)
+				{
+					_logger.Log($"WARNING: 7z process exited with code {x.ExitCode} while updating {file} in {inputArchive}");
+				}
 			}
 			catch (Exception e)
 			{
-				_logger.Log($"Failure during add of {file} in {inputArchive}: {e.Message}");
+				_logger.Log($"Failure during update of {file} in {inputArchive}: {e.Message}");
+			}
+		}
+
+		/// <summary>
+		/// Removes a file from the archive
+		/// </summary>
+		/// <param name="inputArchive">Path to the archive</param>
+		/// <param name="filePattern">File pattern to remove (e.g., "ComicInfo.xml" or "*.xml")</param>
+		public void RemoveFile(string inputArchive, string filePattern)
+		{
+			try
+			{
+				ProcessStartInfo pro = new()
+				{
+					WindowStyle = ProcessWindowStyle.Hidden,
+					FileName = _pathTo7z,
+					Arguments = $"d \"{inputArchive}\" \"{filePattern}\""
+				};
+				_logger.Log($"Launch external command {_pathTo7z} {pro.Arguments}");
+				Process x = Process.Start(pro);
+				x.WaitForExit();
+
+				if (x.ExitCode != 0)
+				{
+					_logger.Log($"WARNING: 7z process exited with code {x.ExitCode} while removing {filePattern} from {inputArchive}");
+				}
+			}
+			catch (Exception e)
+			{
+				_logger.Log($"Failure during removal of {filePattern} from {inputArchive}: {e.Message}");
+			}
+		}
+
+		/// <summary>
+		/// Updates or adds a file to the archive, ensuring it's always updated regardless of timestamps
+		/// </summary>
+		/// <param name="inputArchive">Path to the archive</param>
+		/// <param name="file">Path to the file to add/update</param>
+		/// <param name="forceUpdate">If true, removes existing file first to ensure update</param>
+		public void UpdateFileForced(string inputArchive, string file, bool forceUpdate = true)
+		{
+			try
+			{
+				if (forceUpdate)
+				{
+					// First, try to remove the existing file (ignore if it doesn't exist)
+					string fileName = Path.GetFileName(file);
+					_logger.Log($"Removing existing {fileName} from archive before update");
+					RemoveFile(inputArchive, fileName);
+				}
+
+				// Then add the new file
+				UpdateFile(inputArchive, file);
+			}
+			catch (Exception e)
+			{
+				_logger.Log($"Failure during forced update of {file} in {inputArchive}: {e.Message}");
 			}
 		}
 	}

@@ -29,6 +29,7 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 		private string _fileToEdit = "";
 		private ObservableCollection<ComicMetadata> _metadataCollection;
 		private string _metadataFile = "";
+		private string _calibreMetaDataFile = "";
 
 		// Static mappings to avoid recreation
 		private static readonly Dictionary<string, string> DublinCoreToComicInfoMappings = new(StringComparer.OrdinalIgnoreCase)
@@ -134,17 +135,21 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 				var xmlDoc = CreateComicInfoXmlDocument();
 
 				SaveXmlDocument(xmlDoc, bufferContext.MetadataFilePath);
+				ExportCalibreMetadata();
 
 				var compressionHelper = new CompressionHelper(_logger);
 
 				if (CanUpdateArchiveDirectly(fileInfo.Extension))
 				{
 					compressionHelper.UpdateFile(FileToEdit, bufferContext.MetadataFilePath);
+					compressionHelper.UpdateFile(FileToEdit, bufferContext.CalibreMetaDataFilePath);
 				}
 				else
 				{
 					ProcessFullRecompression(compressionHelper, fileInfo, bufferContext);
 				}
+
+				CleanupBuffer(bufferContext.BufferPath);
 			});
 		}
 
@@ -202,12 +207,15 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 			var metadataFilePath = string.IsNullOrEmpty(_metadataFile)
 				? Path.Combine(bufferPath, "ComicInfo.xml")
 				: _metadataFile;
+			var calibreMetaDataFilePath = string.IsNullOrEmpty(_calibreMetaDataFile)
+				? string.Empty : _calibreMetaDataFile;
 
 			return new BufferContext
 			{
 				BufferPath = bufferPath,
 				BufferDirectory = new DirectoryInfo(bufferPath),
-				MetadataFilePath = metadataFilePath
+				MetadataFilePath = metadataFilePath,
+				CalibreMetaDataFilePath = _calibreMetaDataFile
 			};
 		}
 
@@ -280,12 +288,14 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 			_logger.Log("Archive format does not support update with 7zip. Decompression and recompression is required");
 
 			compressionHelper.DecompressToDirectory(FileToEdit, bufferContext.BufferPath);
+			var xmlDoc = CreateComicInfoXmlDocument();
+			SaveXmlDocument(xmlDoc, bufferContext.MetadataFilePath);
+			ExportCalibreMetadata();
 
 			var outputFile = DetermineOutputFile(fileInfo);
 			compressionHelper.CompressDirectoryContent(bufferContext.BufferPath, outputFile);
 
 			_logger.Log("Recompression done.");
-			CleanupBuffer(bufferContext.BufferPath);
 		}
 
 		private string DetermineOutputFile(FileInfo fileInfo)
@@ -336,6 +346,7 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 		{
 			try
 			{
+				_calibreMetaDataFile = htmlFile;
 				var content = File.ReadAllText(htmlFile);
 				var metadataCollection = new ObservableCollection<ComicMetadata>();
 
@@ -509,6 +520,11 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 					var encodedValue = System.Net.WebUtility.HtmlEncode(metadata.Value);
 					htmlContent.AppendLine($"  <meta name=\"DC.{dcTag}\" content=\"{encodedValue}\" />");
 				}
+				else
+				{
+					var encodedValue = System.Net.WebUtility.HtmlEncode(metadata.Value);
+					htmlContent.AppendLine($"  <meta name=\"{metadata.Key}\" content=\"{encodedValue}\" />");
+				}
 			}
 
 			// Add standard Calibre metadata
@@ -553,6 +569,7 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 			public string BufferPath { get; set; }
 			public DirectoryInfo BufferDirectory { get; set; }
 			public string MetadataFilePath { get; set; }
+			public string CalibreMetaDataFilePath { get; set; }
 		}
 		#endregion
 	}

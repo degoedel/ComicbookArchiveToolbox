@@ -82,23 +82,6 @@
 								</DataTemplate>
 							</Button.ContentTemplate>
 						</Button>
-
-						<!--<Button Content="Export to Calibre HTML" 
-                                Style="{StaticResource MahApps.Styles.Button.Square}"
-                                Command="{Binding ExportCalibreCommand}"
-                                Width="200"
-                                Height="35"
-								Margin="8,0,0,0"
-                                ToolTip="Export current metadata to Calibre HTML format with Dublin Core">
-							<Button.ContentTemplate>
-								<DataTemplate>
-									<StackPanel Orientation="Horizontal">
-										<iconPacks:PackIconMaterial Kind="ApplicationExport" Width="14" Height="14" Margin="0,0,8,0"/>
-										<TextBlock Text="{Binding}"/>
-									</StackPanel>
-								</DataTemplate>
-							</Button.ContentTemplate>
-						</Button>-->
 					</StackPanel>
 				</StackPanel>
 			</Border>
@@ -110,12 +93,13 @@
                                Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
                                Margin="0,0,0,16"/>
 
-					<TextBlock Text="Edit the metadata fields below. You can add new rows or delete existing ones. Changes will be saved in ComicInfo.xml format."
+					<TextBlock Text="Edit the metadata fields below. You can add new rows or delete existing ones. Changes will be saved in ComicInfo.xml format and Calibre format if available."
                                Style="{DynamicResource MahApps.Styles.TextBlock}"
-                               Foreground="{DynamicResource MahApps.Brushes.Gray1}"
+                               Foreground="{DynamicResource MahApps.Brushes.Text}"
                                Margin="0,0,0,16"/>
 
 					<DataGrid ItemsSource="{Binding MetadataCollection}"  
+                              AutoGenerateColumns="False"
                               CanUserDeleteRows="True" 
                               CanUserAddRows="True" 
                               MinHeight="200"
