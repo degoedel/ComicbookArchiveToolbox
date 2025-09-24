@@ -2,7 +2,6 @@
 using ComicbookArchiveToolbox.Views;
 using Prism.Ioc;
 using Prism.Unity;
-using System.ComponentModel;
 using System.Windows;
 
 namespace ComicbookArchiveToolbox
@@ -16,6 +15,9 @@ namespace ComicbookArchiveToolbox
 		{
 			containerRegistry.RegisterSingleton<IFileDialogService, FileDialogService>();
 			containerRegistry.RegisterSingleton<IPathConflictService, PathConflictService>();
+			containerRegistry.Register<IMetadataService, MetadataService>();
+			containerRegistry.Register<IArchiveService, ArchiveService>();
+			containerRegistry.Register<IBufferManager, Services.BufferManager>();
 		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
@@ -23,11 +25,5 @@ namespace ComicbookArchiveToolbox
 		{
 			return Container.Resolve<MainWindow>();
 		}
-
-		//[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-		//protected override IModuleCatalog CreateModuleCatalog()
-		//{
-		//	return new DirectoryModuleCatalog() { ModulePath = @"." };
-		//}
 	}
 }

@@ -5,8 +5,6 @@ using Prism.Events;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Documents;
 using Unity;
 
 namespace ComicbookArchiveToolbox.ViewModels

@@ -1,6 +1,4 @@
-﻿using ComicbookArchiveToolbox.CommonTools;
-using ComicbookArchiveToolbox.CommonTools.Events;
-using ComicbookArchiveToolbox.Events;
+﻿using ComicbookArchiveToolbox.CommonTools.Events;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Ioc;

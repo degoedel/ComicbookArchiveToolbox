@@ -2,7 +2,6 @@
 using ComicbookArchiveToolbox.CommonTools.Events;
 using ComicbookArchiveToolbox.Module.Split.Services;
 using ComicbookArchiveToolbox.ViewModels;
-using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Navigation.Regions;

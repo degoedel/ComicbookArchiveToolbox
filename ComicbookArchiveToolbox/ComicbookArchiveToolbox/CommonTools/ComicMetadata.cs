@@ -1,4 +1,4 @@
-﻿namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
+﻿namespace ComicbookArchiveToolbox.CommonTools
 {
 	public class ComicMetadata
 	{

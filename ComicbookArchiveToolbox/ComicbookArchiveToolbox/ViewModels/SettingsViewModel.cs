@@ -1,5 +1,4 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
-using ComicbookArchiveToolbox.Events;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Events;

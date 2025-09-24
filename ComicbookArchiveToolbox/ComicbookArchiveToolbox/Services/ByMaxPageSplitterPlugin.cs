@@ -1,5 +1,4 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
-using ComicbookArchiveToolbox.CommonTools.Events;
 using Prism.Events;
 using System;
 using System.Collections.Generic;

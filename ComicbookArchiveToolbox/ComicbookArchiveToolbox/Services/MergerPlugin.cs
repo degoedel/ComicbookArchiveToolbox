@@ -3,7 +3,6 @@ using ComicbookArchiveToolbox.CommonTools.Events;
 using Prism.Events;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ComicbookArchiveToolbox.Module.Merge.Service
 {
