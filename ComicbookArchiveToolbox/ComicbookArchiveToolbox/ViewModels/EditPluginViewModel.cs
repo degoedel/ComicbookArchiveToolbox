@@ -1,10 +1,12 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Events;
 using ComicbookArchiveToolbox.Services;
+using ComicbookArchiveToolbox.ViewModels;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -13,13 +15,11 @@ using Unity;
 
 namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 {
-	public class EditPluginViewModel : BindableBase
+	public class EditPluginViewModel : BasePluginViewModel
 	{
 		#region Fields
 		private readonly Logger _logger;
-		private readonly IUnityContainer _container;
 		private readonly IEventAggregator _eventAggregator;
-		private readonly IFileDialogService _fileDialogService;
 		private readonly IMetadataService _metadataService;
 		private readonly IArchiveService _archiveService;
 		private readonly IBufferManager _bufferManager;
@@ -51,7 +51,6 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 			set { SetProperty(ref _metadataCollection, value); }
 		}
 
-		public DelegateCommand BrowseFileCommand { get; private set; }
 		public DelegateCommand SaveCommand { get; private set; }
 		public DelegateCommand ImportCalibreCommand { get; private set; }
 		public DelegateCommand ExportCalibreCommand { get; private set; }
@@ -59,10 +58,9 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 
 		#region Constructor
 		public EditPluginViewModel(IUnityContainer container, IEventAggregator eventAggregator)
+			: base (container, eventAggregator)
 		{
-			_container = container;
 			_eventAggregator = eventAggregator;
-			_fileDialogService = container.Resolve<IFileDialogService>();
 			_logger = container.Resolve<Logger>();
 			_metadataService = container.Resolve<IMetadataService>();
 			_archiveService = container.Resolve<IArchiveService>();
@@ -73,7 +71,6 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 
 		private void InitializeCommands()
 		{
-			BrowseFileCommand = new DelegateCommand(BrowseFile, CanExecute);
 			SaveCommand = new DelegateCommand(async () => await LaunchSaveAsync(), CanSave);
 			ImportCalibreCommand = new DelegateCommand(async () => await ImportCalibreMetadataAsync(), CanImportCalibre);
 			ExportCalibreCommand = new DelegateCommand(async () => await ExportCalibreMetadataAsync(), CanExportCalibre);
@@ -88,12 +85,7 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 		#endregion
 
 		#region Command Handlers
-		private void BrowseFile()
-		{
-			FileToEdit = _fileDialogService.BrowseForInputFile();
-		}
 
-		private bool CanExecute() => true;
 
 		private bool CanSave() => !string.IsNullOrEmpty(FileToEdit) && File.Exists(FileToEdit);
 
@@ -309,6 +301,25 @@ namespace ComicbookArchiveToolbox.Module.Edit.ViewModels
 				_logger.Log($"ERROR: Failed to export Calibre metadata: {ex.Message}");
 			}
 		}
+
+		protected override string GetCurrentInputPath() => FileToEdit;
+
+		protected override string GetCurrentOutputPath()
+		{
+			return string.Empty;
+		}
+
+		protected override void SetInputPath(string file) => FileToEdit = file;
+
+		protected override void SetInputSelectedFiles(IList<string> files)
+		{
+		}
+
+		protected override void SetOutputPath(string file)
+		{
+		}
+
+		protected override string GetOutputSuffix() => string.Empty;
 		#endregion
 	}
 }

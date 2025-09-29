@@ -19,7 +19,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 		public DelegateCommand DisplayToolsCommand { get; private set; }
 		public DelegateCommand DisplaySettingsCommand { get; private set; }
 		public DelegateCommand DisplayAboutCommand { get; private set; }
-		public DelegateCommand DisplayCompressCommand { get; private set; }
+		public DelegateCommand DisplayShrinkCommand { get; private set; }
 		public DelegateCommand DisplayMergeCommand { get; private set; }
 		public DelegateCommand DisplaySplitCommand { get; private set; }
 		public DelegateCommand DisplayEditCommand { get; private set; }
@@ -45,7 +45,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 			_eventAggregator.GetEvent<BusinessEvent>().Subscribe(SetBusyState, ThreadOption.UIThread);
 			DisplaySettingsCommand = new DelegateCommand(DisplaySettings, CanExecute);
 			DisplayAboutCommand = new DelegateCommand(DisplayAbout, CanExecute);
-			DisplayCompressCommand = new DelegateCommand(DisplayCompress, CanExecute);
+			DisplayShrinkCommand = new DelegateCommand(DisplayShrink, CanExecute);
 			DisplayMergeCommand = new DelegateCommand(DisplayMerge, CanExecute);
 			DisplaySplitCommand = new DelegateCommand(DisplaySplit, CanExecute);
 			DisplayEditCommand = new DelegateCommand(DisplayEdit, CanExecute);
@@ -53,7 +53,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 		#endregion Constructors
 
 		public string HostTextContent => "This is the host from vm";
-		public string ToolCompressDescription => "Compress File: Create a new archive with recompressed (degraded) pictures to allow faster page loading in reader.";
+		public string ToolShrinkDescription => "Shrink File: Create a new archive with resized and/or recompressed (degraded) pictures to allow faster page loading in reader.";
 		public string ToolEditDescription => "Edit Metadata: Edit or create a metadata file in archive. Will create a new archive if format does not support update.";
 		public string ToolMergeDescription => "Merge Files: Merge the selected archives in one file. Allow image recompression.";
 		public string ToolSplitDescription => "Split File: Split the selected archive in several files. Allow images recompression. Available split methods are : by file number, by maximum size per file, or by maximum pages number in files.";
@@ -78,10 +78,10 @@ namespace ComicbookArchiveToolbox.ViewModels
 		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-		private void DisplayCompress()
+		private void DisplayShrink()
 		{
 			IRegion region = _regionManager.Regions["PluginRegion"];
-			var view = region.GetView("CompressView");
+			var view = region.GetView("ShrinkView");
 			region.Activate(view);
 		}
 

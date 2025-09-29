@@ -21,8 +21,8 @@
 		<Border Grid.Column="0" Style="{StaticResource NavigationSidebar}">
 			<StackPanel Margin="0,20">
 				<Button Style="{StaticResource NavigationButton}" 
-                        Command="{Binding DisplayCompressCommand}" 
-                        ToolTip="{Binding ToolCompressDescription}">
+                        Command="{Binding DisplayShrinkCommand}" 
+                        ToolTip="{Binding ToolShrinkDescription}">
 					<iconPacks:PackIconModern Kind="Archive" Width="24" Height="24"/>
 				</Button>
 				<Button Style="{StaticResource NavigationButton}" 

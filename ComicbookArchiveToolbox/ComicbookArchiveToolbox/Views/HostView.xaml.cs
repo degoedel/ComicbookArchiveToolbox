@@ -33,7 +33,7 @@ namespace ComicbookArchiveToolbox.Views
 			var about = _container.Resolve<AboutView>();
 			region.Add(about, "AboutView");
 			region.Add(_container.Resolve<MergePluginView>(), "MergeView");
-			region.Add(_container.Resolve<CompressPluginView>(), "CompressView");
+			region.Add(_container.Resolve<ShrinkPluginView>(), "ShrinkView");
 			region.Add(_container.Resolve<SplitPluginView>(), "SplitView");
 			region.Add(_container.Resolve<EditPluginView>(), "EditView");
 			region.Activate(about);

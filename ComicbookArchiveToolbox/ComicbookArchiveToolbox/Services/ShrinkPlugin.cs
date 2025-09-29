@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ComicbookArchiveToolbox.Services
 {
-	public class CompressorPlugin(Logger logger, IEventAggregator eventAggregator)
+	public class ShrinkPlugin(Logger logger, IEventAggregator eventAggregator)
 	{
 		private readonly Logger _logger = logger;
 		private readonly IEventAggregator _eventAggregator = eventAggregator;

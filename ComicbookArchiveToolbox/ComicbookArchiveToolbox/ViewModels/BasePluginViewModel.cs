@@ -4,7 +4,11 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Windows.Input;
 using Unity;
 
 namespace ComicbookArchiveToolbox.ViewModels
@@ -29,6 +33,8 @@ namespace ComicbookArchiveToolbox.ViewModels
 		}
 
 		public DelegateCommand BrowseFileCommand { get; protected set; }
+
+		public DelegateCommand BrowseFilesCommand {  get; protected set; }
 		public DelegateCommand BrowseOutputFileCommand { get; protected set; }
 
 		public DelegateCommand BrowseOutputDirectoryCommand { get; set; }
@@ -54,6 +60,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 			_fileConflictService = container.Resolve<IPathConflictService>();
 
 			BrowseFileCommand = new DelegateCommand(BrowseInput, CanExecute);
+			BrowseFilesCommand = new DelegateCommand(BrowseInputs, CanExecute);
 			BrowseOutputFileCommand = new DelegateCommand(BrowseOutput, CanExecute);
 			BrowseOutputDirectoryCommand = new DelegateCommand(BrowseOutputDirectory, CanExecute);
 		}
@@ -75,6 +82,15 @@ namespace ComicbookArchiveToolbox.ViewModels
 			{
 				SetInputPath(result);
 			}
+		}
+
+		protected virtual void BrowseInputs()
+		{
+			_logger.Log($"Browse for input files");
+			IList<string> result;
+			result = _fileDialogService.BrowseForInputMultiFiles(GetCurrentInputPath());
+			result = result.OrderBy(x => x).ToList();
+			SetInputSelectedFiles(result);
 		}
 
 		protected virtual void BrowseOutput()
@@ -124,6 +140,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 		protected abstract string GetCurrentInputPath();
 		protected abstract string GetCurrentOutputPath();
 		protected abstract void SetInputPath(string file);
+		protected abstract void SetInputSelectedFiles(IList<string> files);
 		protected abstract void SetOutputPath(string file);
 		protected abstract string GetOutputSuffix();
 	}

@@ -10,18 +10,19 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Unity;
+using ComicbookArchiveToolbox.ViewModels;
 
 namespace ComicbookArchiveToolbox.Module.Merge.ViewModels
 {
-	public class MergePluginViewModel : BindableBase
+	public class MergePluginViewModel : BasePluginViewModel
 	{
 		private readonly IUnityContainer _container;
 		private readonly IEventAggregator _eventAggregator;
 		private readonly Logger _logger;
-		public DelegateCommand BrowseFilesCommand { get; private set; }
 		public DelegateCommand ClearFilesCommand { get; private set; }
-		public DelegateCommand BrowseOutputFileCommand { get; private set; }
 		public DelegateCommand MergeCommand { get; private set; }
+
+		public string InputPath { get; private set; }
 
 		private string _outputFile = "";
 		public string OutputFile
@@ -64,55 +65,13 @@ namespace ComicbookArchiveToolbox.Module.Merge.ViewModels
 		}
 
 		public MergePluginViewModel(IUnityContainer container, IEventAggregator eventAggregator)
+			: base(container, eventAggregator)
 		{
 			_container = container;
 			_eventAggregator = eventAggregator;
 			_logger = _container.Resolve<Logger>();
-			BrowseFilesCommand = new DelegateCommand(BrowseFiles, CanExecute);
 			ClearFilesCommand = new DelegateCommand(ClearFiles, CanExecute);
 			MergeCommand = new DelegateCommand(DoMerge, CanMerge);
-			BrowseOutputFileCommand = new DelegateCommand(BrowseOutputFile, CanExecute);
-		}
-
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-		private void BrowseFiles()
-		{
-			var dialog = new Microsoft.Win32.OpenFileDialog
-			{
-				Filter = "Comics Archive files (*.cb7;*.cba;*cbr;*cbt;*.cbz)|*.cb7;*.cba;*cbr;*cbt;*.cbz"
-			};
-			string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			if (SelectedFiles != null && SelectedFiles.Count > 0)
-			{
-				try
-				{
-					FileInfo fi = new(SelectedFiles[0]);
-					string selectedDir = fi.DirectoryName;
-					if (Directory.Exists(selectedDir))
-					{
-						defaultPath = selectedDir;
-					}
-					else
-					{
-						_logger.Log("WARNING: cannot reach selected path... Open standard path instead.");
-					}
-				}
-				catch (Exception)
-				{
-					_logger.Log("ERROR: selected path is not valid... Open standard path instead.");
-				}
-
-			}
-			dialog.InitialDirectory = defaultPath;
-			dialog.Multiselect = true;
-			bool? result = dialog.ShowDialog();
-			if (result.HasValue && result.Value == true)
-			{
-				List<string> dialogSelection = dialog.FileNames.ToList();
-				dialogSelection.Sort();
-				ClearFiles();
-				SelectedFiles.AddRange(dialogSelection);
-			}
 		}
 
 		private void ClearFiles()
@@ -120,29 +79,6 @@ namespace ComicbookArchiveToolbox.Module.Merge.ViewModels
 			SelectedFiles.Clear();
 		}
 
-		private void BrowseOutputFile()
-		{
-			var dialog = new Microsoft.Win32.SaveFileDialog();
-			string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			if (!string.IsNullOrWhiteSpace(OutputFile))
-			{
-				outputPath = (new FileInfo(OutputFile)).Directory.FullName;
-				dialog.InitialDirectory = outputPath;
-			}
-			else
-			{
-				if (SelectedFiles != null && SelectedFiles.Count > 0)
-				{
-					outputPath = (new FileInfo(SelectedFiles[0])).Directory.FullName;
-				}
-			}
-			dialog.InitialDirectory = outputPath;
-			bool? result = dialog.ShowDialog();
-			if (result.HasValue && result.Value == true)
-			{
-				OutputFile = dialog.FileName;
-			}
-		}
 
 		private bool CanExecute()
 		{
@@ -160,7 +96,26 @@ namespace ComicbookArchiveToolbox.Module.Merge.ViewModels
 			return (SelectedFiles != null && SelectedFiles.Count > 1 && !string.IsNullOrWhiteSpace(OutputFile));
 		}
 
+		protected override string GetCurrentInputPath() => InputPath;
+		protected override string GetCurrentOutputPath() => OutputFile;
+		protected override void SetInputPath(string file) { }
+		protected override void SetOutputPath(string file) => OutputFile = file;
+		protected override string GetOutputSuffix() => "_merged";
 
+		protected override void SetInputSelectedFiles(IList<string> files)
+		{
+			if (files != null && files.Count > 0)
+			{
+				ClearFiles();
+				SelectedFiles.AddRange(files);
+				FileInfo fi = new(SelectedFiles[0]);
+				string selectedDir = fi.DirectoryName;
+				if (Directory.Exists(selectedDir))
+				{
+					InputPath = selectedDir;
+				}
+			}
+		}
 	}
 
 }

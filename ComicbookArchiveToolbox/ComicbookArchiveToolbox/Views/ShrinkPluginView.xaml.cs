@@ -4,11 +4,11 @@ using System.Windows.Input;
 namespace ComicbookArchiveToolbox.Views
 {
 	/// <summary>
-	/// Interaction logic for CompressPluginView.xaml
+	/// Interaction logic for ShrinkPluginView.xaml
 	/// </summary>
-	public partial class CompressPluginView : UserControl
+	public partial class ShrinkPluginView : UserControl
 	{
-		public CompressPluginView()
+		public ShrinkPluginView()
 		{
 			InitializeComponent();
 		}

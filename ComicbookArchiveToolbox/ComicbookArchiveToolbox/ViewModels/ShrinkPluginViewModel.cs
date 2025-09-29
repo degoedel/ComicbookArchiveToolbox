@@ -9,7 +9,7 @@ using Unity;
 
 namespace ComicbookArchiveToolbox.ViewModels
 {
-	public class CompressPluginViewModel : BasePluginViewModel
+	public class ShrinkPluginViewModel : BasePluginViewModel
 	{
 		private string _inputPathToCompress = "";
 		public string InputPathToCompress
@@ -57,7 +57,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 
 		public DelegateCommand CompressCommand { get; private set; }
 
-		public CompressPluginViewModel(IUnityContainer container, IEventAggregator eventAggregator)
+		public ShrinkPluginViewModel(IUnityContainer container, IEventAggregator eventAggregator)
 			: base(container, eventAggregator)
 		{
 			CompressCommand = new DelegateCommand(DoCompress, CanCompress);
@@ -79,7 +79,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 
 		private async void DoCompress()
 		{
-			var compresser = new CompressorPlugin(_logger, _eventAggregator);
+			var compresser = new ShrinkPlugin(_logger, _eventAggregator);
 			if (IsBatchMode)
 			{
 				DirectoryInfo batchSource = new(InputPathToCompress);
@@ -115,5 +115,9 @@ namespace ComicbookArchiveToolbox.ViewModels
 		protected override void SetInputPath(string file) => InputPathToCompress = file;
 		protected override void SetOutputPath(string file) => OutputPath = file;
 		protected override string GetOutputSuffix() => "_compressed";
+
+		protected override void SetInputSelectedFiles(IList<string> files)
+		{
+		}
 	}
 }

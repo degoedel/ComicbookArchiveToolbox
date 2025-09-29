@@ -1,6 +1,9 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ComicbookArchiveToolbox.Services
 {
@@ -9,6 +12,7 @@ namespace ComicbookArchiveToolbox.Services
 		string? BrowseForInputFile(string currentFile = "", string filter = "");
 		string? BrowseForOutputFile(string currentFile = "", string inputFile = "", string filter = "");
 		string? BrowseForDirectory(string currentDirectory = "");
+		IList<string> BrowseForInputMultiFiles(string currentDirectory = "", string filter = "");
 	}
 
 	public class FileDialogService : IFileDialogService
@@ -25,6 +29,23 @@ namespace ComicbookArchiveToolbox.Services
 			};
 
 			return dialog.ShowDialog() == true ? dialog.FileName : null;
+		}
+
+		public IList<string> BrowseForInputMultiFiles(string currentDirectory = "", string filter = "")
+		{
+			var dialog = new OpenFileDialog
+			{
+				Filter = string.IsNullOrEmpty(filter) ? ComicsFilter : filter,
+				InitialDirectory = currentDirectory,
+				Multiselect = true
+			};
+
+			if (dialog.ShowDialog() == true)
+			{
+				return dialog.FileNames.ToList();
+			}
+
+			return new List<string>();
 		}
 
 		public string? BrowseForOutputFile(string currentFile = "", string inputFile = "", string filter = "")

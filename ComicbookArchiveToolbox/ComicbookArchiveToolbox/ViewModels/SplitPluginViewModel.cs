@@ -771,6 +771,11 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			_cancellationTokenSource?.Cancel();
 			_cancellationTokenSource?.Dispose();
 		}
+
+		protected override void SetInputSelectedFiles(IList<string> files)
+		{
+			
+		}
 	}
 
 	/// <summary>

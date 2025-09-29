@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ComicbookArchiveToolbox.Views.CompressPluginView"
+﻿<UserControl x:Class="ComicbookArchiveToolbox.Views.ShrinkPluginView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:ComicbookArchiveToolbox.CommonTools"
@@ -21,7 +21,7 @@
                                           Foreground="{DynamicResource MahApps.Brushes.Text}"
                                           VerticalAlignment="Center"
                                           Margin="0,0,16,0"/>
-				<TextBlock Text="Compress Pictures" 
+				<TextBlock Text="Shrink Pictures and Archive" 
                            Style="{DynamicResource MahApps.Styles.TextBlock.Title}"
                            FontSize="28"
                            VerticalAlignment="Center"/>
