@@ -259,8 +259,8 @@
 
 					<!-- Override MahApps title bar colors -->
 					<SolidColorBrush x:Key="MahApps.Brushes.Gray10" Color="#F0F0F5"/>
-					<SolidColorBrush x:Key="MahApps.Brushes.Gray9" Color="#CCCCCC"/>
-					<SolidColorBrush x:Key="MahApps.Brushes.Gray8" Color="#999999"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.Gray9" Color="#9999B8"/>
+					<SolidColorBrush x:Key="MahApps.Brushes.Gray8" Color="#6B6B8A"/>
 				</ResourceDictionary>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>

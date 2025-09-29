@@ -12,10 +12,18 @@ using System.Threading.Tasks;
 
 namespace ComicbookArchiveToolbox.Services
 {
-	public class ShrinkPlugin(Logger logger, IEventAggregator eventAggregator)
+	public class ShrinkPlugin
 	{
-		private readonly Logger _logger = logger;
-		private readonly IEventAggregator _eventAggregator = eventAggregator;
+		private readonly Logger _logger;
+		private readonly IEventAggregator _eventAggregator;
+		private readonly BatchProcessingManager _batchProcessingManager;
+
+		public ShrinkPlugin(Logger logger, IEventAggregator eventAggregator, BatchProcessingManager batchProcessingManager)
+		{
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			_eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+			_batchProcessingManager = batchProcessingManager ?? throw new ArgumentNullException(nameof(batchProcessingManager));
+		}
 
 		public async Task CompressAsync(string inputFile, string outputFile, long imageQuality, bool resizeByPx, long size, long ratio, CancellationToken cancellationToken = default)
 		{
@@ -24,6 +32,11 @@ namespace ComicbookArchiveToolbox.Services
 			_logger.Log($"Input file: {inputFile}");
 			_logger.Log($"Output file: {outputFile}");
 			_logger.Log($"Settings - Quality: {imageQuality}, Resize by pixels: {resizeByPx}, Size: {size}, Ratio: {ratio}%");
+
+			// Log performance information
+			_logger.Log($"System CPU Usage: {PerformanceMonitor.GetCurrentCpuUsage():F1}%");
+			_logger.Log($"Performance Mode: {Settings.Instance.PerformanceMode}");
+			_logger.Log($"Batch Size: {Settings.Instance.BatchSize}");
 
 			_eventAggregator.GetEvent<BusinessEvent>().Publish(true);
 
@@ -104,13 +117,13 @@ namespace ComicbookArchiveToolbox.Services
 					throw;
 				}
 
-				// Process metadata files
+				// Process metadata files using BatchProcessingManager
 				var metadataStopwatch = Stopwatch.StartNew();
 				await ProcessMetadataFilesAsync(metadataFiles, outputBuffer, cancellationToken);
 				metadataStopwatch.Stop();
 				_logger.Log($"Metadata processing completed in {metadataStopwatch.ElapsedMilliseconds:N0}ms");
 
-				// Process image pages with parallel optimization while preserving order
+				// Process image pages using BatchProcessingManager
 				var imageProcessingStopwatch = Stopwatch.StartNew();
 				await ProcessImagePagesAsync(pages, outputBuffer, nameTemplate, imageQuality, resizeByPx, size, ratio, cancellationToken);
 				imageProcessingStopwatch.Stop();
@@ -240,39 +253,36 @@ namespace ComicbookArchiveToolbox.Services
 				return;
 			}
 
-			_logger.Log($"Processing {metadataFiles.Count} metadata files...");
+			_logger.Log($"Processing {metadataFiles.Count} metadata files using BatchProcessingManager...");
+
+			// Use BatchProcessingManager for performance-aware processing
+			await _batchProcessingManager.ProcessFilesAsync(
+				metadataFiles,
+				async file => await ProcessSingleMetadataFileAsync(file, outputBuffer, cancellationToken),
+				cancellationToken);
+
+			_logger.Log($"All metadata files processed successfully");
+		}
+
+		private async Task ProcessSingleMetadataFileAsync(FileInfo file, string outputBuffer, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
 
 			try
 			{
-				var copyTasks = metadataFiles.Select(async (file, index) =>
-				{
-					cancellationToken.ThrowIfCancellationRequested();
+				string destFile = SystemTools.GetOutputFilePath(outputBuffer, file);
+				_logger.Log($"Copying metadata file: {file.Name}");
 
-					try
-					{
-						string destFile = SystemTools.GetOutputFilePath(outputBuffer, file);
-						_logger.Log($"Copying metadata file {index + 1}/{metadataFiles.Count}: {file.Name}");
+				// Use async file copy for better performance
+				using var sourceStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 81920, useAsync: true);
+				using var destStream = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 81920, useAsync: true);
+				await sourceStream.CopyToAsync(destStream, cancellationToken);
 
-						// Use async file copy for better performance
-						using var sourceStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 81920, useAsync: true);
-						using var destStream = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 81920, useAsync: true);
-						await sourceStream.CopyToAsync(destStream, cancellationToken);
-
-						_logger.Log($"Successfully copied metadata file: {file.Name}");
-					}
-					catch (Exception ex)
-					{
-						_logger.Log($"ERROR: Failed to copy metadata file '{file.Name}': {ex.Message}");
-						throw;
-					}
-				});
-
-				await Task.WhenAll(copyTasks);
-				_logger.Log($"All metadata files processed successfully");
+				_logger.Log($"Successfully copied metadata file: {file.Name}");
 			}
 			catch (Exception ex)
 			{
-				_logger.Log($"ERROR: Failed to process metadata files: {ex.Message}");
+				_logger.Log($"ERROR: Failed to copy metadata file '{file.Name}': {ex.Message}");
 				throw;
 			}
 		}
@@ -289,118 +299,80 @@ namespace ComicbookArchiveToolbox.Services
 			}
 
 			_logger.Log($"Starting processing of {imagePages.Count} image pages with quality={imageQuality}, resizeByPx={resizeByPx}, size={size}, ratio={ratio}%");
+			_logger.Log($"Using BatchProcessingManager with performance mode: {Settings.Instance.PerformanceMode}");
 
 			int pagePadSize = imagePages.Count.ToString().Length;
 			var jpgConverter = new JpgConverter(_logger, imageQuality);
 
-			// Create ordered processing tasks that preserve page sequence
-			var processingTasks = new List<Task>();
-			var semaphore = new SemaphoreSlim(Environment.ProcessorCount, Environment.ProcessorCount);
+			// Use BatchProcessingManager for performance-aware processing
+			await _batchProcessingManager.ProcessFilesAsync(
+				imagePages.Select((page, index) => new { Page = page, Index = index + 1 }),
+				async item => await ProcessSinglePageAsync(item.Page, outputBuffer, nameTemplate, pagePadSize,
+					item.Index, jpgConverter, imageQuality, resizeByPx, size, ratio, cancellationToken),
+				cancellationToken);
 
-			_logger.Log($"Using {Environment.ProcessorCount} concurrent processing threads");
-
-			try
-			{
-				int pageIndex = 0;
-				foreach (var page in imagePages)
-				{
-					int currentPageIndex = ++pageIndex; // Capture current index for closure
-
-					var task = ProcessSinglePageAsync(page, outputBuffer, nameTemplate, pagePadSize,
-						currentPageIndex, jpgConverter, imageQuality, resizeByPx, size, ratio,
-						semaphore, cancellationToken);
-
-					processingTasks.Add(task);
-				}
-
-				// Wait for all pages to be processed
-				await Task.WhenAll(processingTasks);
-				_logger.Log($"All {imagePages.Count} image pages processed successfully");
-			}
-			catch (Exception ex)
-			{
-				_logger.Log($"ERROR: Failed to process image pages: {ex.Message}");
-				throw;
-			}
-			finally
-			{
-				semaphore.Dispose();
-			}
+			_logger.Log($"All {imagePages.Count} image pages processed successfully");
 		}
 
 		private async Task ProcessSinglePageAsync(FileInfo page, string outputBuffer, string nameTemplate,
 			int pagePadSize, int pageNumber, JpgConverter jpgConverter, long imageQuality,
-			bool resizeByPx, long size, long ratio, SemaphoreSlim semaphore, CancellationToken cancellationToken)
+			bool resizeByPx, long size, long ratio, CancellationToken cancellationToken)
 		{
-			await semaphore.WaitAsync(cancellationToken);
+			cancellationToken.ThrowIfCancellationRequested();
 
-			try
+			string destFile = SystemTools.GetOutputFilePath(outputBuffer, page);
+			var destFi = new FileInfo(destFile);
+			destFile = Path.Combine(destFi.Directory.FullName,
+				$"{nameTemplate}_{pageNumber.ToString().PadLeft(pagePadSize, '0')}{page.Extension}".Replace(' ', '_'));
+
+			var pageStopwatch = Stopwatch.StartNew();
+
+			await Task.Run(() =>
 			{
-				cancellationToken.ThrowIfCancellationRequested();
-
-				string destFile = SystemTools.GetOutputFilePath(outputBuffer, page);
-				var destFi = new FileInfo(destFile);
-				destFile = Path.Combine(destFi.Directory.FullName,
-					$"{nameTemplate}_{pageNumber.ToString().PadLeft(pagePadSize, '0')}{page.Extension}".Replace(' ', '_'));
-
-				var pageStopwatch = Stopwatch.StartNew();
-
-				await Task.Run(() =>
+				try
 				{
-					try
+					if (!resizeByPx && ratio == 100)
 					{
-						if (!resizeByPx && ratio == 100)
+						// No resizing needed
+						if (imageQuality == 100)
 						{
-							// No resizing needed
-							if (imageQuality == 100)
-							{
-								// Simple file move
-								_logger.Log($"Moving page {pageNumber}: {page.Name} -> {Path.GetFileName(destFile)} (no processing needed)");
-								File.Move(page.FullName, destFile);
-							}
-							else
-							{
-								// Re-encode with quality setting
-								_logger.Log($"Re-encoding page {pageNumber}: {page.Name} -> {Path.GetFileName(destFile)} (quality={imageQuality})");
-								jpgConverter.SaveJpeg(page.FullName, destFile);
-								File.Delete(page.FullName);
-							}
+							// Simple file move
+							_logger.Log($"Moving page {pageNumber}: {page.Name} -> {Path.GetFileName(destFile)} (no processing needed)");
+							File.Move(page.FullName, destFile);
 						}
 						else
 						{
-							// Resizing required
-							string resizeInfo = resizeByPx ? $"resize to {size}px height" : $"resize to {ratio}% ratio";
-							_logger.Log($"Processing page {pageNumber}: {page.Name} -> {Path.GetFileName(destFile)} ({resizeInfo}, quality={imageQuality})");
-
-							Bitmap reduced = resizeByPx ?
-								jpgConverter.ResizeImageByPx(page.FullName, size) :
-								jpgConverter.ResizeImageByRatio(page.FullName, ratio);
-
-							jpgConverter.SaveJpeg(reduced, destFile);
-							reduced?.Dispose(); // Ensure proper cleanup
+							// Re-encode with quality setting
+							_logger.Log($"Re-encoding page {pageNumber}: {page.Name} -> {Path.GetFileName(destFile)} (quality={imageQuality})");
+							jpgConverter.SaveJpeg(page.FullName, destFile);
 							File.Delete(page.FullName);
 						}
-
-						pageStopwatch.Stop();
-						_logger.Log($"Page {pageNumber} completed in {pageStopwatch.ElapsedMilliseconds}ms");
 					}
-					catch (Exception ex)
+					else
 					{
-						pageStopwatch.Stop();
-						_logger.Log($"ERROR: Failed to process page {pageNumber} '{page.Name}': {ex.Message}");
-						throw;
+						// Resizing required
+						string resizeInfo = resizeByPx ? $"resize to {size}px height" : $"resize to {ratio}% ratio";
+						_logger.Log($"Processing page {pageNumber}: {page.Name} -> {Path.GetFileName(destFile)} ({resizeInfo}, quality={imageQuality})");
+
+						Bitmap reduced = resizeByPx ?
+							jpgConverter.ResizeImageByPx(page.FullName, size) :
+							jpgConverter.ResizeImageByRatio(page.FullName, ratio);
+
+						jpgConverter.SaveJpeg(reduced, destFile);
+						reduced?.Dispose(); // Ensure proper cleanup
+						File.Delete(page.FullName);
 					}
-				}, cancellationToken);
-			}
-			catch (Exception ex)
-			{
-				_logger.Log($"ERROR: Page {pageNumber} processing failed: {ex.Message}");
-				throw;
-			}
-			finally
-			{
-				semaphore.Release();
-			}
+
+					pageStopwatch.Stop();
+					_logger.Log($"Page {pageNumber} completed in {pageStopwatch.ElapsedMilliseconds}ms");
+				}
+				catch (Exception ex)
+				{
+					pageStopwatch.Stop();
+					_logger.Log($"ERROR: Failed to process page {pageNumber} '{page.Name}': {ex.Message}");
+					throw;
+				}
+			}, cancellationToken);
 		}
 	}
 }

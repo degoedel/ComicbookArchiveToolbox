@@ -9,8 +9,8 @@
         xmlns:local="clr-namespace:ComicbookArchiveToolbox"
         mc:Ignorable="d"
         Icon="pack://application:,,,/ComicbookArchiveToolbox;component/Resources/Cat.ico"
-        ShowIconOnTitleBar="True"
-        ShowTitleBar="False"
+        ShowIconOnTitleBar="False"
+        ShowTitleBar="True"
         Title="Comicbook Archive Toolbox" 
         Height="750" 
         Width="1100"
@@ -20,8 +20,8 @@
         Background="{DynamicResource MahApps.Brushes.WindowTitleBar}"
         TitleCharacterCasing="Normal"
         TitleBarHeight="35"
-        WindowTitleBrush="{DynamicResource MahApps.Brushes.WindowTitle}"
-        NonActiveWindowTitleBrush="{DynamicResource MahApps.Brushes.WindowTitleInactive}">
+        WindowTitleBrush="{DynamicResource MahApps.Brushes.Gray8}"
+        NonActiveWindowTitleBrush="{DynamicResource MahApps.Brushes.Gray9}">
 
 	<!-- Custom Window Button Commands with Dark Theme -->
 	<Controls:MetroWindow.WindowButtonCommands>

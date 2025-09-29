@@ -30,8 +30,16 @@ namespace ComicbookArchiveToolbox.CommonTools
 				AddFileIndexToCovers = false;
 				DefaultImageHeight = 2048;
 				FlattenStructure = false;
-				SerializeSettings();
 
+				// Performance settings with defaults optimized for smaller configurations
+				PerformanceMode = EPerformanceMode.Balanced;
+				MaxConcurrentOperations = Environment.ProcessorCount / 2; // Use half available cores by default
+				UseProgressiveBatching = true;
+				BatchSize = 10; // Process files in smaller batches
+				EnableThrottling = true;
+				ThrottleDelayMs = 50; // Small delay between operations
+
+				SerializeSettings();
 			}
 		}
 
@@ -59,7 +67,6 @@ namespace ComicbookArchiveToolbox.CommonTools
 			return result;
 		}
 
-
 		public void SerializeSettings()
 		{
 			FileInfo fi = new(_settingsPath);
@@ -86,35 +93,51 @@ namespace ComicbookArchiveToolbox.CommonTools
 			AddFileIndexToCovers = serializedSettings.AddFileIndexToCovers;
 			DefaultImageHeight = serializedSettings.DefaultImageHeight;
 			FlattenStructure = serializedSettings.FlattenStructure;
-		}
 
+			// Initialize performance settings with safe defaults if not present
+			PerformanceMode = serializedSettings.PerformanceMode;
+			MaxConcurrentOperations = serializedSettings.MaxConcurrentOperations > 0
+				? serializedSettings.MaxConcurrentOperations
+				: Environment.ProcessorCount / 2;
+			UseProgressiveBatching = serializedSettings.UseProgressiveBatching;
+			BatchSize = serializedSettings.BatchSize > 0 ? serializedSettings.BatchSize : 10;
+			EnableThrottling = serializedSettings.EnableThrottling;
+			ThrottleDelayMs = serializedSettings.ThrottleDelayMs > 0 ? serializedSettings.ThrottleDelayMs : 50;
+		}
 	}
 
 	public class SerializationSettings
 	{
-		// ace and rar being proprietary format 7zip cannot create them.
 		public enum ArchiveFormat
 		{
 			Cb7,
 			Cbt,
 			Cbz
-		};
+		}
+
+		public enum EPerformanceMode
+		{
+			LowResource,   // Minimal CPU usage, single-threaded operations
+			Balanced,      // Default mode with moderate resource usage
+			HighPerformance // Maximum speed, uses all available resources
+		}
 
 		public string BufferDirectory { get; set; }
 		public bool UseFileDirAsBuffer { get; set; }
 		public bool IncludeCover { get; set; }
-
 		public bool IncludeMetadata { get; set; }
-
 		public ArchiveFormat OutputFormat { get; set; }
-
 		public string DefaultMetadata { get; set; }
-
 		public bool AddFileIndexToCovers { get; set; }
-
 		public long DefaultImageHeight { get; set; }
 		public bool FlattenStructure { get; set; }
 
-
+		// Performance Settings
+		public EPerformanceMode PerformanceMode { get; set; } = EPerformanceMode.Balanced;
+		public int MaxConcurrentOperations { get; set; } = Environment.ProcessorCount / 2;
+		public bool UseProgressiveBatching { get; set; } = true;
+		public int BatchSize { get; set; } = 10;
+		public bool EnableThrottling { get; set; } = true;
+		public int ThrottleDelayMs { get; set; } = 50;
 	}
 }

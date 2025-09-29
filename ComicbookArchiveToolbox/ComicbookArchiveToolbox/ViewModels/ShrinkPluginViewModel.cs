@@ -57,9 +57,13 @@ namespace ComicbookArchiveToolbox.ViewModels
 
 		public DelegateCommand CompressCommand { get; private set; }
 
-		public ShrinkPluginViewModel(IUnityContainer container, IEventAggregator eventAggregator)
+		// Add a field for BatchProcessingManager
+		private readonly BatchProcessingManager _batchProcessingManager;
+
+		public ShrinkPluginViewModel(IUnityContainer container, IEventAggregator eventAggregator, BatchProcessingManager batchProcessingManager)
 			: base(container, eventAggregator)
 		{
+			_batchProcessingManager = batchProcessingManager;
 			CompressCommand = new DelegateCommand(DoCompress, CanCompress);
 			ImageHeight = Settings.Instance.DefaultImageHeight;
 		}
@@ -79,7 +83,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 
 		private async void DoCompress()
 		{
-			var compresser = new ShrinkPlugin(_logger, _eventAggregator);
+			var compresser = new ShrinkPlugin(_logger, _eventAggregator, _batchProcessingManager);
 			if (IsBatchMode)
 			{
 				DirectoryInfo batchSource = new(InputPathToCompress);

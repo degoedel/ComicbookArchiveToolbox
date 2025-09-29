@@ -111,7 +111,12 @@
 							<Button Grid.Column="1" 
                                     Content="Browse..."
                                     Style="{StaticResource MahApps.Styles.Button.Square.Accent}"
-                                    Command="{Binding BrowseDirectoryCommand}"/>
+                                    Command="{Binding BrowseDirectoryCommand}">
+								<Button.ToolTip>
+									<ToolTip Style="{StaticResource MultiLineTooltipStyle}"
+											 Content="Browse for a custom buffer directory location"/>
+								</Button.ToolTip>
+							</Button>
 						</Grid>
 					</StackPanel>
 
@@ -123,41 +128,112 @@
 									 Content="{Binding FlattenStructureTooltip}"/>
 						</mah:ToggleSwitch.ToolTip>
 					</mah:ToggleSwitch>
-
 				</StackPanel>
 			</Border>
 
 			<!-- Output Settings Card -->
 			<Border Style="{StaticResource ModernCard}">
-				<UniformGrid Columns="2">
-					<StackPanel Margin="0,0,16,0">
-						<TextBlock Text="Preferred output format" 
-                                   Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+				<StackPanel>
+					<TextBlock Text="Output Settings" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<UniformGrid Columns="2">
+						<StackPanel Margin="0,0,16,0">
+							<TextBlock Text="Preferred output format" 
+                                       Style="{DynamicResource MahApps.Styles.TextBlock.Caption}"
+                                       Margin="0,0,0,8"/>
+							<ComboBox ItemsSource="{Binding Formats}"
+                                      SelectedItem="{Binding SelectedFormat}"
+                                      Style="{StaticResource MahApps.Styles.ComboBox}">
+								<ComboBox.ToolTip>
+									<ToolTip Style="{StaticResource MultiLineTooltipStyle}"
+											 Content="{Binding SelectedFormatTooltip}"/>
+								</ComboBox.ToolTip>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel>
+							<TextBlock Text="Default Image Height" 
+                                       Style="{DynamicResource MahApps.Styles.TextBlock.Caption}"
+                                       Margin="0,0,0,8"/>
+							<mah:NumericUpDown Value="{Binding DefaultImageHeight}"
+                                               Minimum="100"
+                                               Maximum="4096"
+                                               Interval="100">
+								<mah:NumericUpDown.ToolTip>
+									<ToolTip Style="{StaticResource MultiLineTooltipStyle}"
+											 Content="{Binding DefaultImageHeightTooltip}"/>
+								</mah:NumericUpDown.ToolTip>
+							</mah:NumericUpDown>
+						</StackPanel>
+					</UniformGrid>
+				</StackPanel>
+			</Border>
+
+			<!-- Performance Settings Card -->
+			<Border Style="{StaticResource ModernCard}">
+				<StackPanel>
+					<TextBlock Text="Performance Settings" 
+                               Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+                               Margin="0,0,0,16"/>
+
+					<StackPanel Margin="0,8">
+						<TextBlock Text="Performance Mode" 
+                                   Style="{DynamicResource MahApps.Styles.TextBlock.Caption}"
                                    Margin="0,0,0,8"/>
-						<ComboBox ItemsSource="{Binding Formats}"
-                                  SelectedItem="{Binding SelectedFormat}"
+						<ComboBox ItemsSource="{Binding PerformanceModes}"
+                                  SelectedItem="{Binding PerformanceMode}"
                                   Style="{StaticResource MahApps.Styles.ComboBox}">
 							<ComboBox.ToolTip>
 								<ToolTip Style="{StaticResource MultiLineTooltipStyle}"
-										 Content="{Binding SelectedFormatTooltip}"/>
+										 Content="{Binding PerformanceModeTooltip}"/>
 							</ComboBox.ToolTip>
 						</ComboBox>
 					</StackPanel>
-					<StackPanel>
-						<TextBlock Text="Default Image Height" 
-                                   Style="{DynamicResource MahApps.Styles.TextBlock.SubHeader}"
+
+					<StackPanel Margin="0,8">
+						<TextBlock Text="{Binding BatchSize, StringFormat='Batch Size: {0}'}" 
+                                   Style="{DynamicResource MahApps.Styles.TextBlock.Caption}"
                                    Margin="0,0,0,8"/>
-						<mah:NumericUpDown Value="{Binding DefaultImageHeight}"
-                                           Minimum="100"
-                                           Maximum="4096"
-                                           Interval="100">
-							<mah:NumericUpDown.ToolTip>
+						<Slider Minimum="1" 
+                                Maximum="50" 
+                                Value="{Binding BatchSize}" 
+                                TickFrequency="5" 
+                                TickPlacement="BottomRight"
+                                IsSnapToTickEnabled="True">
+							<Slider.ToolTip>
 								<ToolTip Style="{StaticResource MultiLineTooltipStyle}"
-										 Content="{Binding DefaultImageHeightTooltip}"/>
-							</mah:NumericUpDown.ToolTip>
-						</mah:NumericUpDown>
+										 Content="{Binding BatchSizeTooltip}"/>
+							</Slider.ToolTip>
+						</Slider>
 					</StackPanel>
-				</UniformGrid>
+
+					<mah:ToggleSwitch Header="Enable CPU Throttling"
+                                      IsOn="{Binding EnableThrottling}"
+                                      Margin="0,8">
+						<mah:ToggleSwitch.ToolTip>
+							<ToolTip Style="{StaticResource MultiLineTooltipStyle}"
+									 Content="{Binding EnableThrottlingTooltip}"/>
+						</mah:ToggleSwitch.ToolTip>
+					</mah:ToggleSwitch>
+
+					<StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+						<iconPacks:PackIconModern Kind="Monitor" 
+                                                  Width="16" 
+                                                  Height="16" 
+                                                  Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,8,0"/>
+						<TextBlock Text="{Binding CurrentCpuUsage, StringFormat='Current CPU Usage: {0:F1}%'}"
+                                   Style="{DynamicResource MahApps.Styles.TextBlock.Caption}"
+                                   VerticalAlignment="Center">
+							<TextBlock.ToolTip>
+								<ToolTip Style="{StaticResource MultiLineTooltipStyle}"
+										 Content="Real-time CPU usage monitoring.\nHigh values may indicate the need\nto switch to Low Resource mode."/>
+							</TextBlock.ToolTip>
+						</TextBlock>
+					</StackPanel>
+				</StackPanel>
 			</Border>
 
 			<!-- Action Buttons -->

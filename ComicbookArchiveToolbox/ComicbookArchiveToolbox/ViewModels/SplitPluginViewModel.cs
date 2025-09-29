@@ -1,6 +1,7 @@
 ﻿using ComicbookArchiveToolbox.CommonTools;
 using ComicbookArchiveToolbox.CommonTools.Events;
 using ComicbookArchiveToolbox.Module.Split.Services;
+using ComicbookArchiveToolbox.Services;
 using ComicbookArchiveToolbox.ViewModels;
 using Prism.Commands;
 using Prism.Events;
@@ -543,81 +544,82 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 		{
 			_logger.Log("Processing in batch mode");
 
-			DirectoryInfo sourceFolder = new DirectoryInfo(SourceToSplit);
+			// Check system performance and auto-adjust settings if needed
+			var currentCpuUsage = PerformanceMonitor.GetCurrentCpuUsage();
+			var recommendedMode = PerformanceMonitor.RecommendPerformanceMode();
+			var recommendedBatchSize = PerformanceMonitor.RecommendBatchSize();
 
-			// Get all files with comic book archive extensions, sorted for consistent order
-			List<FileInfo> batch = sourceFolder.GetFiles()
-				.Where(file => SystemTools.ComicExtensions.Contains(file.Extension.ToLowerInvariant()))
-				.OrderBy(f => f.Name, StringComparer.OrdinalIgnoreCase) // Ensure consistent ordering
-				.ToList();
+			_logger.Log($"System Performance Assessment:");
+			_logger.Log($"  Current CPU Usage: {currentCpuUsage:F1}%");
+			_logger.Log($"  Current Performance Mode: {Settings.Instance.PerformanceMode}");
+			_logger.Log($"  Recommended Performance Mode: {recommendedMode}");
+			_logger.Log($"  Current Batch Size: {Settings.Instance.BatchSize}");
+			_logger.Log($"  Recommended Batch Size: {recommendedBatchSize}");
 
-			_logger.Log($"Found {batch.Count} comic archive files to process");
+			// Store original settings to restore later
+			var originalMode = Settings.Instance.PerformanceMode;
+			var originalBatchSize = Settings.Instance.BatchSize;
+			var originalThrottling = Settings.Instance.EnableThrottling;
 
-			if (batch.Count == 0)
+			bool settingsAdjusted = false;
+
+			// Auto-adjust for high CPU usage
+			if (currentCpuUsage > 80 && Settings.Instance.PerformanceMode != SerializationSettings.EPerformanceMode.LowResource)
 			{
-				_logger.Log("WARNING: No comic archive files found in batch directory");
-				return;
+				_logger.Log("High CPU usage detected - temporarily switching to Low Resource mode");
+				Settings.Instance.PerformanceMode = SerializationSettings.EPerformanceMode.LowResource;
+				Settings.Instance.BatchSize = Math.Min(originalBatchSize, 3);
+				Settings.Instance.EnableThrottling = true;
+				settingsAdjusted = true;
+			}
+			// Auto-adjust batch size if current setting seems suboptimal
+			else if (Math.Abs(Settings.Instance.BatchSize - recommendedBatchSize) > 5)
+			{
+				_logger.Log($"Adjusting batch size from {Settings.Instance.BatchSize} to {recommendedBatchSize} based on system performance");
+				Settings.Instance.BatchSize = recommendedBatchSize;
+				settingsAdjusted = true;
 			}
 
-			// Determine optimal concurrency level (but preserve order in processing)
-			int maxConcurrency = Math.Min(Environment.ProcessorCount, 3); // Limit to avoid I/O bottlenecks
-			_logger.Log($"Processing with maximum concurrency of {maxConcurrency}");
-
-			// Use SemaphoreSlim to control concurrency while maintaining order
-			using var semaphore = new SemaphoreSlim(maxConcurrency, maxConcurrency);
-
-			// Process files with controlled concurrency but maintain order
-			var processingTasks = batch.Select(async (file, index) =>
+			try
 			{
-				await semaphore.WaitAsync(cancellationToken);
+				DirectoryInfo sourceFolder = new DirectoryInfo(SourceToSplit);
 
-				try
+				List<FileInfo> batch = sourceFolder.GetFiles()
+					.Where(file => SystemTools.ComicExtensions.Contains(file.Extension.ToLowerInvariant()))
+					.OrderBy(f => f.Name, StringComparer.OrdinalIgnoreCase)
+					.ToList();
+
+				_logger.Log($"Found {batch.Count} comic archive files to process");
+
+				if (batch.Count == 0)
 				{
-					cancellationToken.ThrowIfCancellationRequested();
-
-					_logger.Log($"Processing batch file {index + 1}/{batch.Count}: {file.Name} ({file.Length:N0} bytes)");
-
-					ExtractNameTemplateFromFile(file.FullName, out string templatedName);
-					ArchiveTemplate arctemp = CreateArchiveTemplate(templatedName);
-					LogArchiveTemplate(arctemp, file.Name);
-
-					var splitter = _container.Resolve<ISplitter>(SelectedStyle);
-					_logger.Log($"Starting split operation for: {file.Name}");
-
-					// Execute split operation synchronously to avoid multiple BusinessEvent conflicts
-					// The splitter will handle its own BusinessEvent, but we override with our coordination
-					await Task.Run(() =>
-					{
-						// Temporarily store the current event subscriptions to avoid conflicts
-						using (new SplitterBusinessEventSupressor(_eventAggregator))
-						{
-							splitter.Split(file.FullName, arctemp);
-						}
-					}, cancellationToken);
-
-					_logger.Log($"Completed split operation for: {file.Name}");
+					_logger.Log("WARNING: No comic archive files found in batch directory");
+					return;
 				}
-				catch (OperationCanceledException)
+
+				// Use BatchProcessingManager for performance-aware processing
+				var batchManager = new BatchProcessingManager(_logger, null);
+
+				await batchManager.ProcessFilesAsync(
+					batch.Select((file, index) => new { File = file, Index = index }),
+					async item => await ProcessSingleFile(item.File, item.Index, batch.Count, cancellationToken),
+					cancellationToken);
+
+				_logger.Log("Batch processing completed successfully");
+			}
+			finally
+			{
+				// Restore original settings if they were adjusted
+				if (settingsAdjusted)
 				{
-					_logger.Log($"Split operation cancelled for file: {file.Name}");
-					throw;
+					_logger.Log("Restoring original performance settings");
+					Settings.Instance.PerformanceMode = originalMode;
+					Settings.Instance.BatchSize = originalBatchSize;
+					Settings.Instance.EnableThrottling = originalThrottling;
 				}
-				catch (Exception ex)
-				{
-					_logger.Log($"ERROR: Failed to process batch file '{file.Name}': {ex.Message}");
-					// Don't re-throw to allow other files to continue processing
-				}
-				finally
-				{
-					semaphore.Release();
-				}
-			});
-
-			// Wait for all files to complete processing
-			await Task.WhenAll(processingTasks);
-
-			_logger.Log($"Batch processing completed for {batch.Count} files");
+			}
 		}
+
 
 		private async Task ProcessSingleFileModeAsync(CancellationToken cancellationToken)
 		{
@@ -724,6 +726,30 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			bool canExecute = (FileSelected && selectedMethodArgument && !string.IsNullOrWhiteSpace(OutputDir) && TemplateNameCondition && _activeSplitOperations == 0);
 
 			return canExecute;
+		}
+
+		private async Task ProcessSingleFile(FileInfo file, int index, int totalCount, CancellationToken cancellationToken)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+
+			_logger.Log($"Processing batch file {index + 1}/{totalCount}: {file.Name} ({file.Length:N0} bytes)");
+
+			ExtractNameTemplateFromFile(file.FullName, out string templatedName);
+			ArchiveTemplate arctemp = CreateArchiveTemplate(templatedName);
+			LogArchiveTemplate(arctemp, file.Name);
+
+			var splitter = _container.Resolve<ISplitter>(SelectedStyle);
+			_logger.Log($"Starting split operation for: {file.Name}");
+
+			await Task.Run(() =>
+			{
+				using (new SplitterBusinessEventSupressor(_eventAggregator))
+				{
+					splitter.Split(file.FullName, arctemp);
+				}
+			}, cancellationToken);
+
+			_logger.Log($"Completed split operation for: {file.Name}");
 		}
 
 		private bool TemplateNameCondition => IsBatchMode ? true : !string.IsNullOrWhiteSpace(NameTemplate);
