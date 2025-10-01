@@ -30,12 +30,12 @@ Drag'n'drop on the merge files list uses Josh Smith code [ListViewDragDropManage
 
 **Changelog** 
 * *V3.0*
-  *Fixes application hangout when dealing with html files in the archives.
-  *A major UI overhaul has been made.
-  *The tools can now handle parallel work and have a batch mode.
-  *There is now some settings to adapt CPU demand to the computer performances.
-  *Calibre Metadatas can be read, and updated (experimental).
-  *The plugin architecture has been scrapped to favor factorisation.
+  * Fixes application hangout when dealing with html files in the archives.
+  * A major UI overhaul has been made
+  * The tools can now handle parallel work and have a batch mode
+  * There is now some settings to adapt CPU demand to the computer performances
+  * Calibre Metadatas can be read, and updated (experimental)
+  * The plugin architecture has been scrapped to favor factorisation
 * *V2.0*
   * FIX: The app is adapted to .Net 6 and should fix compatibility issues like crash on startup
 * *V1.4*
