@@ -5,9 +5,9 @@
 **Comicbook Archive Toolbox** is a utility for digital comic book archives such as .cbr or .cbz files.  
 It was first develloped to split files too big to be comfortably used in digital readers,  
 but rapidly evolved to include several split strategies, a merge tool, and a metadata editor.  
-It also allow to resize and recompress the embedded pictures to ease their load in a reader.  
-It's designed to be easily extensible.  
-For now only ComicRack (ComicData.xml) metadata files are supported for edition.  
+It also allow to resize and recompress the embedded pictures to ease their load in a reader.
+ComicRack (ComicData.xml) metadata files are supported for edition.
+Calibre metadata can be read and updated on an experimental basis.  
 
 Split strategies are :  
 - by number of resulting files ;  
@@ -21,14 +21,21 @@ Window styling is made with [Mahapps.metro](https://mahapps.com),
 and general architecture is made with [Prism](https://github.com/PrismLibrary/Prism).  
 Drag'n'drop on the merge files list uses Josh Smith code [ListViewDragDropManager](https://www.codeproject.com/script/Articles/ViewDownloads.aspx?aid=17266) .
 
-**Comicbook Archive Toolbox is based on .NET 6.0 for Desktop Apps.** Download runtime [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0/runtime)  
+**Comicbook Archive Toolbox is based on .NET 8.0 for Desktop Apps.** Download runtime [here](https://dotnet.microsoft.com/en-us/download/dotnet/8.0/runtime)  
 
 
 **Comicbook Archive Toolbox is under MIT license** (do what you want with it)  
 
-**Download portable version** [Comicbook Archive Toolbox v2.0](https://github.com/degoedel/ComicbookArchiveToolbox/files/9149276/ComicbookArchiveToolbox.v2.0.0.zip)  
+**Download portable version** [Comicbook Archive Toolbox v3.0](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v3.0/ComicbookArchiveToolbox.v3.0.0.zip)  
 
 **Changelog** 
+* *V3.0*
+  *Fixes application hangout when dealing with html files in the archives.
+  *A major UI overhaul has been made.
+  *The tools can now handle parallel work and have a batch mode.
+  *There is now some settings to adapt CPU demand to the computer performances.
+  *Calibre Metadatas can be read, and updated (experimental).
+  *The plugin architecture has been scrapped to favor factorisation.
 * *V2.0*
   * FIX: The app is adapted to .Net 6 and should fix compatibility issues like crash on startup
 * *V1.4*
