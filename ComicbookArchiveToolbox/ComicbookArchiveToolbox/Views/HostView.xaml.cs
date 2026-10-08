@@ -41,6 +41,7 @@ namespace ComicbookArchiveToolbox.Views
 			region.Add(_container.Resolve<SplitByFileNbView>(), "SplitByFileNbView");
 			region.Add(_container.Resolve<SplitByMaxPagesView>(), "SplitByMaxPagesView");
 			region.Add(_container.Resolve<SplitByMaxSizeView>(), "SplitByMaxSizeView");
+			region.Add(_container.Resolve<SplitByPagesIndexView>(), "SplitByPagesIndexView");
 		}
 
 		private void TextBox_TextChanged(object sender, TextChangedEventArgs e)

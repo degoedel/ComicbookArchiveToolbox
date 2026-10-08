@@ -57,6 +57,9 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 				case "By Size (Mb)":
 					viewToActivate = "SplitByMaxSizeView";
 					break;
+				case "By Pages Index":
+					viewToActivate = "SplitByPagesIndexView";
+					break;
 				default:
 					_logger.Log($"WARNING: Unknown split style '{selectedView}', defaulting to 'SplitByFileNbView'");
 					viewToActivate = "SplitByFileNbView";
@@ -452,7 +455,8 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			[
 				"By File Nb",
 				"By Max Pages Nb",
-				"By Size (Mb)"
+				"By Size (Mb)",
+				"By Pages Index"
 			];
 
 			_regionManager = regionManager;
@@ -461,6 +465,7 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 			container.RegisterType<ISplitter, ByFileSplitterPlugin>("By File Nb");
 			container.RegisterType<ISplitter, ByMaxPageSplitterPlugin>("By Max Pages Nb");
 			container.RegisterType<ISplitter, BySizeSplitterPlugin>("By Size (Mb)");
+			container.RegisterType<ISplitter, ByPageIdSplitterPlugin>("By Pages Index");
 
 			SplitCommand = new DelegateCommand(DoSplit, CanSplit);
 		}
@@ -690,6 +695,9 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 				case "By Size (Mb)":
 					_logger.Log($"  - Max size per archive: {template.MaxSizePerSplittedFile} MB");
 					break;
+				case "By Pages Index":
+					_logger.Log($"  - Pages index to split: [{string.Join(", ", template.PagesIndexToSplit)}]");
+					break;
 			}
 
 			_logger.Log($"  - Image compression quality: {template.ImageCompression}%");
@@ -715,7 +723,7 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 					selectedMethodArgument = MaxFileSize > 1;
 					break;
 				case "By Pages Index":
-					selectedMethodArgument = _pagesToSplitIndex.Count > 0;
+					selectedMethodArgument = _pagesToSplitIndex.Count > 0 && !IsBatchMode;
 					break;
 				default:
 					selectedMethodArgument = false;
@@ -786,6 +794,8 @@ namespace ComicbookArchiveToolbox.Module.Split.ViewModels
 					return "_pages";
 				case "By Size (Mb)":
 					return "_size";
+				case "By Pages Index":
+					return "_index";
 				default:
 					return "_split";
 			}

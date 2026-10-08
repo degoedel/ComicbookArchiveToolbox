@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="ComicbookArchiveToolbox.Views.SplitByPagesIndexView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ComicbookArchiveToolbox.Module.Split.Views"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             d:DesignHeight="80" d:DesignWidth="400">
+
+	<StackPanel Margin="8">
+		<mah:MetroHeader Header="Pages index">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+
+				<iconPacks:PackIconMaterial Grid.Column="0"
+										  Kind="BookmarkMultipleOutline" 
+										  Width="16" 
+										  Height="16" 
+										  Foreground="{DynamicResource MahApps.Brushes.Accent}"
+										  VerticalAlignment="Center"
+										  Margin="0,0,8,0"/>
+				<TextBox Grid.Column="1"
+						 Text="{Binding PagesToSplitIndex, Mode=TwoWay}"
+								 Style="{StaticResource MahApps.Styles.TextBox}"
+						 HorizontalAlignment="Stretch"
+						 VerticalAlignment="Center"
+								 Margin="0,0,8,0"
+						 ToolTip="Enter the first page of each split archive, separated by semicolons. Example: 5;12;20. Split by page index is not available in Batch mode."/>
+			</Grid>
+		</mah:MetroHeader>
+	</StackPanel>
+</UserControl>

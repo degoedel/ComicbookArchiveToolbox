@@ -56,3 +56,4 @@ ComicbookArchiveToolbox/CatPlugin.Edit/obj/*
 ComicbookArchiveToolbox/CatPlugin.Compress/obj/*
 *.clef
 *.sarif
+/.vs
