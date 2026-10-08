@@ -4,7 +4,7 @@ namespace ComicbookArchiveToolbox.ViewModels
 {
 	public class AboutViewModel : BindableBase
 	{
-		public string AboutContent => "Comicbook Archive Toolbox v3.0 is a free open source digital comics utility.\n" +
+		public string AboutContent => "Comicbook Archive Toolbox v3.1 is a free open source digital comics utility.\n" +
 			"It allows to split, merge, resize and compress digital comic book archives such as cbr or cbz files,\n" +
 			"and to edit their metadata.\n\n" +
 			"Comicbook Archive Toolbox requires .NET 8.0 to work properly,\n" +

@@ -26,9 +26,12 @@ Drag'n'drop on the merge files list uses Josh Smith code [ListViewDragDropManage
 
 **Comicbook Archive Toolbox is under MIT license** (do what you want with it)  
 
-**Download portable version** [Comicbook Archive Toolbox v3.0](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v3.0/ComicbookArchiveToolbox.v3.0.0.zip)  
+**Download portable version** [Comicbook Archive Toolbox v3.1](https://github.com/degoedel/ComicbookArchiveToolbox/releases/download/v3.1/ComicbookArchiveToolbox.v3.1.0.zip)  
 
 **Changelog** 
+* *V3.1*
+  * Fixes page order after a merge operation which could be insconsistent on some cases.
+  * New Split method by page index: specify the first page of each splitted archive you want
 * *V3.0*
   * Fixes application hangout when dealing with html files in the archives.
   * A major UI overhaul has been made
