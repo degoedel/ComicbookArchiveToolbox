@@ -3,6 +3,7 @@ using ComicbookArchiveToolbox.CommonTools.Events;
 using ComicbookArchiveToolbox.Services;
 using Prism.Events;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -14,6 +15,11 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 {
 	public class MergerPlugin
 	{
+		/// <summary>
+		/// Holds the results of extracting a single archive to preserve ordering.
+		/// </summary>
+		private record ExtractionResult(List<FileInfo> MetadataFiles, List<FileInfo> Pages);
+
 		private readonly Logger _logger;
 		private readonly IEventAggregator _eventAggregator;
 		private readonly BatchProcessingManager _batchProcessingManager;
@@ -60,6 +66,9 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 				var allMetadataFiles = new List<FileInfo>();
 				var allPages = new List<FileInfo>();
 
+				// Dictionary to map archive index to extraction results (preserves order)
+				var extractionResults = new ConcurrentDictionary<int, ExtractionResult>();
+
 				// Process archives in performance-aware batches
 				_logger.Log($"Starting extraction of {files.Count} archives...");
 				var extractionStopwatch = Stopwatch.StartNew();
@@ -67,11 +76,22 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 				await _batchProcessingManager.ProcessFilesAsync(
 					files.Select((file, index) => new { File = file, Index = index }),
 					async item => await ExtractSingleArchiveAsync(item.File, item.Index, bufferPath, files.Count,
-						allMetadataFiles, allPages, cancellationToken),
+						extractionResults, cancellationToken),
 					cancellationToken);
 
 				extractionStopwatch.Stop();
 				_logger.Log($"All extractions completed in {extractionStopwatch.ElapsedMilliseconds:N0}ms");
+
+				// Populate shared collections in original file order to preserve sequence
+				for (int i = 0; i < files.Count; i++)
+				{
+					if (extractionResults.TryGetValue(i, out var result))
+					{
+						allMetadataFiles.AddRange(result.MetadataFiles);
+						allPages.AddRange(result.Pages);
+					}
+				}
+
 				_logger.Log($"Total pages found: {allPages.Count}, Total metadata files: {allMetadataFiles.Count}");
 
 				// Process pages in performance-aware batches
@@ -176,7 +196,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 		}
 
 		private async Task ExtractSingleArchiveAsync(string archiveFile, int index, string bufferPath, int totalCount,
-			List<FileInfo> allMetadataFiles, List<FileInfo> allPages, CancellationToken cancellationToken)
+			ConcurrentDictionary<int, ExtractionResult> extractionResults, CancellationToken cancellationToken)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 
@@ -186,7 +206,7 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 			try
 			{
 				int bufferPadSize = totalCount.ToString().Length;
-				string decompressionBuffer = Path.Combine(bufferPath, $"archive_{index.ToString().PadLeft(bufferPadSize, '0')}");
+				string decompressionBuffer = Path.Combine(bufferPath, index.ToString().PadLeft(bufferPadSize, '0'));
 
 				await Task.Run(() =>
 				{
@@ -199,15 +219,8 @@ namespace ComicbookArchiveToolbox.Module.Merge.Service
 				var pages = new List<FileInfo>();
 				SystemTools.ParseArchiveFiles(decompressionBuffer, ref metadataFiles, ref pages);
 
-				// Thread-safe addition to shared collections
-				lock (allMetadataFiles)
-				{
-					allMetadataFiles.AddRange(metadataFiles);
-				}
-				lock (allPages)
-				{
-					allPages.AddRange(pages);
-				}
+				// Store results in dictionary indexed by archive order (preserves order for later assembly)
+				extractionResults.TryAdd(index, new ExtractionResult(metadataFiles, pages));
 
 				stopwatch.Stop();
 				_logger.Log($"Archive {index + 1} extracted in {stopwatch.ElapsedMilliseconds}ms - Found {pages.Count} pages, {metadataFiles.Count} metadata files");
